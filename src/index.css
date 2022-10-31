@@ -8,595 +8,596 @@
 
 /* import fonts */
 @font-face {
-    font-family: "Inter";
-    src: url("fonts/Inter-Light.woff2") format("woff2");
-    font-weight: 300;
-    font-style: normal;
+  font-family: "Inter";
+  src: url("fonts/Inter-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: "Inter";
-    src: url("fonts/Inter-Regular.woff2") format("woff2");
-    font-weight: 400;
-    font-style: normal;
+  font-family: "Inter";
+  src: url("fonts/Inter-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: "Inter";
-    src: url("fonts/Inter-Medium.woff2") format("woff2");
-    font-weight: 500;
-    font-style: normal;
+  font-family: "Inter";
+  src: url("fonts/Inter-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: "Inter";
-    src: url("fonts/Inter-Bold.woff2") format("woff2");
-    font-weight: 700;
-    font-style: normal;
+  font-family: "Inter";
+  src: url("fonts/Inter-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: "JetBrains Mono";
-    src: url("fonts/JetBrainsMono-Light.woff2") format("woff2");
-    font-weight: 300;
-    font-style: normal;
+  font-family: "JetBrains Mono";
+  src: url("fonts/JetBrainsMono-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: "JetBrains Mono";
-    src: url("fonts/JetBrainsMono-Regular.woff2") format("woff2");
-    font-weight: 400;
-    font-style: normal;
+  font-family: "JetBrains Mono";
+  src: url("fonts/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: "JetBrains Mono";
-    src: url("fonts/JetBrainsMono-Bold.woff2") format("woff2");
-    font-weight: 700;
-    font-style: normal;
+  font-family: "JetBrains Mono";
+  src: url("fonts/JetBrainsMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: "JetBrains Mono";
-    src: url("fonts/JetBrainsMono-ExtraBold.woff2") format("woff2");
-    font-weight: 800;
-    font-style: normal;
+  font-family: "JetBrains Mono";
+  src: url("fonts/JetBrainsMono-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
 }
 
 @layer base {
-    /* structure styles */
-    body {
-        @apply text-gray-dark font-sans text-base antialiased selection:bg-primary-light;
-    }
+  /* structure styles */
+  body {
+    @apply text-gray-dark font-sans text-base antialiased selection:bg-primary-light;
+  }
 
-    code {
-        @apply border-solid border-danger border text-danger font-mono font-bold rounded p-2 text-sm before:content-['TEST:'] before:mr-4 overflow-x-auto;
-    }
+  code {
+    @apply border-solid border-danger border text-danger font-mono font-bold rounded p-2 text-sm before:content-['TEST:'] before:mr-4 overflow-x-auto;
+  }
 
-    p strong {
-        @apply text-gray-darker;
-    }
+  p strong {
+    @apply text-gray-darker;
+  }
 }
 
 @layer components {
-    .viewport {
-        @apply overflow-y-auto overflow-x-hidden scroll-smooth pt-4 px-5 spacer-y;
-    }
+  .viewport {
+    @apply overflow-y-auto overflow-x-hidden scroll-smooth pt-4 px-5 spacer-y;
+  }
 
-    .viewport .ant-layout {
-        @apply grow-0;
-    }
+  .viewport .ant-layout {
+    @apply grow-0;
+  }
 
-    .spacer-x {
-        @apply flex flex-row gap-4;
-    }
+  .spacer-x {
+    @apply flex flex-row gap-4;
+  }
 
-    .spacer-x-sm {
-        @apply spacer-x gap-2;
-    }
+  .spacer-x-sm {
+    @apply spacer-x gap-2;
+  }
 
-    .spacer-y {
-        @apply flex flex-col gap-4;
-    }
+  .spacer-y {
+    @apply flex flex-col gap-4;
+  }
 
-    .spacer-y-sm {
-        @apply spacer-y gap-2;
-    }
+  .spacer-y-sm {
+    @apply spacer-y gap-2;
+  }
 
-    .animate {
-        @apply transition-all duration-500;
-    }
+  .animate {
+    @apply transition-all duration-500;
+  }
 
-    .ant-typography.message-error {
-        @apply text-danger text-sm font-mono font-bold;
-    }
+  .ant-typography.message-error {
+    @apply text-danger text-sm font-mono font-bold;
+  }
 
-    .ant-typography.alert-error {
-        @apply bg-danger rounded p-2 text-white text-center text-sm font-mono font-bold;
-    }
+  .ant-typography.alert-error {
+    @apply bg-danger rounded p-2 text-white text-center text-sm font-mono font-bold;
+  }
 
-    .loader span {
-        @apply text-gray-darker text-lg font-bold
-    }
+  .loader span {
+    @apply text-gray-darker text-lg font-bold;
+  }
 
-    .mnemonic-card {
-        @apply relative border border-solid border-gray-lighter py-6 px-4 rounded animate grow-0;
-    }
+  .mnemonic-card {
+    @apply relative border border-solid border-gray-lighter py-6 px-4 rounded animate grow-0;
+  }
 
-    .mnemonic-words {
-        @apply flex justify-center flex-wrap;
-    }
+  .mnemonic-words {
+    @apply flex justify-center flex-wrap;
+  }
 
-    .mnemonic-card .mnemonic-overlay {
-        @apply absolute inset-0 flex items-center justify-center text-center text-lg text-gray-darker font-medium animate cursor-pointer;
-    }
+  .mnemonic-card .mnemonic-overlay {
+    @apply absolute inset-0 flex items-center justify-center text-center text-lg text-gray-darker font-medium animate cursor-pointer;
+  }
 
-    .mnemonic-card span {
-        @apply font-bold text-center animate;
-    }
+  .mnemonic-card span {
+    @apply font-bold text-center animate;
+  }
 
-    .mnemonic-card.active .mnemonic-overlay {
-        @apply opacity-0 pointer-events-none;
-    }
+  .mnemonic-card.active .mnemonic-overlay {
+    @apply opacity-0 pointer-events-none;
+  }
 
-    .mnemonic-card:not(.active) span {
-        @apply opacity-50 blur;
-    }
+  .mnemonic-card:not(.active) span {
+    @apply opacity-50 blur;
+  }
 
-    /* override ant components (imported in "~antd/dist/antd.css") */
-    /* structure */
-    [class^="ant-layout"] {
-        @apply bg-transparent;
-    }
+  /* override ant components (imported in "~antd/dist/antd.css") */
+  /* structure */
+  [class^="ant-layout"] {
+    @apply bg-transparent;
+  }
 
-    .ant-layout {
-        @apply min-h-fit;
-    }
+  .ant-layout {
+    @apply min-h-fit;
+  }
 
-    .ant-layout-header {
-        @apply py-4 px-5 text-base;
-    }
+  .ant-layout-header {
+    @apply py-4 px-5 text-base;
+  }
 
-    .ant-layout-header .ant-btn .anticon {
-        @apply flex items-center;
-    }
+  .ant-layout-header .ant-btn .anticon {
+    @apply flex items-center;
+  }
 
-    .ant-layout-header .ant-btn .anticon svg {
-        @apply w-6 h-6;
-    }
+  .ant-layout-header .ant-btn .anticon svg {
+    @apply w-6 h-6;
+  }
 
-    .ant-layout-content {
-        @apply spacer-y justify-between overflow-x-hidden;
-    }
+  .ant-layout-content {
+    @apply spacer-y justify-between overflow-x-hidden;
+  }
 
-    .ant-layout-footer {
-        @apply pt-0 px-5 pb-4 text-base;
-    }
+  .ant-layout-footer {
+    @apply pt-0 px-5 pb-4 text-base;
+  }
 
-    /* typography */
-    .ant-typography {
-        @apply text-gray-dark;
-    }
+  /* typography */
+  .ant-typography {
+    @apply text-gray-dark;
+  }
 
-    h1.ant-typography {
-        @apply text-md text-gray-darker font-medium mb-0;
-    }
+  h1.ant-typography {
+    @apply text-md text-gray-darker font-medium mb-0;
+  }
 
-    h2.ant-typography {
-        @apply mb-0 text-lg font-bold text-gray-darker;
-    }
+  h2.ant-typography {
+    @apply mb-0 text-lg font-bold text-gray-darker;
+  }
 
-    .ant-typography + h1.ant-typography,
-    .ant-typography + h2.ant-typography,
-    .ant-typography + h3.ant-typography,
-    .ant-typography + h4.ant-typography,
-    .ant-typography + h5.ant-typography,
-    .ant-btn + h1.ant-typography,
-    .ant-btn + h2.ant-typography,
-    .ant-btn + h3.ant-typography,
-    .ant-btn + h4.ant-typography,
-    .ant-btn + h5.ant-typography {
-        @apply mt-4
-    }
+  .ant-typography + h1.ant-typography,
+  .ant-typography + h2.ant-typography,
+  .ant-typography + h3.ant-typography,
+  .ant-typography + h4.ant-typography,
+  .ant-typography + h5.ant-typography,
+  .ant-btn + h1.ant-typography,
+  .ant-btn + h2.ant-typography,
+  .ant-btn + h3.ant-typography,
+  .ant-btn + h4.ant-typography,
+  .ant-btn + h5.ant-typography {
+    @apply mt-4;
+  }
 
-    a.ant-typography,
-    .ant-typography a {
-        @apply font-bold font-mono text-primary hover:text-primary hover:underline underline-offset-1;
-    }
+  a.ant-typography,
+  .ant-typography a {
+    @apply font-bold font-mono text-primary hover:text-primary hover:underline underline-offset-1;
+  }
 
-    .ant-typography strong {
-        @apply text-gray-darker;
-    }
+  .ant-typography strong {
+    @apply text-gray-darker;
+  }
 
-    /* button */
-    .ant-btn,
-    a.ant-btn {
-        @apply focus-within:!border-secondary;
-    }
+  /* button */
+  .ant-btn,
+  a.ant-btn {
+    @apply focus-within:!border-secondary;
+  }
 
-    .ant-btn-text:hover > .anticon {
-        @apply animate text-primary-light;
-    }
+  .ant-btn-text:hover > .anticon {
+    @apply animate text-primary-light;
+  }
 
-    .ant-btn-text,
-    a.ant-btn-text {
-        @apply text-primary p-0 h-auto font-mono font-bold animate border-0 hover:bg-transparent hover:text-primary-light active:text-primary focus:text-primary;
-    }
+  .ant-btn-text,
+  a.ant-btn-text {
+    @apply text-primary p-0 h-auto font-mono font-bold animate border-0 hover:bg-transparent hover:text-primary-light active:text-primary focus:text-primary;
+  }
 
-    a.ant-btn-text {
-        @apply !pt-0 text-sm
-    }
+  a.ant-btn-text {
+    @apply !pt-0 text-sm;
+  }
 
-    .ant-btn-text span,
-    a.ant-btn-text span {
-        @apply underline;
-    }
+  .ant-btn-text span,
+  a.ant-btn-text span {
+    @apply underline;
+  }
 
-    .ant-btn:not(.ant-btn-text) {
-        @apply w-full text-primary uppercase h-auto font-mono font-bold tracking-wide px-4 py-3 rounded border-primary border animate hover:text-primary-light hover:border-primary-light;
-    }
+  .ant-btn:not(.ant-btn-text) {
+    @apply w-full text-primary uppercase h-auto font-mono font-bold tracking-wide px-4 py-3 rounded border-primary border animate hover:text-primary-light hover:border-primary-light;
+  }
 
-    .ant-btn:not(.ant-btn-text),
-    a.ant-btn:not(.ant-btn-text) {
-        @apply w-full text-primary uppercase h-auto font-mono font-extrabold tracking-wide px-4 py-3 rounded border-primary border animate hover:text-primary-light hover:border-primary-light;
-    }
+  .ant-btn:not(.ant-btn-text),
+  a.ant-btn:not(.ant-btn-text) {
+    @apply w-full text-primary uppercase h-auto font-mono font-extrabold tracking-wide px-4 py-3 rounded border-primary border animate hover:text-primary-light hover:border-primary-light;
+  }
 
-    .ant-btn-primary:not(.ant-btn-text),
-    a.ant-btn-primary:not(.ant-btn-text) {
-        @apply text-white bg-primary shadow-none hover:text-white hover:bg-primary-light;
-    }
+  .ant-btn-primary:not(.ant-btn-text),
+  a.ant-btn-primary:not(.ant-btn-text) {
+    @apply text-white bg-primary shadow-none hover:text-white hover:bg-primary-light;
+  }
 
-    .ant-btn.ant-btn-dangerous {
-        @apply border border-danger focus-within:!border-danger-light text-danger hover:!text-danger-light hover:!border-danger-light;
-    }
+  .ant-btn.ant-btn-dangerous {
+    @apply border border-danger focus-within:!border-danger-light text-danger hover:!text-danger-light hover:!border-danger-light;
+  }
 
-    .ant-btn-dangerous.ant-btn-primary {
-        @apply border-0 bg-danger text-white hover:text-white hover:border-danger-light;
-    }
+  .ant-btn-dangerous.ant-btn-primary {
+    @apply border-0 bg-danger text-white hover:text-white hover:border-danger-light;
+  }
 
-    .ant-btn-dangerous.ant-btn-primary:disabled {
-        @apply bg-gray-disabled text-disabled border-0;
-    }
+  .ant-btn-dangerous.ant-btn-primary:disabled {
+    @apply bg-gray-disabled text-disabled border-0;
+  }
 
-    .ant-btn:disabled {
-        @apply text-gray-light bg-white border-gray-lighter hover:bg-white hover:border-gray-lighter hover:text-gray-light;
-    }
+  .ant-btn:disabled {
+    @apply text-gray-light bg-white border-gray-lighter hover:bg-white hover:border-gray-lighter hover:text-gray-light;
+  }
 
-    .ant-btn-primary:disabled {
-        @apply bg-gray-lighter border-gray-lighter hover:bg-gray-lighter hover:border-gray-lighter;
-    }
+  .ant-btn-primary:disabled {
+    @apply bg-gray-lighter border-gray-lighter hover:bg-gray-lighter hover:border-gray-lighter;
+  }
 
-    .ant-btn.ant-btn-sm {
-        @apply text-sm py-1;
-    }
+  .ant-btn.ant-btn-sm {
+    @apply text-sm py-1;
+  }
 
-    .ant-btn-primary .ant-typography,
-    .ant-btn-dangerous .ant-typography {
-        @apply text-white;
-    }
+  .ant-btn-primary .ant-typography,
+  .ant-btn-dangerous .ant-typography {
+    @apply text-white;
+  }
 
-    .ant-btn.btn-lighter {
-        @apply px-2 py-1 border-gray-lighter hover:!border-primary-light focus:!border-primary;
-    }
+  .ant-btn.btn-lighter {
+    @apply px-2 py-1 border-gray-lighter hover:!border-primary-light focus:!border-primary;
+  }
 
-    .brand-button {
-        @apply !border-2 !border-secondary-light
-    }
+  .brand-button {
+    @apply !border-2 !border-secondary-light;
+  }
 
-    .brand-button.active {
-        @apply bg-secondary-light
-    }
+  .brand-button.active {
+    @apply bg-secondary-light;
+  }
 
-    .anticon {
-        @apply text-primary animate hover:fill-primary-light h-auto;
-    }
+  .anticon {
+    @apply text-primary animate hover:fill-primary-light h-auto;
+  }
 
-    /* card */
-    .ant-card {
-        @apply rounded border border-solid border-gray-lighter;
-    }
+  /* card */
+  .ant-card {
+    @apply rounded border border-solid border-gray-lighter;
+  }
 
-    .ant-card-body {
-        @apply p-4 pt-3 spacer-y before:hidden after:hidden;
-    }
+  .ant-card-body {
+    @apply p-4 pt-3 spacer-y before:hidden after:hidden;
+  }
 
-    .ant-card-body .ant-btn-text {
-        @apply text-sm;
-    }
+  .ant-card-body .ant-btn-text {
+    @apply text-sm;
+  }
 
-    /* form */
-    .ant-form-item {
-        @apply pt-2 mb-3 text-base text-inherit;
-    }
+  /* form */
+  .ant-form-item {
+    @apply pt-2 mb-3 text-base text-inherit;
+  }
 
-    .ant-form-item.ant-form-item-checkbox {
-        @apply pt-0 mb-0;
-    }
+  .ant-form-item.ant-form-item-checkbox {
+    @apply pt-0 mb-0;
+  }
 
-    .ant-form-item-checkbox.ant-form-item-has-error .ant-checkbox-wrapper span,
-    .ant-form-item-checkbox.ant-form-item-has-error
+  .ant-form-item-checkbox.ant-form-item-has-error .ant-checkbox-wrapper span,
+  .ant-form-item-checkbox.ant-form-item-has-error
     .ant-checkbox-wrapper
     span
     strong {
-        @apply text-danger;
-    }
+    @apply text-danger;
+  }
 
-    .ant-form-item-checkbox .ant-form-item-explain-error {
-        @apply hidden;
-    }
+  .ant-form-item-checkbox .ant-form-item-explain-error {
+    @apply hidden;
+  }
 
-    .ant-form-item > .ant-row {
-        @apply flex-col relative;
-    }
+  .ant-form-item > .ant-row {
+    @apply flex-col relative;
+  }
 
-    .ant-form-item > .ant-row .ant-form-item-label {
-        @apply bg-white px-2 absolute top-0 left-2.5 z-10 animate transform -translate-y-1/2;
-    }
+  .ant-form-item > .ant-row .ant-form-item-label {
+    @apply bg-white px-2 absolute top-0 left-2.5 z-10 animate transform -translate-y-1/2;
+  }
 
-    .ant-form-item-empty:not(.ant-form-item-focus)
+  .ant-form-item-empty:not(.ant-form-item-focus)
     > .ant-row
     .ant-form-item-label {
-        @apply top-2/4 left-1 bg-white pointer-events-none;
-    }
+    @apply top-2/4 left-1 bg-white pointer-events-none;
+  }
 
-    .ant-form-item-simple.ant-form-item-empty:not(.ant-form-item-focus)
+  .ant-form-item-simple.ant-form-item-empty:not(.ant-form-item-focus)
     > .ant-row
     .ant-form-item-label {
-        @apply top-2/4;
-    }
+    @apply top-2/4;
+  }
 
-    .ant-form-item.ant-form-item-empty:not(.ant-form-item-focus)
+  .ant-form-item.ant-form-item-empty:not(.ant-form-item-focus)
     > .ant-row
     .ant-form-item-label
     label {
-        @apply text-base;
-    }
+    @apply text-base;
+  }
 
-    .ant-form-item > .ant-row .ant-form-item-label > label {
-        @apply text-sm text-gray block h-auto text-left animate before:content-[''] after:content-[''] before:hidden after:hidden;
-    }
+  .ant-form-item > .ant-row .ant-form-item-label > label {
+    @apply text-sm text-gray block h-auto text-left animate before:content-[''] after:content-[''] before:hidden after:hidden;
+  }
 
-    .ant-form-item-control-input {
-        @apply h-auto;
-    }
+  .ant-form-item-control-input {
+    @apply h-auto;
+  }
 
-    .ant-form-item-control-input .ant-input-affix-wrapper {
-        @apply border-gray-light rounded overflow-hidden p-0 text-inherit text-base;
-    }
+  .ant-form-item-control-input .ant-input-affix-wrapper {
+    @apply border-gray-light rounded overflow-hidden p-0 text-inherit text-base;
+  }
 
-    .ant-form-item-fill
+  .ant-form-item-fill
     .ant-form-item-control-input:not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless)
     .ant-input-affix-wrapper {
-        @apply border-gray-dark;
-    }
+    @apply border-gray-dark;
+  }
 
-    .ant-form-item
+  .ant-form-item
     .ant-form-item-control-input:not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless)
     .ant-input-affix-wrapper:focus,
-    .ant-form-item
+  .ant-form-item
     .ant-form-item-control-input:not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless)
     .ant-input-affix-wrapper-focused {
-        @apply shadow-none border-secondary;
-    }
+    @apply shadow-none border-secondary;
+  }
 
-    .ant-form-item.ant-form-item-clean
+  .ant-form-item.ant-form-item-clean
     .ant-input-affix-wrapper-status-error:not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless).ant-input-affix-wrapper,
-    .ant-form-item.ant-form-item-clean
+  .ant-form-item.ant-form-item-clean
     .ant-input-affix-wrapper-status-error:not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless).ant-input-affix-wrapper:hover {
-        @apply border-secondary;
-    }
+    @apply border-secondary;
+  }
 
-    .ant-form-item.ant-form-item-dirty
+  .ant-form-item.ant-form-item-dirty
     .ant-input-affix-wrapper-status-error:not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless).ant-input-affix-wrapper,
-    .ant-form-item.ant-form-item-dirty
+  .ant-form-item.ant-form-item-dirty
     .ant-input-affix-wrapper-status-error:not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless).ant-input-affix-wrapper:hover {
-        @apply border-danger;
-    }
+    @apply border-danger;
+  }
 
-    .ant-form-item-explain {
-        @apply absolute;
-    }
+  .ant-form-item-explain {
+    @apply absolute;
+  }
 
-    .ant-form-item-explain-error {
-        @apply text-sm font-mono text-danger pt-1 px-2;
-    }
+  .ant-form-item-explain-error {
+    @apply text-sm font-mono text-danger pt-1 px-2;
+  }
 
-    .ant-form-item.ant-form-item-clean .ant-form-item-explain-error {
-        @apply hidden;
-    }
+  .ant-form-item.ant-form-item-clean .ant-form-item-explain-error {
+    @apply hidden;
+  }
 
-    .ant-form-item-control-input .ant-input-affix-wrapper > .ant-input {
-        @apply p-2 selection:bg-secondary-light;
-    }
+  .ant-form-item-control-input .ant-input-affix-wrapper > .ant-input {
+    @apply p-2 selection:bg-secondary-light;
+  }
 
-    /* General input styling, spacing, borders.. */
-    .ant-form-item .ant-input {
-        @apply px-2.5 py-3 text-gray-darker animate rounded border-solid border border-gray-light
-    }
+  /* General input styling, spacing, borders.. */
+  .ant-form-item .ant-input {
+    @apply px-2.5 py-3 text-gray-darker animate rounded border-solid border border-gray-light;
+  }
 
-    /* basically when input filled */
-    .ant-form-item .ant-input:not(:placeholder-shown) {
-        @apply border-gray-darker
-    }
+  /* basically when input filled */
+  .ant-form-item .ant-input:not(:placeholder-shown) {
+    @apply border-gray-darker;
+  }
 
-    /* focus style, even when there is error */
-    .ant-form-item .ant-input:focus, .ant-input-status-error:not(.ant-input-disabled):not(.ant-input-borderless).ant-input:focus {
-        @apply border-secondary shadow-none
-    }
+  /* focus style, even when there is error */
+  .ant-form-item .ant-input:focus,
+  .ant-input-status-error:not(.ant-input-disabled):not(.ant-input-borderless).ant-input:focus {
+    @apply border-secondary shadow-none;
+  }
 
-    .ant-form-item-simple {
-        @apply mb-0 pt-0
-    }
+  .ant-form-item-simple {
+    @apply mb-0 pt-0;
+  }
 
-    .ant-form-item-simple .ant-form-item-explain-error {
-        @apply hidden
-    }
+  .ant-form-item-simple .ant-form-item-explain-error {
+    @apply hidden;
+  }
 
-    .ant-input-password svg {
-        @apply w-6 h-auto mr-3 fill-primary animate hover:fill-primary-light;
-    }
+  .ant-input-password svg {
+    @apply w-6 h-auto mr-3 fill-primary animate hover:fill-primary-light;
+  }
 
-    .ant-checkbox-wrapper {
-        @apply items-start gap-2 after:hidden;
-    }
+  .ant-checkbox-wrapper {
+    @apply items-start gap-2 after:hidden;
+  }
 
-    .ant-checkbox-wrapper span {
-        @apply px-0 text-sm text-gray-dark;
-    }
+  .ant-checkbox-wrapper span {
+    @apply px-0 text-sm text-gray-dark;
+  }
 
-    .ant-checkbox-wrapper span strong {
-        @apply text-gray-darker;
-    }
+  .ant-checkbox-wrapper span strong {
+    @apply text-gray-darker;
+  }
 
-    .ant-checkbox-inner {
-        @apply border-primary border border-solid animate;
-    }
+  .ant-checkbox-inner {
+    @apply border-primary border border-solid animate;
+  }
 
-    .ant-checkbox-wrapper:hover .ant-checkbox-inner,
-    .ant-checkbox:hover .ant-checkbox-inner,
-    .ant-checkbox-input:focus + .ant-checkbox-inner {
-        @apply border-primary-light;
-    }
+  .ant-checkbox-wrapper:hover .ant-checkbox-inner,
+  .ant-checkbox:hover .ant-checkbox-inner,
+  .ant-checkbox-input:focus + .ant-checkbox-inner {
+    @apply border-primary-light;
+  }
 
-    /* bg + border when checked */
-    .ant-checkbox-checked .ant-checkbox-inner {
-        @apply bg-white border-primary;
-    }
+  /* bg + border when checked */
+  .ant-checkbox-checked .ant-checkbox-inner {
+    @apply bg-white border-primary;
+  }
 
-    /* good but causes alignment trouble, we have to check (enlarge checkbox) */
-    /* .ant-checkbox-inner,
+  /* good but causes alignment trouble, we have to check (enlarge checkbox) */
+  /* .ant-checkbox-inner,
     .ant-checkbox-input {
       @apply scale-150;
     } */
-    /* tick style */
-    .ant-checkbox-checked .ant-checkbox-inner:after {
-        @apply border-primary;
-    }
+  /* tick style */
+  .ant-checkbox-checked .ant-checkbox-inner:after {
+    @apply border-primary;
+  }
 
-    .ant-switch-checked {
-        @apply bg-primary;
-    }
+  .ant-switch-checked {
+    @apply bg-primary;
+  }
 
-    .ant-radio-checked .ant-radio-inner {
-        @apply border-primary hover:border-primary after:bg-primary;
-    }
+  .ant-radio-checked .ant-radio-inner {
+    @apply border-primary hover:border-primary after:bg-primary;
+  }
 
-    /* tooltip */
-    .ant-tooltip {
-        @apply text-sm pr-1;
-    }
+  /* tooltip */
+  .ant-tooltip {
+    @apply text-sm pr-1;
+  }
 
-    .ant-tooltip .ant-tooltip-arrow {
-        @apply hidden;
-    }
+  .ant-tooltip .ant-tooltip-arrow {
+    @apply hidden;
+  }
 
-    .ant-tooltip .ant-tooltip-inner {
-        @apply p-4 bg-white rounded shadow-lg text-gray-dark;
-    }
+  .ant-tooltip .ant-tooltip-inner {
+    @apply p-4 bg-white rounded shadow-lg text-gray-dark;
+  }
 
-    /* carousel */
-    .ant-carousel {
-        @apply leading-normal;
-    }
+  /* carousel */
+  .ant-carousel {
+    @apply leading-normal;
+  }
 
-    .ant-carousel .slick-dots {
-        @apply m-0 gap-2 bottom-auto top-[250px];
-    }
+  .ant-carousel .slick-dots {
+    @apply m-0 gap-2 bottom-auto top-[250px];
+  }
 
-    .ant-carousel .slick-dots li {
-        @apply m-0 !w-[12px] h-[12px] flex items-stretch;
-    }
+  .ant-carousel .slick-dots li {
+    @apply m-0 !w-[12px] h-[12px] flex items-stretch;
+  }
 
-    .ant-carousel .slick-dots li button {
-        @apply h-full rounded-full border border-solid border-gray-light opacity-100;
-    }
+  .ant-carousel .slick-dots li button {
+    @apply h-full rounded-full border border-solid border-gray-light opacity-100;
+  }
 
-    .ant-carousel .slick-dots li.slick-active button {
-        @apply bg-gray-dark;
-    }
+  .ant-carousel .slick-dots li.slick-active button {
+    @apply bg-gray-dark;
+  }
 
-    .ant-carousel svg {
-        @apply h-[220px] w-auto;
-    }
+  .ant-carousel svg {
+    @apply h-[220px] w-auto;
+  }
 
-    /* table */
-    .ant-table {
-        @apply text-gray-dark
-    }
+  /* table */
+  .ant-table {
+    @apply text-gray-dark;
+  }
 
-    .ant-table table {
-        @apply text-center text-sm
-    }
+  .ant-table table {
+    @apply text-center text-sm;
+  }
 
-    .ant-table-content table tr {
-        @apply !border-b-gray-lighter
-    }
+  .ant-table-content table tr {
+    @apply !border-b-gray-lighter;
+  }
 
-    .ant-table-content table tr td {
-        @apply !px-0 !py-3
-    }
+  .ant-table-content table tr td {
+    @apply !px-0 !py-3;
+  }
 
-    .ant-table-content table tr td span {
-        @apply block p-1
-    }
+  .ant-table-content table tr td span {
+    @apply block p-1;
+  }
 
-    .ant-table-content table tr td .table-account {
-        @apply text-gray-light text-base text-left
-    }
+  .ant-table-content table tr td .table-account {
+    @apply text-gray-light text-base text-left;
+  }
 
-    .ant-table-tbody > tr.ant-table-row-selected:hover > td,
-    .ant-table-tbody > tr.ant-table-row-selected > td {
-        @apply !bg-white
-    }
+  .ant-table-tbody > tr.ant-table-row-selected:hover > td,
+  .ant-table-tbody > tr.ant-table-row-selected > td {
+    @apply !bg-white;
+  }
 
-    .ant-table-tbody > tr.ant-table-row-selected > td .table-account {
-        @apply !text-primary
-    }
+  .ant-table-tbody > tr.ant-table-row-selected > td .table-account {
+    @apply !text-primary;
+  }
 
-    .ant-table-content table tr td:not(.ant-table-selection-column) + td span {
-        @apply border-0 border-l-gray-lighter border-l border-solid
-    }
+  .ant-table-content table tr td:not(.ant-table-selection-column) + td span {
+    @apply border-0 border-l-gray-lighter border-l border-solid;
+  }
 
-    /* other */
-    .ant-divider-horizontal {
-        @apply m-0;
-    }
+  /* other */
+  .ant-divider-horizontal {
+    @apply m-0;
+  }
 
-    .ant-select-selector {
-        @apply !rounded border border-gray-darker text-black !shadow-none;
-    }
+  .ant-select-selector {
+    @apply !rounded border border-gray-darker text-black !shadow-none;
+  }
 
-    .ant-select-open .ant-select-selector {
-        @apply !border-secondary shadow-none;
-    }
+  .ant-select-open .ant-select-selector {
+    @apply !border-secondary shadow-none;
+  }
 
-    .ant-select-dropdown {
-        @apply rounded border-solid !border-secondary !border-[1.5px] !shadow-none;
-    }
+  .ant-select-dropdown {
+    @apply rounded border-solid !border-secondary !border-[1.5px] !shadow-none;
+  }
 
-    .ant-select-arrow {
-        @apply text-primary text-[20px];
-    }
+  .ant-select-arrow {
+    @apply text-primary text-[20px];
+  }
 
-    .ant-modal-mask {
-        backdrop-filter: blur(5px);
-        @apply blur-sm;
-    }
+  .ant-modal-mask {
+    backdrop-filter: blur(5px);
+    @apply blur-sm;
+  }
 
-    .ant-modal-body {
-        @apply rounded;
-    }
+  .ant-modal-body {
+    @apply rounded;
+  }
 
-    .settings-title {
-        @apply text-gray text-md font-light;
-    }
+  .settings-title {
+    @apply text-gray text-md font-light;
+  }
 
-    .settings-subtitle {
-        @apply text-sm font-normal text-gray-darker;
-    }
+  .settings-subtitle {
+    @apply text-sm font-normal text-gray-darker;
+  }
 
-    /* component */
-    .loader {
-        @apply absolute inset-0 z-50 spacer-y bg-white h-full items-center justify-center animate-fade-in
-    }
+  /* component */
+  .loader {
+    @apply absolute inset-0 z-50 spacer-y bg-white h-full items-center justify-center animate-fade-in;
+  }
 }

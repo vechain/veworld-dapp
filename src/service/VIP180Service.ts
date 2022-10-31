@@ -5,6 +5,7 @@ import Web3 from "web3"
 import VIP180Abi from "../vechain/VIP180.abi"
 import { Connex } from "@vechain/connex"
 import { Token } from "../store/tokenSlice"
+import { TokenReceiver } from "../model/Token"
 
 const web3 = new Web3()
 
@@ -26,11 +27,6 @@ const buildDeployClause = (
   }
 
   return [deployClause]
-}
-
-export interface TokenReceiver {
-  address: string
-  amount: string
 }
 
 const buildMintClause = async (

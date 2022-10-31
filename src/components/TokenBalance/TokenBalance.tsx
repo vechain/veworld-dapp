@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { getToken } from "../../store/tokenSlice"
 import { useAppSelector } from "../../store/hooks"
 import { getSelectedAccount } from "../../store/walletSlice"
@@ -6,7 +6,6 @@ import { Card, Layout, Typography } from "antd"
 import { Content } from "antd/es/layout/layout"
 import ConnexService from "../../service/ConnexService"
 import VIP180Service from "../../service/VIP180Service"
-import { useIsomorphicLayoutEffect } from "react-redux/es/utils/useIsomorphicLayoutEffect"
 
 const { Text } = Typography
 
@@ -62,28 +61,6 @@ const TokenBalance: React.FC = () => {
       </Content>
     </Card>
   )
-}
-
-function useInterval(callback: () => void, delay: number | null) {
-  const savedCallback = useRef(callback)
-
-  // Remember the latest callback if it changes.
-  useIsomorphicLayoutEffect(() => {
-    savedCallback.current = callback
-  }, [callback])
-
-  // Set up the interval.
-  useEffect(() => {
-    // Don't schedule if no delay is specified.
-    // Note: 0 is a valid value for delay.
-    if (!delay && delay !== 0) {
-      return
-    }
-
-    const id = setInterval(() => savedCallback.current(), delay)
-
-    return () => clearInterval(id)
-  }, [delay])
 }
 
 export default TokenBalance

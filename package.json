@@ -31,7 +31,9 @@
         "test": "yarn && yarn contract:compile && yarn react-scripts test",
         "eject": "yarn react-scripts eject",
         "contract:compile": "yarn hardhat compile",
-        "contract:deploy": "npx hardhat run --network vechain scripts/deploy.js"
+        "contract:deploy": "npx hardhat run --network vechain scripts/deploy.js",
+        "lint": "yarn && yarn run eslint src",
+        "format": "yarn prettier --write 'src'"
     },
     "eslintConfig": {
         "extends": [

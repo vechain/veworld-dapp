@@ -1,10 +1,5 @@
 import { Connex } from "@vechain/connex"
 
-export interface TxResponse {
-  data: any
-  txReceipt: Connex.Thor.Transaction.Receipt
-}
-
 export enum TxStage {
   NONE = "None",
   IN_EXTENSION = "Pending in extension",

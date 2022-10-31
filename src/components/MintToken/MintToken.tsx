@@ -18,10 +18,11 @@ import TransactionStatus from "../TransactionStatus/TransactionStatus"
 import useFormEvents from "../../hooks/FormEvents"
 import { TxStage } from "../../model/Transaction"
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
-import VIP180Service, { TokenReceiver } from "../../service/VIP180Service"
+import VIP180Service from "../../service/VIP180Service"
 import { toast } from "react-toastify"
 import FormUtils from "../../utils/FormUtils"
 import TransactionsService from "../../service/TransactionsService"
+import { TokenReceiver } from "../../model/Token"
 
 const { Text } = Typography
 
