@@ -16,6 +16,7 @@ const { Text } = Typography
 interface DeployTokenForm {
   tokenName: string
   tokenSymbol: string
+  decimals: number
 }
 
 const DeployToken: React.FC = () => {
@@ -38,8 +39,10 @@ const DeployToken: React.FC = () => {
 
       const clause = VIP180Service.buildDeployClause(
         form.tokenName,
-        form.tokenSymbol
+        form.tokenSymbol,
+        form.decimals
       )
+
       setTxStatus(TxStage.IN_EXTENSION)
 
       const { txid } = await TransactionsService.requestTransaction(
@@ -120,6 +123,22 @@ const DeployToken: React.FC = () => {
                     ]}
                   >
                     <Input name={"tokenSymbol"} />
+                  </Form.Item>
+                  <Form.Item
+                    label={"Decimals"}
+                    className={generateAntClasses("decimals")}
+                    name="decimals"
+                    rules={[
+                      {
+                        required: true,
+                        message:
+                          "Please enter a number of decimals between 0 and 255",
+                        min: 0,
+                        max: 255,
+                      },
+                    ]}
+                  >
+                    <Input type={"number"} name={"decimals"} />
                   </Form.Item>
                 </Layout>
                 <Footer className="spacer-x">

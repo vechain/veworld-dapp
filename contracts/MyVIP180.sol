@@ -1,9 +1,16 @@
+pragma solidity ^0.8.0;
+
 import "@openzeppelin/contracts/token/ERC20/presets/ERC20PresetMinterPauser.sol";
 
 contract MyVIP180 is ERC20PresetMinterPauser {
-    constructor(string memory name, string memory symbol) ERC20PresetMinterPauser(name, symbol) {}
+
+    uint8 private _decimals;
+
+    constructor(string memory name, string memory symbol, uint8 decimals_) ERC20PresetMinterPauser(name, symbol) {
+        _decimals = decimals_;
+    }
 
     function decimals() public view virtual override returns (uint8) {
-        return 2;
+        return _decimals;
     }
 }

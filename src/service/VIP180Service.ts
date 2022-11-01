@@ -11,10 +11,11 @@ const web3 = new Web3()
 
 const buildDeployClause = (
   name: string,
-  symbol: string
+  symbol: string,
+  decimals: number
 ): Connex.Vendor.TxMessage => {
   const constructorParameters = web3.eth.abi
-    .encodeParameters(["string", "string"], [name, symbol])
+    .encodeParameters(["string", "string", "uint8"], [name, symbol, decimals])
     .replace("0x", "")
 
   const byteCodeWithParameters = CompiledVIP180.bytecode + constructorParameters
