@@ -65,7 +65,5 @@ jobs:
         with:
           context: ./
           push: true
-          # Latest tag and sha tag
-          tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
+          # Sha tag only
+          tags: ghcr.io/${{ github.repository }}:${{ github.sha }}
