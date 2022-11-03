@@ -86,7 +86,10 @@ const DeployToken: React.FC = () => {
           description={error}
           type="error"
           showIcon
-          onClick={() => setError(null)}
+          onClick={() => {
+            setError(null)
+            setTxStatus(TxStage.NONE)
+          }}
         />
       )
     return <></>
