@@ -3,11 +3,13 @@ import { TxStage } from "../../model/Transaction"
 import { Alert } from "antd"
 
 interface TransactionStatusProps {
+  setTxStage: (txStage: TxStage) => void
   txStage: TxStage
   txId?: string
 }
 
 const TransactionStatus: React.FC<TransactionStatusProps> = ({
+  setTxStage,
   txStage,
   txId,
 }) => {
@@ -34,6 +36,7 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
     case TxStage.FAILURE:
       return (
         <Alert
+          onClick={() => setTxStage(TxStage.NONE)}
           message={"Transaction failed"}
           type={"error"}
           description={txId ? `Transaction ID: ${txId}` : undefined}
@@ -42,6 +45,7 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
     case TxStage.COMPLETE:
       return (
         <Alert
+          onClick={() => setTxStage(TxStage.NONE)}
           message={"Transaction successful"}
           type={"success"}
           showIcon
@@ -51,6 +55,7 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
     case TxStage.REVERTED:
       return (
         <Alert
+          onClick={() => setTxStage(TxStage.NONE)}
           message={"Transaction reverted"}
           type={"error"}
           showIcon

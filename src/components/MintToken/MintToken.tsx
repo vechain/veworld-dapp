@@ -4,6 +4,7 @@ import { getToken } from "../../store/tokenSlice"
 import { getSelectedAccount } from "../../store/walletSlice"
 import { Content, Footer } from "antd/es/layout/layout"
 import {
+  Alert,
   Button,
   Card,
   Col,
@@ -23,6 +24,7 @@ import { toast } from "react-toastify"
 import FormUtils from "../../utils/FormUtils"
 import TransactionsService from "../../service/TransactionsService"
 import { TokenReceiver } from "../../model/Token"
+import { getErrorMessage } from "../../utils/ExtensionUtils"
 
 const { Text } = Typography
 
@@ -39,10 +41,12 @@ const MintToken: React.FC = () => {
 
   const [txStatus, setTxStatus] = useState<TxStage>(TxStage.NONE)
   const [txId, setTxId] = useState<string | undefined>()
+  const [error, setError] = useState<string | null>(null)
 
   if (!token.address || !account) return <></>
 
   const mintToken = async (form: MintTokenForm) => {
+    setError(null)
     if (!token.address) return toast.error("Token address not found")
     if (form.receivers.length < 1) return toast.error("No receivers found")
 
@@ -80,11 +84,42 @@ const MintToken: React.FC = () => {
     } catch (e) {
       console.error(e)
       toast.error("Error minting token")
+      setError(getErrorMessage(e))
     }
   }
 
+  const ErrorAlert = () => {
+    if (error)
+      return (
+        <Alert
+          description={error}
+          type="error"
+          showIcon
+          onClick={() => setError(null)}
+        />
+      )
+    return <></>
+  }
+
+  const getActions = () => {
+    const actions = []
+
+    if (error) actions.push(<ErrorAlert key={"error"} />)
+    else if (txStatus !== TxStage.NONE)
+      actions.push(
+        <TransactionStatus
+          txStage={txStatus}
+          txId={txId}
+          key={"txStatus"}
+          setTxStage={setTxStatus}
+        />
+      )
+
+    return actions
+  }
+
   return (
-    <Card className={"my-10"}>
+    <Card className={"my-10"} actions={getActions()}>
       <Content className="h-full">
         <Form
           form={mintTokenForm}
@@ -106,11 +141,6 @@ const MintToken: React.FC = () => {
                 <Button type={"primary"} htmlType="submit">
                   Mint Tokens
                 </Button>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <TransactionStatus txStage={txStatus} txId={txId} />
               </Col>
             </Row>
           </Footer>

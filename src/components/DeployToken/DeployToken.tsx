@@ -5,11 +5,12 @@ import VIP180Service from "../../service/VIP180Service"
 import { TxStage } from "../../model/Transaction"
 import { addToken, getToken } from "../../store/tokenSlice"
 import { toast } from "react-toastify"
-import { Button, Card, Form, Input, Layout, Row, Typography } from "antd"
+import { Alert, Button, Card, Form, Input, Layout, Row, Typography } from "antd"
 import { Content, Footer } from "antd/es/layout/layout"
 import useFormEvents from "../../hooks/FormEvents"
 import TransactionStatus from "../TransactionStatus/TransactionStatus"
 import TransactionsService from "../../service/TransactionsService"
+import { getErrorMessage } from "../../utils/ExtensionUtils"
 
 const { Text } = Typography
 
@@ -29,10 +30,12 @@ const DeployToken: React.FC = () => {
   const [deployTokenForm] = Form.useForm<DeployTokenForm>()
   const { onFormBlur, onFormFocus, generateAntClasses } =
     useFormEvents(deployTokenForm)
+  const [error, setError] = useState<string | null>(null)
 
   if (!selectedAccount) return <></>
 
   const deployToken = async (form: DeployTokenForm) => {
+    setError(null)
     try {
       setTxId(undefined)
       setTxStatus(TxStage.NONE)
@@ -72,12 +75,43 @@ const DeployToken: React.FC = () => {
           txStatus
       )
       setTxStatus(TxStage.FAILURE)
+      setError(getErrorMessage(e))
     }
+  }
+
+  const ErrorAlert = () => {
+    if (error)
+      return (
+        <Alert
+          description={error}
+          type="error"
+          showIcon
+          onClick={() => setError(null)}
+        />
+      )
+    return <></>
+  }
+
+  const getActions = () => {
+    const actions = []
+
+    if (error) actions.push(<ErrorAlert key={"error"} />)
+    else if (txStatus !== TxStage.NONE)
+      actions.push(
+        <TransactionStatus
+          txStage={txStatus}
+          txId={txId}
+          key={"txStatus"}
+          setTxStage={setTxStatus}
+        />
+      )
+
+    return actions
   }
 
   return (
     <>
-      <Card className={"my-10"}>
+      <Card className={"my-10"} actions={getActions()}>
         {!token.address ? (
           <>
             <Content className="h-full">
@@ -147,9 +181,6 @@ const DeployToken: React.FC = () => {
                       Deploy Token
                     </Button>
                   </Row>
-                  <Row>
-                    <TransactionStatus txStage={txStatus} />
-                  </Row>
                 </Footer>
               </Form>
             </Content>
@@ -166,7 +197,6 @@ const DeployToken: React.FC = () => {
             <Text copyable type="success" ellipsis>
               {token.address}
             </Text>
-            <TransactionStatus txStage={txStatus} txId={txId} />
           </>
         )}
       </Card>

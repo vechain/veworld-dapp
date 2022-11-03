@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import {
   getSelectedAccount,
@@ -7,7 +7,8 @@ import {
   updateAccounts,
   WalletAccount,
 } from "../../store/walletSlice"
-import { Button, Card, Select, Typography } from "antd"
+import { Alert, Button, Card, Select, Typography } from "antd"
+import { getErrorMessage } from "../../utils/ExtensionUtils"
 
 const { Text } = Typography
 
@@ -15,29 +16,49 @@ const ConnectToExtension: React.FC = () => {
   const wallet = useAppSelector(getWallet)
   const selectedAccount = useAppSelector(getSelectedAccount)
 
+  const [error, setError] = useState<string | null>(null)
   const dispatch = useAppDispatch()
 
   const connectHandler = async () => {
-    const accounts = await window.vechain.requestAccounts()
+    setError(null)
+    try {
+      const accounts = await window.vechain.requestAccounts()
 
-    if (accounts.length > 0) {
-      const walletAccounts: WalletAccount[] = accounts.map(
-        (address: string) => {
-          return {
-            address,
-            selected: false,
+      if (accounts.length > 0) {
+        const walletAccounts: WalletAccount[] = accounts.map(
+          (address: string) => {
+            return {
+              address,
+              selected: false,
+            }
           }
-        }
-      )
+        )
 
-      dispatch(updateAccounts(walletAccounts))
-      dispatch(selectAccount(walletAccounts[0].address))
+        dispatch(updateAccounts(walletAccounts))
+        dispatch(selectAccount(walletAccounts[0].address))
+      }
+    } catch (e) {
+      console.error(e)
+      setError(getErrorMessage(e))
     }
+  }
+
+  const ErrorAlert = () => {
+    if (error)
+      return (
+        <Alert
+          description={error}
+          type="error"
+          showIcon
+          onClick={() => setError(null)}
+        />
+      )
+    return <></>
   }
 
   return (
     <>
-      <Card>
+      <Card actions={error ? [<ErrorAlert key={"error"} />] : undefined}>
         {wallet.accounts.length === 0 ? (
           <>
             <Text strong>Connect to VeWorld Extension</Text>
