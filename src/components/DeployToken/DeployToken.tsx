@@ -102,6 +102,7 @@ const DeployToken: React.FC = () => {
     else if (txStatus !== TxStage.NONE)
       actions.push(
         <TransactionStatus
+          componentName={"Deploy Token"}
           txStage={txStatus}
           txId={txId}
           key={"txStatus"}

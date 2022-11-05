@@ -111,6 +111,7 @@ const MintToken: React.FC = () => {
     else if (txStatus !== TxStage.NONE)
       actions.push(
         <TransactionStatus
+          componentName={"Mint Token"}
           txStage={txStatus}
           txId={txId}
           key={"txStatus"}

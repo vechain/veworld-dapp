@@ -6,12 +6,14 @@ interface TransactionStatusProps {
   setTxStage: (txStage: TxStage) => void
   txStage: TxStage
   txId?: string
+  componentName: string
 }
 
 const TransactionStatus: React.FC<TransactionStatusProps> = ({
   setTxStage,
   txStage,
   txId,
+  componentName,
 }) => {
   switch (txStage) {
     case TxStage.NONE:
@@ -19,7 +21,7 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
     case TxStage.IN_EXTENSION:
       return (
         <Alert
-          message={"Waiting for confirmation in extension"}
+          message={`${componentName} - Waiting for confirmation in extension`}
           type={"warning"}
           showIcon
         />
@@ -27,7 +29,7 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
     case TxStage.POLLING_TX:
       return (
         <Alert
-          message={"Polling the blockchain for the transaction"}
+          message={`${componentName} - Polling the blockchain for the transaction`}
           type={"warning"}
           description={txId ? `Transaction ID: ${txId}` : undefined}
           showIcon
@@ -37,7 +39,7 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
       return (
         <Alert
           onClick={() => setTxStage(TxStage.NONE)}
-          message={"Transaction failed"}
+          message={`${componentName} - Transaction failed`}
           type={"error"}
           description={txId ? `Transaction ID: ${txId}` : undefined}
         />
@@ -46,7 +48,7 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
       return (
         <Alert
           onClick={() => setTxStage(TxStage.NONE)}
-          message={"Transaction successful"}
+          message={`${componentName} - Transaction successful`}
           type={"success"}
           showIcon
           description={txId ? `Transaction ID: ${txId}` : undefined}
@@ -56,7 +58,7 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
       return (
         <Alert
           onClick={() => setTxStage(TxStage.NONE)}
-          message={"Transaction reverted"}
+          message={`${componentName} - Transaction reverted`}
           type={"error"}
           showIcon
           description={txId ? `Transaction ID: ${txId}` : undefined}
