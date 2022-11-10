@@ -17,29 +17,41 @@ const ConnectToExtension: React.FC = () => {
   const selectedAccount = useAppSelector(getSelectedAccount)
 
   const [error, setError] = useState<string | null>(null)
+  const [warning, setWarning] = useState<string | null>(null)
   const dispatch = useAppDispatch()
 
   const connectHandler = async () => {
-    setError(null)
+    if (!window.vechain) {
+      return setError("VeChain extension not found")
+    }
+
     try {
-      const accounts = await window.vechain.requestAccounts()
+      await window.vechain.openExtension()
 
-      if (accounts.length > 0) {
-        const walletAccounts: WalletAccount[] = accounts.map(
-          (address: string) => {
-            return {
-              address,
-              selected: false,
-            }
-          }
-        )
-
-        dispatch(updateAccounts(walletAccounts))
-        dispatch(selectAccount(walletAccounts[0].address))
-      }
+      await getAccounts()
     } catch (e) {
       console.error(e)
       setError(getErrorMessage(e))
+    }
+  }
+
+  const getAccounts = async () => {
+    if (!window.vechain) return
+
+    const accounts = await window.vechain.requestAccounts()
+
+    if (accounts.length > 0) {
+      const walletAccounts: WalletAccount[] = accounts.map(
+        (address: string) => {
+          return {
+            address,
+            selected: false,
+          }
+        }
+      )
+
+      dispatch(updateAccounts(walletAccounts))
+      dispatch(selectAccount(walletAccounts[0].address))
     }
   }
 
@@ -51,6 +63,16 @@ const ConnectToExtension: React.FC = () => {
           type="error"
           showIcon
           onClick={() => setError(null)}
+        />
+      )
+
+    if (warning)
+      return (
+        <Alert
+          description={warning}
+          type="warning"
+          showIcon
+          onClick={() => setWarning(null)}
         />
       )
     return <></>

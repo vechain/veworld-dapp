@@ -1,4 +1,8 @@
 /// <reference types="react-scripts" />
-interface Window {
-  vechain: any
+import WindowVeChain from "@vechainfoundation/veworld-types"
+
+declare global {
+  interface Window {
+    vechain: WindowVeChain
+  }
 }

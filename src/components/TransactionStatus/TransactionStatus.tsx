@@ -15,6 +15,8 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
   txId,
   componentName,
 }) => {
+  const description = txId ? `Transaction ID: ${txId}` : undefined
+
   switch (txStage) {
     case TxStage.NONE:
       return <></>
@@ -31,7 +33,7 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
         <Alert
           message={`${componentName} - Polling the blockchain for the transaction`}
           type={"warning"}
-          description={txId ? `Transaction ID: ${txId}` : undefined}
+          description={description}
           showIcon
         />
       )
@@ -41,7 +43,7 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
           onClick={() => setTxStage(TxStage.NONE)}
           message={`${componentName} - Transaction failed`}
           type={"error"}
-          description={txId ? `Transaction ID: ${txId}` : undefined}
+          description={description}
         />
       )
     case TxStage.COMPLETE:
@@ -51,7 +53,7 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
           message={`${componentName} - Transaction successful`}
           type={"success"}
           showIcon
-          description={txId ? `Transaction ID: ${txId}` : undefined}
+          description={description}
         />
       )
     case TxStage.REVERTED:
@@ -61,7 +63,7 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
           message={`${componentName} - Transaction reverted`}
           type={"error"}
           showIcon
-          description={txId ? `Transaction ID: ${txId}` : undefined}
+          description={description}
         />
       )
     default:

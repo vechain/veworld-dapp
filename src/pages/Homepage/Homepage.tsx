@@ -8,6 +8,7 @@ import { getToken } from "../../store/tokenSlice"
 import TokenBalance from "../../components/TokenBalance/TokenBalance"
 import MintToken from "../../components/MintToken/MintToken"
 import { toast } from "react-toastify"
+import { OnChangeNotification } from "@vechainfoundation/veworld-types"
 
 const Homepage: React.FC = () => {
   const wallet = useAppSelector(getWallet)
@@ -15,7 +16,7 @@ const Homepage: React.FC = () => {
 
   useEffect(() => {
     if (window.vechain && window.vechain.isVeWorld) {
-      window.vechain.onChange("network", () => {
+      window.vechain.onChange(OnChangeNotification.NETWORK, () => {
         toast.warning("The network has changed inside the extension")
       })
     }
