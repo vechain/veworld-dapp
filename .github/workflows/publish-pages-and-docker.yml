@@ -32,14 +32,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Use Node v16
+      - name: Use Node v16 & GitHub registry
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          registry-url: https://registry.npmjs.org/
+          registry-url: 'https://npm.pkg.github.com'
           always-auth: true
+          scope: '@vechainfoundation'
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Build React App
         run: yarn build
