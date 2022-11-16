@@ -26,8 +26,6 @@ const ConnectToExtension: React.FC = () => {
     }
 
     try {
-      await window.vechain.openExtension()
-
       await getAccounts()
     } catch (e) {
       console.error(e)
