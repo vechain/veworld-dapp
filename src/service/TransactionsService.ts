@@ -62,6 +62,7 @@ const requestTransaction = async (
   return connex.vendor
     .sign("tx", txMessage)
     .signer(signer)
+    .delegate("https://sponsor-testnet.vechain.energy/by/147", signer)
     .comment("Deploy a custom VIP181 Token")
     .request()
 }
