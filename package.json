@@ -65,7 +65,7 @@
         "@typechain/hardhat": "^6.1.3",
         "@typescript-eslint/eslint-plugin": "^5.41.0",
         "@vechain.energy/hardhat-thor": "^0.3.1",
-        "@vechainfoundation/veworld-types": "0.0.7",
+        "@vechainfoundation/veworld-types": "0.0.9-beta",
         "chai": "^4.3.6",
         "eslint": "^8.26.0",
         "eslint-config-prettier": "^8.5.0",

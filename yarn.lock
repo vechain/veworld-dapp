@@ -3236,10 +3236,10 @@
     uuid "2.0.1"
     xmlhttprequest "1.8.0"
 
-"@vechainfoundation/veworld-types@0.0.7":
-  version "0.0.7"
-  resolved "https://npm.pkg.github.com/download/@vechainfoundation/veworld-types/0.0.7/d044112b20eb28c2f5ba294f1b677c7e5c55dbbb#d044112b20eb28c2f5ba294f1b677c7e5c55dbbb"
-  integrity sha512-dUc/YsGzn/+kvd4ptJCGgqpnkX7U+K+wo/M9jzkSDz5d9e0X5J/en5g/GXQhC8oJhMD3WonNbSrp6yJJKKPFkw==
+"@vechainfoundation/veworld-types@0.0.9-beta":
+  version "0.0.9-beta"
+  resolved "https://npm.pkg.github.com/download/@vechainfoundation/veworld-types/0.0.9-beta/241defd5d0a227c3fcfb8553d32088b50e76002f#241defd5d0a227c3fcfb8553d32088b50e76002f"
+  integrity sha512-FcS09PaxrRcW7hBuhsN53e10rWIk3n4WG+wTb/lnKoeYhWn5J/eRpBOUZ3dah66q8bMDXBYljyCm54Q8LAe61Q==
   dependencies:
     "@vechain/connex-types" "^2.0.2"
     prettier "^2.7.1"
