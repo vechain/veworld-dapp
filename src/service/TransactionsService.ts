@@ -55,15 +55,19 @@ const explainRevertReason = async (id: string): Promise<string> => {
 
 const requestTransaction = async (
   signer: string,
-  txMessage: Connex.Vendor.TxMessage
+  txMessage: Connex.Vendor.TxMessage,
+  delegateUrl?: string
 ) => {
   const connex = await ConnexService.getConnex()
-
-  return connex.vendor
+  console.log("url " + delegateUrl)
+  const request = connex.vendor
     .sign("tx", txMessage)
     .signer(signer)
     .comment("Deploy a custom VIP181 Token")
-    .request()
+
+  if (delegateUrl) request.delegate(delegateUrl, signer)
+
+  return request.request()
 }
 
 export default {
