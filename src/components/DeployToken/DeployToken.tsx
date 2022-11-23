@@ -18,6 +18,7 @@ interface DeployTokenForm {
   tokenName: string
   tokenSymbol: string
   decimals: number
+  delegateURL?: string
 }
 
 const DeployToken: React.FC = () => {
@@ -51,6 +52,7 @@ const DeployToken: React.FC = () => {
       const { txid } = await TransactionsService.requestTransaction(
         selectedAccount.address,
         clause
+        //form.delegateURL
       )
       setTxId(txid)
       setTxStatus(TxStage.POLLING_TX)
@@ -177,6 +179,19 @@ const DeployToken: React.FC = () => {
                     ]}
                   >
                     <Input type={"number"} name={"decimals"} />
+                  </Form.Item>
+                  <Form.Item
+                    label={"URL"}
+                    className={generateAntClasses("delegateURL")}
+                    name="delegateURL"
+                    rules={[
+                      {
+                        required: false,
+                        message: "Please enter a valid URL",
+                      },
+                    ]}
+                  >
+                    <Input type={"url"} name="delegateURL" />
                   </Form.Item>
                 </Layout>
                 <Footer className="spacer-x">

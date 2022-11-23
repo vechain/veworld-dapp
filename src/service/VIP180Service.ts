@@ -30,6 +30,23 @@ const buildDeployClause = (
   return [deployClause]
 }
 
+const buildDeployClauseUrl = (url: string): Connex.Vendor.TxMessage => {
+  const constructorParameters = web3.eth.abi
+    .encodeParameters(["string"], [url])
+    .replace("0x", "")
+
+  const byteCodeWithParameters = CompiledVIP180.bytecode + constructorParameters
+
+  const deployClause: ClauseType = {
+    data: byteCodeWithParameters,
+    to: null,
+    value: "0x0",
+    abi: CompiledVIP180.abi,
+  }
+
+  return [deployClause]
+}
+
 const buildMintClause = async (
   recipients: TokenReceiver[],
   tokenAddress: string
@@ -89,6 +106,7 @@ const getBalance = async (address: string, tokenAddress: string) => {
 
 export default {
   buildDeployClause,
+  buildDeployClauseUrl,
   buildMintClause,
   getToken,
   getBalance,
