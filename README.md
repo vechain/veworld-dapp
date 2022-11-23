@@ -24,6 +24,11 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+If you wish to serve the production build locally:
+`yarn build`
+`npm install -g serve`
+`serve -s build`
+
 ### `yarn eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
