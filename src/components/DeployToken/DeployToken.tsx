@@ -51,8 +51,8 @@ const DeployToken: React.FC = () => {
 
       const { txid } = await TransactionsService.requestTransaction(
         selectedAccount.address,
-        clause
-        //form.delegateURL
+        clause,
+        form.delegateURL
       )
       setTxId(txid)
       setTxStatus(TxStage.POLLING_TX)
