@@ -213,7 +213,8 @@ const DeployToken: React.FC = () => {
             <Text strong>Contract Decimals:</Text>
             <Text ellipsis>{token.decimals}</Text>
             <Text strong>Contract address:</Text>
-            <Text copyable type="success" ellipsis>
+            <Text copyable={{ text: token.address }} />
+            <Text data-testid="token-address" type="success" ellipsis>
               {token.address}
             </Text>
           </>
