@@ -16,10 +16,6 @@ permissions:
   id-token: write
   packages: write
 
-# Allow one concurrent deployment
-concurrency:
-  cancel-in-progress: true
-
 jobs:
   build-docker:
     runs-on: ubuntu-latest
