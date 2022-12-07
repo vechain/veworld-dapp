@@ -142,7 +142,11 @@ const MintToken: React.FC = () => {
           <Footer className="spacer-x">
             <Row>
               <Col>
-                <Button type={"primary"} htmlType="submit">
+                <Button
+                  id={"mintTokensButton"}
+                  type={"primary"}
+                  htmlType="submit"
+                >
                   Mint Tokens
                 </Button>
               </Col>
@@ -174,7 +178,10 @@ const MintTokenRecipient: React.FC = () => {
                     },
                   ]}
                 >
-                  <Input placeholder="VeChain Address" />
+                  <Input
+                    id={`recipient-address-${index}`}
+                    placeholder="VeChain Address"
+                  />
                 </Form.Item>
 
                 <Form.Item
@@ -188,7 +195,10 @@ const MintTokenRecipient: React.FC = () => {
                     },
                   ]}
                 >
-                  <Input placeholder="Amount of tokens" />
+                  <Input
+                    id={`token-amount-${index}`}
+                    placeholder="Amount of tokens"
+                  />
                 </Form.Item>
                 {fields.length > 1 ? (
                   <Button
@@ -206,6 +216,7 @@ const MintTokenRecipient: React.FC = () => {
             <Divider />
             <Form.Item>
               <Button
+                id={"addRecipientButton"}
                 type="dashed"
                 onClick={() => add()}
                 style={{ width: "60%" }}

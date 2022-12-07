@@ -87,7 +87,9 @@ const ConnectToExtension: React.FC = () => {
         {wallet.accounts.length === 0 ? (
           <>
             <Text strong>Connect to VeWorld Extension</Text>
-            <Button onClick={connectHandler}>Connect to wallet</Button>
+            <Button id={"connectWalletButton"} onClick={connectHandler}>
+              Connect to wallet
+            </Button>
           </>
         ) : (
           <>

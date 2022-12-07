@@ -144,7 +144,7 @@ const DeployToken: React.FC = () => {
                       },
                     ]}
                   >
-                    <Input name="tokenName" />
+                    <Input id={"tokenNameInput"} name="tokenName" />
                   </Form.Item>
                   <Form.Item
                     label={"Token Symbol"}
@@ -162,7 +162,7 @@ const DeployToken: React.FC = () => {
                       },
                     ]}
                   >
-                    <Input name={"tokenSymbol"} />
+                    <Input id={"tokenSymbolInput"} name={"tokenSymbol"} />
                   </Form.Item>
                   <Form.Item
                     label={"Decimals"}
@@ -178,7 +178,11 @@ const DeployToken: React.FC = () => {
                       },
                     ]}
                   >
-                    <Input type={"number"} name={"decimals"} />
+                    <Input
+                      id={"decimalsInput"}
+                      type={"number"}
+                      name={"decimals"}
+                    />
                   </Form.Item>
                   <Form.Item
                     label={"URL"}
@@ -191,12 +195,20 @@ const DeployToken: React.FC = () => {
                       },
                     ]}
                   >
-                    <Input type={"url"} name="delegateURL" />
+                    <Input
+                      id={"delegationUrlInput"}
+                      type={"url"}
+                      name="delegateURL"
+                    />
                   </Form.Item>
                 </Layout>
                 <Footer className="spacer-x">
                   <Row>
-                    <Button type={"primary"} htmlType="submit">
+                    <Button
+                      id={"deployTokenButton"}
+                      type={"primary"}
+                      htmlType="submit"
+                    >
                       Deploy Token
                     </Button>
                   </Row>
@@ -214,7 +226,7 @@ const DeployToken: React.FC = () => {
             <Text ellipsis>{token.decimals}</Text>
             <Text strong>Contract address:</Text>
             <Text copyable={{ text: token.address }} />
-            <Text data-testid="token-address" type="success" ellipsis>
+            <Text id="tokenAddress" type="success" ellipsis>
               {token.address}
             </Text>
           </>
