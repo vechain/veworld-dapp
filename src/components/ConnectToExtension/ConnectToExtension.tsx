@@ -9,6 +9,7 @@ import {
 } from "../../store/walletSlice"
 import { Alert, Button, Card, Select, Typography } from "antd"
 import { getErrorMessage } from "../../utils/ExtensionUtils"
+import ConnexService from "../../service/ConnexService"
 
 const { Text } = Typography
 
@@ -36,21 +37,25 @@ const ConnectToExtension: React.FC = () => {
   const getAccounts = async () => {
     if (!window.vechain) return
 
-    const accounts = await window.vechain.requestAccounts()
+    const connex = await ConnexService.getConnex()
 
-    if (accounts.length > 0) {
-      const walletAccounts: WalletAccount[] = accounts.map(
-        (address: string) => {
-          return {
-            address,
-            selected: false,
-          }
-        }
-      )
+    const signedCert = await connex.vendor
+      .sign("cert", {
+        purpose: "identification",
+        payload: {
+          type: "text",
+          content: "Sign a certificate to prove your identity",
+        },
+      })
+      .request()
 
-      dispatch(updateAccounts(walletAccounts))
-      dispatch(selectAccount(walletAccounts[0].address))
+    const walletAccount: WalletAccount = {
+      address: signedCert.annex.signer,
+      selected: true,
     }
+
+    dispatch(updateAccounts([walletAccount]))
+    dispatch(selectAccount(walletAccount.address))
   }
 
   const ErrorAlert = () => {
@@ -82,7 +87,9 @@ const ConnectToExtension: React.FC = () => {
         {wallet.accounts.length === 0 ? (
           <>
             <Text strong>Connect to VeWorld Extension</Text>
-            <Button onClick={connectHandler}>Connect to wallet</Button>
+            <Button id={"connectWalletButton"} onClick={connectHandler}>
+              Connect to wallet
+            </Button>
           </>
         ) : (
           <>
