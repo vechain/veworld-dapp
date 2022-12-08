@@ -17,6 +17,7 @@ const ConnectToExtension: React.FC = () => {
   const wallet = useAppSelector(getWallet)
   const selectedAccount = useAppSelector(getSelectedAccount)
 
+  const [waitingForExtension, setWaitingForExtension] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [warning, setWarning] = useState<string | null>(null)
   const dispatch = useAppDispatch()
@@ -37,25 +38,33 @@ const ConnectToExtension: React.FC = () => {
   const getAccounts = async () => {
     if (!window.vechain) return
 
-    const connex = await ConnexService.getConnex()
+    try {
+      const connex = await ConnexService.getConnex()
 
-    const signedCert = await connex.vendor
-      .sign("cert", {
-        purpose: "identification",
-        payload: {
-          type: "text",
-          content: "Sign a certificate to prove your identity",
-        },
-      })
-      .request()
+      setWaitingForExtension(true)
 
-    const walletAccount: WalletAccount = {
-      address: signedCert.annex.signer,
-      selected: true,
+      const signedCert = await connex.vendor
+        .sign("cert", {
+          purpose: "identification",
+          payload: {
+            type: "text",
+            content: "Sign a certificate to prove your identity",
+          },
+        })
+        .request()
+
+      const walletAccount: WalletAccount = {
+        address: signedCert.annex.signer,
+        selected: true,
+      }
+
+      dispatch(updateAccounts([walletAccount]))
+      dispatch(selectAccount(walletAccount.address))
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setWaitingForExtension(false)
     }
-
-    dispatch(updateAccounts([walletAccount]))
-    dispatch(selectAccount(walletAccount.address))
   }
 
   const ErrorAlert = () => {
@@ -90,6 +99,13 @@ const ConnectToExtension: React.FC = () => {
             <Button id={"connectWalletButton"} onClick={connectHandler}>
               Connect to wallet
             </Button>
+            {waitingForExtension && (
+              <Alert
+                message={`Waiting for response from VeWorld extension`}
+                type={"warning"}
+                showIcon
+              />
+            )}
           </>
         ) : (
           <>
