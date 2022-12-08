@@ -98,10 +98,10 @@ const ConnectToExtension: React.FC = () => {
               onChange={(key) => dispatch(selectAccount(key))}
               defaultValue={selectedAccount?.address}
             >
-              {wallet.accounts.map((acc) => {
+              {wallet.accounts.map((acc, index) => {
                 return (
                   <Select.Option key={acc.address} value={acc.address}>
-                    {acc.address}
+                    <Text id={`account-option-${index}`}>{acc.address}</Text>
                   </Select.Option>
                 )
               })}
