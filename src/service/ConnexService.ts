@@ -1,8 +1,6 @@
-import { Connex } from "@vechain/connex"
-import { ConnexOptions } from "@vechainfoundation/veworld-types/dist/model"
+import { Connex, Options } from "@vechain/connex"
 
 let connex: Connex
-let options: ConnexOptions
 
 const getConnex = async () => {
   if (!connex) await initConnex()
@@ -11,15 +9,12 @@ const getConnex = async () => {
 }
 
 const initConnex = async () => {
-  if (!window.vechain || !window.vechain.isVeWorld)
-    throw Error("Please install VeWorld extension")
-
-  options = {
+  const options: Options = {
     node: "https://vethor-node-test.vechaindev.com",
     network: "test",
   }
 
-  connex = await window.vechain.newConnex(options)
+  connex = new Connex(options)
 }
 
 export default {
