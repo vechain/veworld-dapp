@@ -24,7 +24,6 @@ const buildDeployClause = (
     data: byteCodeWithParameters,
     to: null,
     value: "0x0",
-    abi: CompiledVIP180.abi,
   }
 
   return [deployClause]
