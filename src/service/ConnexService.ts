@@ -1,8 +1,6 @@
-import { Connex } from "@vechain/connex"
-import { ConnexOptions } from "@vechainfoundation/veworld-types/dist/model"
+import { Connex, Options } from "@vechain/connex"
 
 let connex: Connex
-let options: ConnexOptions
 
 const soloGenesis = {
   number: 0,
@@ -33,15 +31,12 @@ const getConnex = async () => {
 }
 
 const initConnex = async () => {
-  if (!window.vechain || !window.vechain.isVeWorld)
-    throw Error("Please install VeWorld extension")
-
-  options = {
+  const options: Options = {
     node: "http://localhost:8669",
     network: soloGenesis,
   }
 
-  connex = await window.vechain.newConnex(options)
+  connex = new Connex(options)
 }
 
 export default {

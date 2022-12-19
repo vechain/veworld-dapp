@@ -21,6 +21,7 @@ root.render(
           <HashRouter>
             <Routes>
               <Route path="/" element={<Homepage />} />
+              <Route path="/tx-callback" element={<Homepage />} />
             </Routes>
           </HashRouter>
         </div>

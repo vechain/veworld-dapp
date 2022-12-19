@@ -184,6 +184,9 @@ const DeployToken: React.FC = () => {
                       name={"decimals"}
                     />
                   </Form.Item>
+                  <Text>
+                    Sample URL: https://sponsor-testnet.vechain.energy/by/147
+                  </Text>
                   <Form.Item
                     label={"Delegation URL (Optional)"}
                     className={generateAntClasses("delegateURL")}
