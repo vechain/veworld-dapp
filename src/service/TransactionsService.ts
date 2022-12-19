@@ -67,7 +67,7 @@ const requestTransaction = async (
   const request = connex.vendor
     .sign("tx", txMessage)
     .signer(signer)
-    .comment("Deploy a custom VIP181 Token")
+    .comment("Deploy a custom VIP180 Token")
     .link(linkUrl)
 
   if (delegateUrl) request.delegate(delegateUrl, signer)
