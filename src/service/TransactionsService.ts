@@ -58,12 +58,17 @@ const requestTransaction = async (
   txMessage: Connex.Vendor.TxMessage,
   delegateUrl?: string
 ) => {
+  const linkUrl = location.origin + "/tx-callback/{txid}"
+
+  console.log(linkUrl)
+
   const connex = await ConnexService.getConnex()
   console.log("url " + delegateUrl)
   const request = connex.vendor
     .sign("tx", txMessage)
     .signer(signer)
     .comment("Deploy a custom VIP181 Token")
+    .link(linkUrl)
 
   if (delegateUrl) request.delegate(delegateUrl, signer)
 
