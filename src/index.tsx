@@ -5,7 +5,7 @@ import reportWebVitals from "./reportWebVitals"
 import { Provider } from "react-redux"
 import { store } from "./store/store"
 
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { HashRouter, Route, Routes } from "react-router-dom"
 import Homepage from "./pages/Homepage/Homepage"
 import "react-toastify/dist/ReactToastify.css"
 import CustomToast from "./components/CustomToast"
@@ -19,12 +19,12 @@ root.render(
 
       <div className={"bg-gray-light h-screen w-screen"}>
         <div className={"bg-gray-lighter w-[750px] left-0 h-full"}>
-          <BrowserRouter>
+          <HashRouter>
             <Routes>
               <Route path="/" element={<Homepage />} />
               <Route path="/tx-callback/:txid" element={<TxCallback />} />
             </Routes>
-          </BrowserRouter>
+          </HashRouter>
         </div>
       </div>
     </Provider>

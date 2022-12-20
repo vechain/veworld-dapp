@@ -63,7 +63,7 @@ const requestTransaction = async (
   const request = connex.vendor
     .sign("tx", txMessage)
     .signer(signer)
-    .link(window.location.href + "tx-callback/{txid}")
+    .link(window.location.href + "#/tx-callback/{txid}")
 
   if (comment) request.comment(comment)
   if (delegateUrl) request.delegate(delegateUrl, signer)
