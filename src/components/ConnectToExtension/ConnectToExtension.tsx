@@ -62,6 +62,7 @@ const ConnectToExtension: React.FC = () => {
       dispatch(selectAccount(walletAccount.address))
     } catch (e) {
       console.error(e)
+      setError(getErrorMessage(e))
     } finally {
       setWaitingForExtension(false)
     }

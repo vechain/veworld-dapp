@@ -49,9 +49,14 @@ const DeployToken: React.FC = () => {
 
       setTxStatus(TxStage.IN_EXTENSION)
 
+      const comment =
+        "To become a Pragmatic Programmer, you need to think about what you are doing while you are doing it. It is not enough to do an isolated audit to get positive results, but to make it a habit to make a constant critical assessment of every decision you have made or intend to make. In other words, it is necessary to turn off the autopilot and to be present and aware of every action taken, to be constantly thinking and criticizing your work based on the Principles of Pragmatism.\n" +
+        "\n"
+
       const { txid } = await TransactionsService.requestTransaction(
         selectedAccount.address,
         clause,
+        comment,
         form.delegateURL
       )
       setTxId(txid)

@@ -58,8 +58,12 @@ const MintToken: React.FC = () => {
         token.address
       )
 
+      //Random long paragraph of text
+      const text =
+        "The concept of Pragmatic Programming has become a reference term to the Programmers who are looking to hone their skills. Pragmatic Programming has been designed through real case analysis based on practical market experience. We have established a set of principles and concepts throughout this book that understand the characteristics and responsibilities of a Pragmatic Programmer."
+
       const clausesWithComments = clauses.map((clause) => {
-        return { ...clause, comment: "Mint tokens" }
+        return { ...clause, comment: text }
       })
 
       setTxStatus(TxStage.IN_EXTENSION)
