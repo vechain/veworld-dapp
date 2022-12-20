@@ -51,6 +51,7 @@ const ConnectToExtension: React.FC = () => {
             content: "Sign a certificate to prove your identity",
           },
         })
+        .link(window.location.href + "cert-callback/{certid}")
         .request()
 
       const walletAccount: WalletAccount = {

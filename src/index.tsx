@@ -5,10 +5,11 @@ import reportWebVitals from "./reportWebVitals"
 import { Provider } from "react-redux"
 import { store } from "./store/store"
 
-import { HashRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Homepage from "./pages/Homepage/Homepage"
 import "react-toastify/dist/ReactToastify.css"
 import CustomToast from "./components/CustomToast"
+import TxCallback from "./pages/TxCallback/TxCallback"
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
@@ -18,12 +19,12 @@ root.render(
 
       <div className={"bg-gray-light h-screen w-screen"}>
         <div className={"bg-gray-lighter w-[750px] left-0 h-full"}>
-          <HashRouter>
+          <BrowserRouter>
             <Routes>
               <Route path="/" element={<Homepage />} />
-              <Route path="/tx-callback/{txid}" element={<Homepage />} />
+              <Route path="/tx-callback/:txid" element={<TxCallback />} />
             </Routes>
-          </HashRouter>
+          </BrowserRouter>
         </div>
       </div>
     </Provider>

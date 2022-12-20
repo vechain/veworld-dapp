@@ -59,16 +59,11 @@ const requestTransaction = async (
   comment?: string,
   delegateUrl?: string
 ) => {
-  const linkUrl = location.origin + "/tx-callback/{txid}"
-
-  console.log("Link: ", linkUrl)
-  console.log("Delegation ", delegateUrl)
-
   const connex = await ConnexService.getConnex()
   const request = connex.vendor
     .sign("tx", txMessage)
     .signer(signer)
-    .link(linkUrl)
+    .link(window.location.href + "tx-callback/{txid}")
 
   if (comment) request.comment(comment)
   if (delegateUrl) request.delegate(delegateUrl, signer)
