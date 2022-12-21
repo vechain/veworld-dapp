@@ -10,6 +10,7 @@ import {
 import { Alert, Button, Card, Select, Typography } from "antd"
 import { getErrorMessage } from "../../utils/ExtensionUtils"
 import ConnexService from "../../service/ConnexService"
+import { Certificate } from "thor-devkit"
 
 const { Text } = Typography
 
@@ -43,19 +44,39 @@ const ConnectToExtension: React.FC = () => {
 
       setWaitingForExtension(true)
 
-      const signedCert = await connex.vendor
-        .sign("cert", {
-          purpose: "identification",
-          payload: {
-            type: "text",
-            content: "Sign a certificate to prove your identity",
-          },
-        })
+      const message: Connex.Vendor.CertMessage = {
+        purpose: "identification",
+        payload: {
+          type: "text",
+          content: "Sign a certificate to prove your identity",
+        },
+      }
+
+      const certResponse = await connex.vendor
+        .sign("cert", message)
         .link(window.location.href + "#/cert-callback/{certid}")
         .request()
 
+      const cert: Certificate = {
+        purpose: message.purpose,
+        payload: message.payload,
+        domain: certResponse.annex.domain,
+        timestamp: certResponse.annex.timestamp,
+        signer: certResponse.annex.signer,
+        signature: certResponse.signature,
+      }
+
+      try {
+        console.log("Signed cert", cert)
+        Certificate.verify(cert)
+        console.log("Cert verified")
+      } catch (e) {
+        console.error(e)
+        setError(getErrorMessage(e))
+      }
+
       const walletAccount: WalletAccount = {
-        address: signedCert.annex.signer,
+        address: cert.signer,
         selected: true,
       }
 
