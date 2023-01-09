@@ -15,8 +15,6 @@ const TokenBalance: React.FC<{
   const [updateTime, setUpdateTime] = useState<number>()
 
   useEffect(() => {
-    if (!token || !accountAddress) return
-
     refreshBalance().then(() => {
       setUpdateTime(Date.now())
     })

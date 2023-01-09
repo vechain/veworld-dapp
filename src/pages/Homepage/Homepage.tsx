@@ -56,6 +56,7 @@ const Homepage: React.FC = () => {
 
   const clearState = () => {
     LocalStorageService.clear()
+    ConnexService.clear()
     setAccount(undefined)
     setToken(undefined)
     setNetwork(undefined)

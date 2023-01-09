@@ -1,7 +1,7 @@
 import { Connex } from "@vechain/connex"
 import { WalletSource } from "./LocalStorageService"
 
-let connex: Connex
+let connex: Connex | undefined
 
 export enum Network {
   MAIN = "main",
@@ -27,7 +27,12 @@ const getConnex = async () => {
   return connex
 }
 
+const clear = () => {
+  connex = undefined
+}
+
 export default {
   getConnex,
   initialise,
+  clear,
 }
