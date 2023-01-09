@@ -1,46 +1,34 @@
 import React, { useState } from "react"
-import { useAppDispatch, useAppSelector } from "../../store/hooks"
-import {
-  getSelectedAccount,
-  getWallet,
-  selectAccount,
-  updateAccounts,
-  WalletAccount,
-} from "../../store/walletSlice"
-import { Alert, Button, Card, Select, Typography } from "antd"
+import { Alert, Button, Card, Form, Radio } from "antd"
 import { getErrorMessage } from "../../utils/ExtensionUtils"
-import ConnexService from "../../service/ConnexService"
+import ConnexService, { Network } from "../../service/ConnexService"
 import { Certificate } from "thor-devkit"
+import { WalletSource } from "../../service/LocalStorageService"
+import { AccountState } from "../../pages/Homepage/Homepage"
 
-const { Text } = Typography
+interface ConnectForm {
+  network: Network
+  source: WalletSource
+}
 
-const ConnectToExtension: React.FC = () => {
-  const wallet = useAppSelector(getWallet)
-  const selectedAccount = useAppSelector(getSelectedAccount)
+const DEFAULT_NETWORK = Network.TEST
+const DEFAULT_SOURCE = WalletSource.VEWORLD
 
+const ConnectToExtension: React.FC<{
+  setAccount: (account: AccountState) => void
+  setNetwork: (network: Network) => void
+}> = ({ setAccount, setNetwork }) => {
   const [waitingForExtension, setWaitingForExtension] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [warning, setWarning] = useState<string | null>(null)
-  const dispatch = useAppDispatch()
+  const [form] = Form.useForm<ConnectForm>()
 
-  const connectHandler = async () => {
-    if (!window.vechain) {
-      return setError("VeChain extension not found")
-    }
-
+  const connectHandler = async (form: ConnectForm) => {
     try {
-      await getAccounts()
-    } catch (e) {
-      console.error(e)
-      setError(getErrorMessage(e))
-    }
-  }
+      form.source = form.source || DEFAULT_SOURCE
+      form.network = form.network || DEFAULT_NETWORK
 
-  const getAccounts = async () => {
-    if (!window.vechain) return
-
-    try {
-      const connex = await ConnexService.getConnex()
+      const connex = ConnexService.initialise(form.source, form.network)
 
       setWaitingForExtension(true)
 
@@ -52,10 +40,7 @@ const ConnectToExtension: React.FC = () => {
         },
       }
 
-      const certResponse = await connex.vendor
-        .sign("cert", message)
-        .link(window.location.href + "#/cert-callback/{certid}")
-        .request()
+      const certResponse = await connex.vendor.sign("cert", message).request()
 
       const cert: Certificate = {
         purpose: message.purpose,
@@ -75,13 +60,11 @@ const ConnectToExtension: React.FC = () => {
         setError(getErrorMessage(e))
       }
 
-      const walletAccount: WalletAccount = {
+      setAccount({
         address: cert.signer,
-        selected: true,
-      }
-
-      dispatch(updateAccounts([walletAccount]))
-      dispatch(selectAccount(walletAccount.address))
+        source: form.source,
+      })
+      setNetwork(form.network)
     } catch (e) {
       console.error(e)
       setError(getErrorMessage(e))
@@ -116,36 +99,31 @@ const ConnectToExtension: React.FC = () => {
   return (
     <>
       <Card actions={error ? [<ErrorAlert key={"error"} />] : undefined}>
-        {wallet.accounts.length === 0 ? (
-          <>
-            <Text strong>Connect to VeWorld Extension</Text>
-            <Button id={"connectWalletButton"} onClick={connectHandler}>
-              Connect to wallet
-            </Button>
-            {waitingForExtension && (
-              <Alert
-                message={`Waiting for response from VeWorld extension`}
-                type={"warning"}
-                showIcon
-              />
-            )}
-          </>
-        ) : (
-          <>
-            <Text strong>Select an account:</Text>
-            <Select
-              onChange={(key) => dispatch(selectAccount(key))}
-              defaultValue={selectedAccount?.address}
-            >
-              {wallet.accounts.map((acc, index) => {
-                return (
-                  <Select.Option key={acc.address} value={acc.address}>
-                    <Text id={`account-option-${index}`}>{acc.address}</Text>
-                  </Select.Option>
-                )
-              })}
-            </Select>
-          </>
+        <Form onFinish={connectHandler} form={form}>
+          <Form.Item label="Network" name="network">
+            <Radio.Group defaultValue={DEFAULT_NETWORK}>
+              <Radio.Button value={Network.TEST}>Test Net</Radio.Button>
+              <Radio.Button value={Network.MAIN}>Main Net</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
+
+          <Form.Item label="Wallet" name="source">
+            <Radio.Group defaultValue={DEFAULT_SOURCE}>
+              <Radio.Button value={WalletSource.VEWORLD}>VeWorld</Radio.Button>
+              <Radio.Button value={WalletSource.SYNC2}>Sync 2</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
+
+          <Button id={"connectWalletButton"} htmlType={"submit"}>
+            Connect Wallet
+          </Button>
+        </Form>
+        {waitingForExtension && (
+          <Alert
+            message={`Waiting for response from Wallet`}
+            type={"warning"}
+            showIcon
+          />
         )}
       </Card>
     </>

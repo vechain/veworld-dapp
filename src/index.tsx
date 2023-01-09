@@ -2,8 +2,6 @@ import React from "react"
 import ReactDOM from "react-dom/client"
 import "./index.css"
 import reportWebVitals from "./reportWebVitals"
-import { Provider } from "react-redux"
-import { store } from "./store/store"
 
 import { HashRouter, Route, Routes } from "react-router-dom"
 import Homepage from "./pages/Homepage/Homepage"
@@ -14,20 +12,18 @@ import TxCallback from "./pages/TxCallback/TxCallback"
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <CustomToast />
+    <CustomToast />
 
-      <div className={"bg-gray-light h-screen w-screen"}>
-        <div className={"bg-gray-lighter w-[750px] left-0 h-full"}>
-          <HashRouter>
-            <Routes>
-              <Route path="/" element={<Homepage />} />
-              <Route path="/tx-callback/:txid" element={<TxCallback />} />
-            </Routes>
-          </HashRouter>
-        </div>
+    <div className={"bg-gray-light h-screen w-screen"}>
+      <div className={"bg-gray-lighter w-[750px] left-0 h-full"}>
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/tx-callback/:txid" element={<TxCallback />} />
+          </Routes>
+        </HashRouter>
       </div>
-    </Provider>
+    </div>
   </React.StrictMode>
 )
 

@@ -1,22 +1,33 @@
-import { Connex, Options } from "@vechain/connex"
+import { Connex } from "@vechain/connex"
+import { WalletSource } from "./LocalStorageService"
 
 let connex: Connex
 
-const getConnex = async () => {
-  if (!connex) await initConnex()
+export enum Network {
+  MAIN = "main",
+  TEST = "test",
+}
+
+const TEST_NET = "https://vethor-node-test.vechaindev.com"
+const MAIN_NET = "https://vethor-node.vechain.com"
+
+const initialise = (walletSource: WalletSource, network: Network) => {
+  connex = new Connex({
+    node: network === Network.MAIN ? MAIN_NET : TEST_NET,
+    network,
+    noExtension: walletSource === WalletSource.SYNC2,
+  })
 
   return connex
 }
 
-const initConnex = async () => {
-  const options: Options = {
-    node: "https://vethor-node-test.vechaindev.com",
-    network: "test",
-  }
+const getConnex = async () => {
+  if (!connex) throw new Error("Connex not initialised")
 
-  connex = new Connex(options)
+  return connex
 }
 
 export default {
   getConnex,
+  initialise,
 }

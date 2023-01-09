@@ -4,8 +4,7 @@ import { ClauseType } from "../model/Transaction"
 import Web3 from "web3"
 import VIP180Abi from "../vechain/VIP180.abi"
 import { Connex } from "@vechain/connex"
-import { Token } from "../store/tokenSlice"
-import { TokenReceiver } from "../model/Token"
+import { Token } from "../pages/Homepage/Homepage"
 
 const web3 = new Web3()
 
@@ -30,18 +29,20 @@ const buildDeployClause = (
 }
 
 const buildMintClause = async (
-  recipients: TokenReceiver[],
+  address: string,
+  tokenAmount: number,
+  clauseAmount: number,
   tokenAddress: string
 ): Promise<Connex.Vendor.TxMessage> => {
   const connex = await ConnexService.getConnex()
 
   const clauses = []
 
-  for (const recipient of recipients) {
+  for (let i = 0; i < clauseAmount; i++) {
     const clause = connex.thor
       .account(tokenAddress)
       .method(VIP180Abi.mint)
-      .asClause(recipient.address, recipient.amount)
+      .asClause(address, tokenAmount)
 
     clauses.push(clause)
   }

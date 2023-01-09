@@ -1,14 +1,10 @@
 import React, { useState } from "react"
-import { useAppSelector } from "../../store/hooks"
-import { getToken } from "../../store/tokenSlice"
-import { getSelectedAccount } from "../../store/walletSlice"
 import { Content, Footer } from "antd/es/layout/layout"
 import {
   Alert,
   Button,
   Card,
   Col,
-  Divider,
   Form,
   Input,
   Layout,
@@ -18,24 +14,25 @@ import {
 import TransactionStatus from "../TransactionStatus/TransactionStatus"
 import useFormEvents from "../../hooks/FormEvents"
 import { TxStage } from "../../model/Transaction"
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import VIP180Service from "../../service/VIP180Service"
 import { toast } from "react-toastify"
 import FormUtils from "../../utils/FormUtils"
 import TransactionsService from "../../service/TransactionsService"
-import { TokenReceiver } from "../../model/Token"
 import { getErrorMessage } from "../../utils/ExtensionUtils"
+import { Token } from "../../pages/Homepage/Homepage"
 
 const { Text } = Typography
 
 interface MintTokenForm {
-  receivers: TokenReceiver[]
+  address: string
+  tokenAmount: number
+  clauseAmount: number
 }
 
-const MintToken: React.FC = () => {
-  const token = useAppSelector(getToken)
-  const account = useAppSelector(getSelectedAccount)
-
+const MintToken: React.FC<{ accountAddress: string; token: Token }> = ({
+  accountAddress,
+  token,
+}) => {
   const [mintTokenForm] = Form.useForm<MintTokenForm>()
   const { onFormBlur, onFormFocus } = useFormEvents(mintTokenForm)
 
@@ -43,18 +40,17 @@ const MintToken: React.FC = () => {
   const [txId, setTxId] = useState<string | undefined>()
   const [error, setError] = useState<string | null>(null)
 
-  if (!token.address || !account) return <></>
-
   const mintToken = async (form: MintTokenForm) => {
     setError(null)
     if (!token.address) return toast.error("Token address not found")
-    if (form.receivers.length < 1) return toast.error("No receivers found")
 
     try {
       setTxStatus(TxStage.NONE)
 
       const clauses = await VIP180Service.buildMintClause(
-        form.receivers,
+        form.address,
+        form.tokenAmount,
+        form.clauseAmount,
         token.address
       )
 
@@ -69,7 +65,7 @@ const MintToken: React.FC = () => {
       setTxStatus(TxStage.IN_EXTENSION)
 
       const { txid } = await TransactionsService.requestTransaction(
-        account.address,
+        accountAddress,
         clausesWithComments
       )
       setTxId(txid)
@@ -164,74 +160,49 @@ const MintToken: React.FC = () => {
 
 const MintTokenRecipient: React.FC = () => {
   return (
-    <Form.List name="receivers">
-      {(fields, { add, remove }) => {
-        return (
-          <div>
-            {fields.map((field, index) => (
-              <div key={field.key}>
-                <Divider>Recipient {index + 1}</Divider>
-                <Form.Item
-                  name={[index, "address"]}
-                  label="Receiver Address"
-                  rules={[
-                    {
-                      required: true,
-                      validator: FormUtils.validateAddress,
-                      message: "Please input a valid address",
-                    },
-                  ]}
-                >
-                  <Input
-                    id={`recipient-address-${index}`}
-                    placeholder="VeChain Address"
-                  />
-                </Form.Item>
+    <>
+      <Form.Item
+        name={"address"}
+        label="Receiver Address"
+        rules={[
+          {
+            required: true,
+            validator: FormUtils.validateAddress,
+            message: "Please input a valid address",
+          },
+        ]}
+      >
+        <Input id={`recipient-address`} placeholder="VeChain Address" />
+      </Form.Item>
+      <Form.Item
+        name={"tokenAmount"}
+        label="Token Amount"
+        rules={[
+          {
+            required: true,
+            min: 1,
+            message: "Amount must be greater than 0",
+          },
+        ]}
+      >
+        <Input id={`token-amount`} placeholder="Amount of tokens" />
+      </Form.Item>
 
-                <Form.Item
-                  name={[index, "amount"]}
-                  label="Amount"
-                  rules={[
-                    {
-                      required: true,
-                      min: 1,
-                      message: "Amount must be greater than 0",
-                    },
-                  ]}
-                >
-                  <Input
-                    id={`token-amount-${index}`}
-                    placeholder="Amount of tokens"
-                  />
-                </Form.Item>
-                {fields.length > 1 ? (
-                  <Button
-                    danger={true}
-                    className="dynamic-delete-button"
-                    onClick={() => remove(field.name)}
-                    icon={<MinusCircleOutlined />}
-                    style={{ width: "100%" }}
-                  >
-                    Remove
-                  </Button>
-                ) : null}
-              </div>
-            ))}
-            <Divider />
-            <Form.Item>
-              <Button
-                id={"addRecipientButton"}
-                type="dashed"
-                onClick={() => add()}
-                style={{ width: "60%" }}
-              >
-                <PlusOutlined /> Add Recipient
-              </Button>
-            </Form.Item>
-          </div>
-        )
-      }}
-    </Form.List>
+      <Form.Item
+        name={"clauseAmount"}
+        label="Number of Clauses"
+        rules={[
+          {
+            required: true,
+            min: 1,
+            max: 100,
+            message: "Must be between 1 and 100",
+          },
+        ]}
+      >
+        <Input id={`clause-amount`} placeholder="Amount of clauses" />
+      </Form.Item>
+    </>
   )
 }
 

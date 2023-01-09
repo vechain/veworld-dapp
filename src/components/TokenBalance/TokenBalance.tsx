@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react"
-import { getToken } from "../../store/tokenSlice"
-import { useAppSelector } from "../../store/hooks"
-import { getSelectedAccount } from "../../store/walletSlice"
 import { Card, Layout, Typography } from "antd"
 import { Content } from "antd/es/layout/layout"
 import ConnexService from "../../service/ConnexService"
 import VIP180Service from "../../service/VIP180Service"
+import { Token } from "../../pages/Homepage/Homepage"
 
 const { Text } = Typography
 
-const TokenBalance: React.FC = () => {
-  const token = useAppSelector(getToken)
-  const account = useAppSelector(getSelectedAccount)
+const TokenBalance: React.FC<{
+  token: Token
+  accountAddress: string
+}> = ({ token, accountAddress }) => {
   const [balance, setBalance] = useState<string>()
   const [updateTime, setUpdateTime] = useState<number>()
 
   useEffect(() => {
-    if (!token || !account) return
+    if (!token || !accountAddress) return
 
     refreshBalance().then(() => {
       setUpdateTime(Date.now())
@@ -25,14 +24,14 @@ const TokenBalance: React.FC = () => {
   }, [updateTime])
 
   const refreshBalance = async () => {
-    if (!token.address || !account) return
+    if (!token.address || !accountAddress) return
 
     const newBalance = await VIP180Service.getBalance(
-      account.address,
+      accountAddress,
       token.address
     )
 
-    console.log(`Account (${account.address}) balance: ${newBalance}`)
+    console.log(`Account (${accountAddress}) balance: ${newBalance}`)
 
     setBalance(newBalance)
 
@@ -41,17 +40,15 @@ const TokenBalance: React.FC = () => {
     await connex.thor.ticker().next()
   }
 
-  if (!token.address || !account) return <></>
-
   return (
     <Card className={"my-10"}>
       <Content className="h-full">
         <Layout className={"viewport"}>
           <Text strong className={"font-sans text-base font-normal"}>
-            Account:
+            Contract Address:
           </Text>
           <Text copyable className={"font-sans text-base font-normal"}>
-            {account.address}
+            {token.address}
           </Text>
           <Text strong className={"font-sans text-base font-normal"}>
             Token Balance:
