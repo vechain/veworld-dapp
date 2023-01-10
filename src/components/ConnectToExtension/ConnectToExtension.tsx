@@ -4,7 +4,7 @@ import { getErrorMessage } from "../../utils/ExtensionUtils"
 import ConnexService, { Network } from "../../service/ConnexService"
 import { Certificate } from "thor-devkit"
 import { WalletSource } from "../../service/LocalStorageService"
-import { AccountState } from "../../pages/Homepage/Homepage"
+import { IAccount } from "../../model/State"
 
 interface ConnectForm {
   network: Network
@@ -15,7 +15,7 @@ const DEFAULT_NETWORK = Network.TEST
 const DEFAULT_SOURCE = WalletSource.VEWORLD
 
 const ConnectToExtension: React.FC<{
-  setAccount: (account: AccountState) => void
+  setAccount: (account: IAccount) => void
   setNetwork: (network: Network) => void
 }> = ({ setAccount, setNetwork }) => {
   const [waitingForExtension, setWaitingForExtension] = useState(false)

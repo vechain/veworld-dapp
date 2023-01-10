@@ -1,5 +1,6 @@
 import { Network } from "./ConnexService"
-import { AccountState, Token } from "../pages/Homepage/Homepage"
+import { Token } from "../pages/Homepage/Homepage"
+import { IAccount } from "../model/State"
 
 export const ACCOUNT_KEY = "PREVIOUS_ACCOUNT_KEY"
 export const TOKEN_KEY = "TOKEN_KEY"
@@ -10,11 +11,11 @@ export enum WalletSource {
   SYNC2 = "sync2",
 }
 
-const setAccount = (account: AccountState) => {
+const setAccount = (account: IAccount) => {
   localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account))
 }
 
-const getAccount = (): AccountState | undefined => {
+const getAccount = (): IAccount | undefined => {
   const previousAccount = localStorage.getItem(ACCOUNT_KEY)
 
   if (previousAccount) {

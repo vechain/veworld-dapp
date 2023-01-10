@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { Layout } from "antd"
 import ConnectToExtension from "../../components/ConnectToExtension/ConnectToExtension"
 import DeployToken from "../../components/DeployToken/DeployToken"
 import TokenBalance from "../../components/TokenBalance/TokenBalance"
 import MintToken from "../../components/MintToken/MintToken"
-import ConnexService, { Network } from "../../service/ConnexService"
-import LocalStorageService, {
-  WalletSource,
-} from "../../service/LocalStorageService"
+import { Network } from "../../service/ConnexService"
+import LocalStorageService from "../../service/LocalStorageService"
 import Account from "../../components/Account/Account"
-
-export interface AccountState {
-  address: string
-  source: WalletSource
-}
+import { ActionType, useWallet } from "../../context/walletContext"
+import { IAccount } from "../../model/State"
 
 export interface Token {
   address?: string
@@ -23,44 +18,27 @@ export interface Token {
 }
 
 const Homepage: React.FC = () => {
-  const [account, setAccount] = useState<AccountState | undefined>(
-    LocalStorageService.getAccount()
-  )
-  const [network, setNetwork] = useState<Network | undefined>(
-    LocalStorageService.getNetwork()
-  )
   const [token, setToken] = useState<Token | undefined>(
     LocalStorageService.getToken()
   )
 
-  useEffect(() => {
-    if (account?.source && network) {
-      ConnexService.initialise(account.source, network)
-    }
-  }, [account, network, token])
-
-  const persistAccount = (account: AccountState) => {
-    setAccount(account)
-    LocalStorageService.setAccount(account)
-  }
-
-  const persistNetwork = (network: Network) => {
-    setNetwork(network)
-    LocalStorageService.setNetwork(network)
-  }
+  const {
+    state: { account, network },
+    dispatch,
+  } = useWallet()
 
   const persistToken = (token: Token) => {
     setToken(token)
     LocalStorageService.setToken(token)
   }
 
-  const clearState = () => {
-    LocalStorageService.clear()
-    ConnexService.clear()
-    setAccount(undefined)
-    setToken(undefined)
-    setNetwork(undefined)
-  }
+  const setAccount = (account: IAccount) =>
+    dispatch({ type: ActionType.SET_ACCOUNT, payload: account })
+
+  const setNetwork = (network: Network) =>
+    dispatch({ type: ActionType.SET_NETWORK, payload: network })
+
+  const clearState = () => dispatch({ type: ActionType.CLEAR })
 
   return (
     <div
@@ -86,10 +64,7 @@ const Homepage: React.FC = () => {
             )}
           </>
         ) : (
-          <ConnectToExtension
-            setAccount={persistAccount}
-            setNetwork={persistNetwork}
-          />
+          <ConnectToExtension setAccount={setAccount} setNetwork={setNetwork} />
         )}
       </Layout>
     </div>

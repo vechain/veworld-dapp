@@ -1,10 +1,10 @@
 import React from "react"
-import { AccountState } from "../../pages/Homepage/Homepage"
 import { Button, Card, Layout, Typography } from "antd"
 import { Content } from "antd/es/layout/layout"
+import { IAccount } from "../../model/State"
 
 interface AccountProps {
-  account: AccountState
+  account: IAccount
   clearState: () => void
 }
 
