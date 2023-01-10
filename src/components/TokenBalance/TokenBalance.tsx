@@ -19,7 +19,7 @@ const TokenBalance: React.FC<{
       setUpdateTime(Date.now())
     })
     //Refresh the balance every time `updateTime` is changed (Every block)
-  }, [accountAddress, token])
+  }, [updateTime, token, accountAddress])
 
   const refreshBalance = async () => {
     if (!token.address || !accountAddress) return
