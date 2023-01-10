@@ -9,6 +9,7 @@ import LocalStorageService from "../../service/LocalStorageService"
 import Account from "../../components/Account/Account"
 import { ActionType, useWallet } from "../../context/walletContext"
 import { IAccount } from "../../model/State"
+import NavBar from "../../components/Layout/Navbar"
 
 export interface Token {
   address?: string
@@ -41,32 +42,26 @@ const Homepage: React.FC = () => {
   const clearState = () => dispatch({ type: ActionType.CLEAR })
 
   return (
-    <div
-      className={
-        "h-full w-full py-10 flex flex-col justify-center items-center"
-      }
-    >
-      <Layout className={"w-[80%] float-center"}>
-        {account ? (
-          <>
-            <Account account={account} clearState={clearState} />
+    <div className={"flex flex-col justify-center items-center"}>
+      {account ? (
+        <>
+          <Account account={account} clearState={clearState} />
 
-            {token?.address ? (
-              <>
-                <TokenBalance accountAddress={account.address} token={token} />
-                <MintToken accountAddress={account.address} token={token} />
-              </>
-            ) : (
-              <DeployToken
-                setToken={persistToken}
-                accountAddress={account.address}
-              />
-            )}
-          </>
-        ) : (
-          <ConnectToExtension setAccount={setAccount} setNetwork={setNetwork} />
-        )}
-      </Layout>
+          {token?.address ? (
+            <>
+              <TokenBalance accountAddress={account.address} token={token} />
+              <MintToken accountAddress={account.address} token={token} />
+            </>
+          ) : (
+            <DeployToken
+              setToken={persistToken}
+              accountAddress={account.address}
+            />
+          )}
+        </>
+      ) : (
+        <ConnectToExtension setAccount={setAccount} setNetwork={setNetwork} />
+      )}
     </div>
   )
 }

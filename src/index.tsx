@@ -9,13 +9,16 @@ import Router from "./router"
 
 import "./index.css"
 import "react-toastify/dist/ReactToastify.css"
+import NavBar from "./components/Layout/Navbar"
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
+
 root.render(
   <React.StrictMode>
     <WalletProvider>
       <CustomToast />
-      <div className={"bg-gray-light h-screen w-screen"}>
-        <div className={"bg-gray-lighter w-[750px] left-0 h-full"}>
+      <div className={"w-full flex flex-col items-center justify-center"}>
+        <NavBar />
+        <div className={"max-w-6xl"}>
           <Router />
         </div>
       </div>
