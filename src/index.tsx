@@ -21,7 +21,7 @@ root.render(
       <WalletProvider>
         <CustomToast />
         <NavBar />
-        <Container maxW="6xl" bg="blue.600" centerContent>
+        <Container maxW="6xl" centerContent>
           <Router />
         </Container>
       </WalletProvider>

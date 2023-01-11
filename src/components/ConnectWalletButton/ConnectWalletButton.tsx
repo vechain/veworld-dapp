@@ -23,7 +23,6 @@ const ConnectWalletButton = () => {
         <Button
           colorScheme={"blue"}
           onClick={onOpen}
-          flex={1}
           leftIcon={<Icon as={WalletIcon} />}
         >
           {humanAddress(account.address)}
@@ -34,7 +33,7 @@ const ConnectWalletButton = () => {
   return (
     <>
       <ConnectWalletModal isOpen={isOpen} onClose={onClose} />
-      <Button onClick={onOpen} flex={1} leftIcon={<Icon as={WalletIcon} />}>
+      <Button onClick={onOpen} leftIcon={<Icon as={WalletIcon} />}>
         Connect Wallet
       </Button>
     </>

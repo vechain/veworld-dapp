@@ -1,4 +1,4 @@
-import { Icon, Box, Flex, Tag, Text } from "@chakra-ui/react"
+import { Icon, Box, Flex, Tag, Text, HStack } from "@chakra-ui/react"
 import React from "react"
 import Logo from "../Logo/Logo"
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher"
@@ -12,17 +12,17 @@ const NavBar: React.FC = () => {
   return (
     <Flex
       py={2}
-      px={4}
+      px={20}
       w={"full"}
       flexDirection="row"
       justifyContent="space-between"
       alignItems={"center"}
-      boxShadow="xs"
+      borderBottomWidth={"1px"}
     >
-      <Logo />
-      <Box width={"30%"}>
-        <NavBarWalletConnect />
+      <Box h="30px">
+        <Logo />
       </Box>
+      <NavBarWalletConnect />
     </Flex>
   )
 }
@@ -33,11 +33,11 @@ const NavBarWalletConnect = () => {
   } = useWallet()
 
   return (
-    <Flex gap={2} direction="row">
+    <HStack spacing={4}>
       {account && network && <NetworkBadge network={network} />}
       <ConnectWalletButton />
       <ThemeSwitcher />
-    </Flex>
+    </HStack>
   )
 }
 
@@ -46,10 +46,10 @@ interface INetworkBadge {
 }
 const NetworkBadge: React.FC<INetworkBadge> = ({ network }) => {
   return (
-    <Tag flexDir="row" gap={2}>
+    <HStack fontSize={"lg"} spacing={2}>
       <Icon as={GlobeAltIcon} />
       <Text>{NetworkInfo[network].name}</Text>
-    </Tag>
+    </HStack>
   )
 }
 const GlobalNetworkSwitcher = () => {
