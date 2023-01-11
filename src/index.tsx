@@ -7,22 +7,25 @@ import CustomToast from "./components/CustomToast"
 import { WalletProvider } from "./context/walletContext"
 import Router from "./router"
 
-import "./index.css"
+import "./styles/index.css"
 import "react-toastify/dist/ReactToastify.css"
 import NavBar from "./components/Layout/Navbar"
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
+import { ChakraProvider, Container } from "@chakra-ui/react"
+import Fonts from "./styles/Fonts"
+import theme from "./styles/Theme"
 
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
   <React.StrictMode>
-    <WalletProvider>
-      <CustomToast />
-      <div className={"w-full flex flex-col items-center justify-center"}>
+    <ChakraProvider theme={theme}>
+      <WalletProvider>
+        <CustomToast />
         <NavBar />
-        <div className={"max-w-6xl"}>
+        <Container maxW="2xl" bg="blue.600" centerContent>
           <Router />
-        </div>
-      </div>
-    </WalletProvider>
+        </Container>
+      </WalletProvider>
+    </ChakraProvider>
   </React.StrictMode>
 )
 
