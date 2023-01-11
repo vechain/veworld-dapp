@@ -10,10 +10,10 @@ const MenuDropdown: React.FC<IMenuDropdown> = ({ title, options }) => {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex w-full justify-center rounded-md bg-transparent bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+        <Menu.Button className="cursor-pointer  inline-flex w-full justify-center items-center rounded-md bg-transparent bg-opacity-20 px-4 py-2 text-md font-medium text-primary hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
           {title}
           <ChevronDownIcon
-            className="ml-2 -mr-1 h-5 w-5 text-primary-light hover:opacity-50"
+            className="ml-2 -mr-1 w-8 h-8 text-primary-light hover:opacity-50"
             aria-hidden="true"
           />
         </Menu.Button>
