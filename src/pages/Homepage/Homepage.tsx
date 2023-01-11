@@ -1,14 +1,11 @@
 import React, { useState } from "react"
-import DeployToken from "../../components/DeployToken/DeployToken"
-import TokenBalance from "../../components/TokenBalance/TokenBalance"
-import MintToken from "../../components/MintToken/MintToken"
 import LocalStorageService from "../../service/LocalStorageService"
-import Account from "../../components/Account/Account"
 import { ActionType, useWallet } from "../../context/walletContext"
-import { IAccount } from "../../model/State"
 
-import { Network } from "../../model/enums"
-import { VStack } from "@chakra-ui/react"
+import { Grid, GridItem } from "@chakra-ui/react"
+import Welcome from "../../components/Homepage/Welcome/Welcome"
+import Features from "../../components/Homepage/Features/Features"
+import MeetVeWorld from "../../components/Homepage/MeetVeWorld/MeetVeWorld"
 export interface Token {
   address?: string
   name?: string
@@ -30,21 +27,26 @@ const Homepage: React.FC = () => {
     setToken(token)
     LocalStorageService.setToken(token)
   }
-
-  const setAccount = (account: IAccount) =>
-    dispatch({ type: ActionType.SET_ACCOUNT, payload: account })
-
-  const setNetwork = (network: Network) =>
-    dispatch({ type: ActionType.SET_NETWORK, payload: network })
-
-  const clearState = () => dispatch({ type: ActionType.CLEAR })
-
-  if (!account || !network) return <></>
-
   return (
-    <VStack w="full" spacing={4}>
-      <Account account={account} clearState={clearState} />
+    <Grid
+      mt={20}
+      w="full"
+      templateRows="repeat(2, 1fr)"
+      templateColumns="repeat(5, 1fr)"
+      gap={8}
+      alignItems="stretch"
+    >
+      <GridItem rowSpan={1} colSpan={3}>
+        <Welcome />
+      </GridItem>
+      <GridItem rowSpan={1} colSpan={2}>
+        <MeetVeWorld />
+      </GridItem>
+      <GridItem rowSpan={1} colSpan={5}>
+        <Features />
+      </GridItem>
 
+      {/* 
       {token?.address ? (
         <>
           <TokenBalance accountAddress={account.address} token={token} />
@@ -52,8 +54,8 @@ const Homepage: React.FC = () => {
         </>
       ) : (
         <DeployToken setToken={persistToken} accountAddress={account.address} />
-      )}
-    </VStack>
+      )} */}
+    </Grid>
   )
 }
 

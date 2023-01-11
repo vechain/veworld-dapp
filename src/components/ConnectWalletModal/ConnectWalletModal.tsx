@@ -8,8 +8,9 @@ import {
   VStack,
   Alert,
   AlertIcon,
+  HStack,
 } from "@chakra-ui/react"
-import { LinkIcon } from "@heroicons/react/24/solid"
+import { LinkIcon, WalletIcon } from "@heroicons/react/24/solid"
 import React, { useState } from "react"
 import { ActionType, useWallet } from "../../context/walletContext"
 import {
@@ -32,11 +33,18 @@ const ConnectWalletModal: React.FC<IConnectWalletModal> = ({
   isOpen,
   onClose,
 }) => {
+  const header = (
+    <HStack spacing={2}>
+      <Icon as={WalletIcon} />
+      <Text>Connect Wallet</Text>
+    </HStack>
+  )
+
   return (
     <Dialog
       isOpen={isOpen}
       onClose={onClose}
-      header={"Connect Wallet"}
+      header={header}
       body={<ConnectWalletBody onClose={onClose} />}
     />
   )
@@ -97,7 +105,7 @@ const ConnectWalletBody: React.FC<IConnectWalletBody> = ({ onClose }) => {
           />
         </Box>
       </Flex>
-      <VStack w="full" spacing={4} mt={24}>
+      <VStack w="full" spacing={4} mt={8}>
         {connectionLoading && (
           <Alert status="warning">
             <AlertIcon />

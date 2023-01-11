@@ -1,4 +1,4 @@
-import { Text, Icon, useClipboard, IconButton, HStack } from "@chakra-ui/react"
+import { Text, Icon, useClipboard, HStack, Button, Tag } from "@chakra-ui/react"
 import { DocumentDuplicateIcon, CheckIcon } from "@heroicons/react/24/solid"
 import React from "react"
 import { humanAddress } from "../../../utils/FormattingUtils"
@@ -9,18 +9,22 @@ interface IAddress {
 }
 const Address: React.FC<IAddress> = ({ address, copyable = true }) => {
   const { onCopy, hasCopied } = useClipboard(address)
+
+  if (copyable)
+    return (
+      <Button variant="unstyled" onClick={onCopy}>
+        <Tag colorScheme="blue">
+          <HStack spacing={2}>
+            <Text>{humanAddress(address)}</Text>
+            <Icon as={hasCopied ? CheckIcon : DocumentDuplicateIcon} />
+          </HStack>
+        </Tag>
+      </Button>
+    )
   return (
-    <HStack spacing={2}>
+    <Tag colorScheme="blue">
       <Text>{humanAddress(address)}</Text>
-      {copyable && (
-        <IconButton
-          variant={"ghost"}
-          onClick={onCopy}
-          aria-label={`copy-address-${address}`}
-          icon={<Icon as={hasCopied ? CheckIcon : DocumentDuplicateIcon} />}
-        />
-      )}
-    </HStack>
+    </Tag>
   )
 }
 

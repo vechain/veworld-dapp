@@ -9,16 +9,17 @@ const ConnectWalletButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const {
-    state: { account },
+    state: { account, network },
   } = useWallet()
 
-  if (account)
+  if (account && network)
     return (
       <>
         <AccountDetailModal
           isOpen={isOpen}
           onClose={onClose}
           account={account}
+          network={network}
         />
         <Button
           colorScheme={"blue"}
