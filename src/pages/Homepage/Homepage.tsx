@@ -1,14 +1,14 @@
 import React, { useState } from "react"
-import ConnectToExtension from "../../components/ConnectToExtension/ConnectToExtension"
 import DeployToken from "../../components/DeployToken/DeployToken"
 import TokenBalance from "../../components/TokenBalance/TokenBalance"
 import MintToken from "../../components/MintToken/MintToken"
-import { Network } from "../../service/ConnexService"
 import LocalStorageService from "../../service/LocalStorageService"
 import Account from "../../components/Account/Account"
 import { ActionType, useWallet } from "../../context/walletContext"
 import { IAccount } from "../../model/State"
 
+import { Network } from "../../model/enums"
+import { VStack } from "@chakra-ui/react"
 export interface Token {
   address?: string
   name?: string
@@ -39,28 +39,21 @@ const Homepage: React.FC = () => {
 
   const clearState = () => dispatch({ type: ActionType.CLEAR })
 
-  return (
-    <div className={"flex flex-col justify-center items-center"}>
-      {account ? (
-        <>
-          <Account account={account} clearState={clearState} />
+  if (!account || !network) return <></>
 
-          {token?.address ? (
-            <>
-              <TokenBalance accountAddress={account.address} token={token} />
-              <MintToken accountAddress={account.address} token={token} />
-            </>
-          ) : (
-            <DeployToken
-              setToken={persistToken}
-              accountAddress={account.address}
-            />
-          )}
+  return (
+    <VStack w="full" spacing={4}>
+      <Account account={account} clearState={clearState} />
+
+      {token?.address ? (
+        <>
+          <TokenBalance accountAddress={account.address} token={token} />
+          <MintToken accountAddress={account.address} token={token} />
         </>
       ) : (
-        <ConnectToExtension setAccount={setAccount} setNetwork={setNetwork} />
+        <DeployToken setToken={persistToken} accountAddress={account.address} />
       )}
-    </div>
+    </VStack>
   )
 }
 

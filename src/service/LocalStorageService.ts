@@ -1,15 +1,10 @@
-import { Network } from "./ConnexService"
 import { Token } from "../pages/Homepage/Homepage"
 import { IAccount } from "../model/State"
+import { Network } from "../model/enums"
 
 export const ACCOUNT_KEY = "PREVIOUS_ACCOUNT_KEY"
 export const TOKEN_KEY = "TOKEN_KEY"
 export const NETWORK_KEY = "NETWORK_KEY"
-
-export enum WalletSource {
-  VEWORLD = "veworld",
-  SYNC2 = "sync2",
-}
 
 const setAccount = (account: IAccount) => {
   localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account))

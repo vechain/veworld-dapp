@@ -23,18 +23,19 @@ const AccountDetailModal: React.FC<IConnectWalletModal> = ({
     onClose()
   }
 
-  const title = (
+  const header = (
     <HStack spacing={2}>
       <Icon as={WalletIcon} />
       <Text>Connected Wallet</Text>
     </HStack>
   )
+
   if (!account) return <></>
   return (
     <Dialog
       isOpen={isOpen}
       onClose={onClose}
-      header={title}
+      header={header}
       body={
         <AccountDetailBody
           account={account}

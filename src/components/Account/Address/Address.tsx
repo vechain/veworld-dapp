@@ -1,11 +1,4 @@
-import {
-  Flex,
-  Text,
-  Icon,
-  useClipboard,
-  IconButton,
-  HStack,
-} from "@chakra-ui/react"
+import { Text, Icon, useClipboard, IconButton, HStack } from "@chakra-ui/react"
 import { DocumentDuplicateIcon, CheckIcon } from "@heroicons/react/24/solid"
 import React from "react"
 import { humanAddress } from "../../../utils/FormattingUtils"

@@ -1,38 +1,13 @@
 import { Connex } from "@vechain/connex"
-import { WalletSource } from "./LocalStorageService"
+import { Certificate } from "thor-devkit"
+import { WalletSource, NetworkInfo, Network } from "../model/enums"
 
 let connex: Connex | undefined
 
-export enum Network {
-  MAIN = "main",
-  TEST = "test",
-}
-
-export interface INetwork {
-  type: Network
-  name: string
-  color: string
-}
-
-export const Networks: INetwork[] = [
-  {
-    type: Network.MAIN,
-    name: "Mainnet",
-    color: "orange",
-  },
-  {
-    type: Network.TEST,
-    name: "Testnet",
-    color: "green",
-  },
-]
-
-const TEST_NET = "https://vethor-node-test.vechaindev.com"
-const MAIN_NET = "https://vethor-node.vechain.com"
-
 const initialise = (walletSource: WalletSource, network: Network) => {
+  const enhancedNetwork = NetworkInfo[network]
   connex = new Connex({
-    node: network === Network.MAIN ? MAIN_NET : TEST_NET,
+    node: enhancedNetwork.url,
     network,
     noExtension: walletSource === WalletSource.SYNC2,
   })
@@ -48,6 +23,38 @@ const getConnex = async () => {
 
 const clear = () => {
   connex = undefined
+}
+
+export const connectToWalletHandler = async (
+  source: WalletSource,
+  network: Network
+): Promise<Certificate> => {
+  const connex = initialise(source, network)
+
+  const message: Connex.Vendor.CertMessage = {
+    purpose: "identification",
+    payload: {
+      type: "text",
+      content: "Sign a certificate to prove your identity",
+    },
+  }
+
+  const certResponse = await connex.vendor.sign("cert", message).request()
+
+  const cert: Certificate = {
+    purpose: message.purpose,
+    payload: message.payload,
+    domain: certResponse.annex.domain,
+    timestamp: certResponse.annex.timestamp,
+    signer: certResponse.annex.signer,
+    signature: certResponse.signature,
+  }
+
+  console.log("Signed cert", cert)
+  Certificate.verify(cert)
+  console.log("Cert verified")
+
+  return cert
 }
 
 export default {

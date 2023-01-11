@@ -1,4 +1,4 @@
-import { WalletSource } from "../service/LocalStorageService"
+import { WalletSource } from "./enums"
 
 export interface IAccount {
   address: string
