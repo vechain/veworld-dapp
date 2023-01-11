@@ -10,10 +10,10 @@ import {
 } from "@chakra-ui/react"
 import { ArrowSmallDownIcon } from "@heroicons/react/24/solid"
 import { useMemo } from "react"
-import { useWallet } from "../../context/walletContext"
-import { Networks } from "../../service/ConnexService"
+import { ActionType, useWallet } from "../../context/walletContext"
+import { Network, Networks } from "../../service/ConnexService"
 
-import { Select } from "chakra-react-select"
+import { Select, SingleValue } from "chakra-react-select"
 import CircleIcon from "../Icons/CircleIcon"
 
 const NetworkSwitcher = () => {
@@ -36,7 +36,25 @@ const NetworkSwitcher = () => {
     () => networksOptions.find((net) => net.value === network),
     [network, networksOptions]
   )
-  return <Select options={networksOptions} value={selectedNetwork} />
+
+  const onNetworkChange = (
+    newValue: SingleValue<{
+      value: string
+      label: JSX.Element
+    }>
+  ) =>
+    newValue &&
+    dispatch({
+      type: ActionType.SET_NETWORK,
+      payload: Network[newValue.value as keyof typeof Network],
+    })
+  return (
+    <Select
+      options={networksOptions}
+      defaultValue={selectedNetwork}
+      onChange={onNetworkChange}
+    />
+  )
 }
 
 export default NetworkSwitcher

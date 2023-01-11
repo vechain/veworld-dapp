@@ -1,17 +1,7 @@
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-  Text,
-  Button,
-  Flex,
-  Box,
-} from "@chakra-ui/react"
+import { Box, Button, Flex, Text } from "@chakra-ui/react"
 import React from "react"
 import NetworkSwitcher from "../NetworkSwitcher/NetworkSwitcher"
+import { Dialog } from "../Shared"
 
 interface IConnectWalletModal {
   isOpen: boolean
@@ -22,26 +12,28 @@ const ConnectWalletModal: React.FC<IConnectWalletModal> = ({
   onClose,
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Connect Wallet</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Flex direction={"column"} gap={8}>
-            <Box>
-              <Text mb="8px">Network</Text>
-              <NetworkSwitcher />
-            </Box>
-            <Box>
-              <Text mb="8px">Wallet</Text>
-              <NetworkSwitcher />
-            </Box>
-            <Button colorScheme={"blue"}>Connect</Button>
-          </Flex>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+    <Dialog
+      isOpen={isOpen}
+      onClose={onClose}
+      header={"Connect Wallet"}
+      body={<ConnectWalletBody />}
+    />
+  )
+}
+
+const ConnectWalletBody: React.FC = () => {
+  return (
+    <Flex direction={"column"} gap={8}>
+      <Box>
+        <Text mb="8px">Network</Text>
+        <NetworkSwitcher />
+      </Box>
+      <Box>
+        <Text mb="8px">Wallet</Text>
+        <NetworkSwitcher />
+      </Box>
+      <Button colorScheme={"blue"}>Connect</Button>
+    </Flex>
   )
 }
 

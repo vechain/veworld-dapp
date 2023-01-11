@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { Layout } from "antd"
 import ConnectToExtension from "../../components/ConnectToExtension/ConnectToExtension"
 import DeployToken from "../../components/DeployToken/DeployToken"
 import TokenBalance from "../../components/TokenBalance/TokenBalance"
@@ -9,7 +8,6 @@ import LocalStorageService from "../../service/LocalStorageService"
 import Account from "../../components/Account/Account"
 import { ActionType, useWallet } from "../../context/walletContext"
 import { IAccount } from "../../model/State"
-import NavBar from "../../components/Layout/Navbar"
 
 export interface Token {
   address?: string
