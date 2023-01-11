@@ -8,6 +8,25 @@ export enum Network {
   TEST = "test",
 }
 
+export interface INetwork {
+  type: Network
+  name: string
+  color: string
+}
+
+export const Networks: INetwork[] = [
+  {
+    type: Network.MAIN,
+    name: "Mainnet",
+    color: "orange",
+  },
+  {
+    type: Network.TEST,
+    name: "Testnet",
+    color: "green",
+  },
+]
+
 const TEST_NET = "https://vethor-node-test.vechaindev.com"
 const MAIN_NET = "https://vethor-node.vechain.com"
 

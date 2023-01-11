@@ -1,7 +1,11 @@
-import { Button, Flex } from "@chakra-ui/react"
+import { Box, Button, Flex, Icon } from "@chakra-ui/react"
 import React from "react"
 import { WalletSource } from "../../service/LocalStorageService"
 import Logo from "../Logo/Logo"
+import { WalletIcon } from "@heroicons/react/24/solid"
+import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher"
+import NetworkSwitcher from "../NetworkSwitcher/NetworkSwitcher"
+import ConnectWalletButton from "../ConnectWalletButton/ConnectWalletButton"
 
 const NavBar: React.FC = () => {
   return (
@@ -15,7 +19,9 @@ const NavBar: React.FC = () => {
       boxShadow="xs"
     >
       <Logo />
-      <NavBarWalletConnect />
+      <Box width={"30%"}>
+        <NavBarWalletConnect />
+      </Box>
     </Flex>
   )
 }
@@ -25,7 +31,15 @@ const NavBarWalletConnect = () => {
     label: value,
     action: () => null,
   }))
-  return <Button> Connect Wallet </Button>
+  return (
+    <Flex gap={2} direction="row">
+      <Box flex={1.5}>
+        <NetworkSwitcher />
+      </Box>
+      <ConnectWalletButton />
+      <ThemeSwitcher />
+    </Flex>
+  )
 }
 
 export default NavBar

@@ -5623,6 +5623,13 @@ chai@^4.3.6:
     pathval "^1.1.1"
     type-detect "^4.0.5"
 
+chakra-react-select@^4.4.3:
+  version "4.4.3"
+  resolved "https://registry.yarnpkg.com/chakra-react-select/-/chakra-react-select-4.4.3.tgz#678fcb25b90b9f977628694d1a9d49d072e01128"
+  integrity sha512-anDgJyYUpIapTmUbgXB+Iw5hJ90hOPvgoUPUaYdO5q9zY2VBFhQ1L0gBMqWAQxiKUmuHpwQypf8sPoVtd0b3KA==
+  dependencies:
+    react-select "5.7.0"
+
 chalk@^2.0.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
@@ -12815,7 +12822,7 @@ react-scripts@5.0.1:
   optionalDependencies:
     fsevents "^2.3.2"
 
-react-select@^5.7.0:
+react-select@5.7.0, react-select@^5.7.0:
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/react-select/-/react-select-5.7.0.tgz#82921b38f1fcf1471a0b62304da01f2896cd8ce6"
   integrity sha512-lJGiMxCa3cqnUr2Jjtg9YHsaytiZqeNOKeibv6WF5zbK/fPegZ1hg3y/9P1RZVLhqBTs0PfqQLKuAACednYGhQ==
