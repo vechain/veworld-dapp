@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import LocalStorageService from "../../service/LocalStorageService"
 import { ActionType, useWallet } from "../../context/walletContext"
 
-import { Grid, GridItem } from "@chakra-ui/react"
+import { Divider, Grid, GridItem } from "@chakra-ui/react"
 import Welcome from "../../components/Homepage/Welcome/Welcome"
 import Features from "../../components/Homepage/Features/Features"
 import MeetVeWorld from "../../components/Homepage/MeetVeWorld/MeetVeWorld"
@@ -14,24 +14,15 @@ export interface Token {
 }
 
 const Homepage: React.FC = () => {
-  const [token, setToken] = useState<Token | undefined>(
-    LocalStorageService.getToken()
-  )
-
   const {
     state: { account, network },
     dispatch,
   } = useWallet()
 
-  const persistToken = (token: Token) => {
-    setToken(token)
-    LocalStorageService.setToken(token)
-  }
   return (
     <Grid
-      mt={20}
       w="full"
-      templateRows="repeat(2, 1fr)"
+      templateRows="repeat(3, 1fr)"
       templateColumns="repeat(5, 1fr)"
       gap={8}
       alignItems="stretch"

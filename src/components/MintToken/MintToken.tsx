@@ -15,11 +15,11 @@ import TransactionStatus from "../TransactionStatus/TransactionStatus"
 import useFormEvents from "../../hooks/FormEvents"
 import { TxStage } from "../../model/Transaction"
 import VIP180Service from "../../service/VIP180Service"
-import { toast } from "react-toastify"
 import FormUtils from "../../utils/FormUtils"
 import TransactionsService from "../../service/TransactionsService"
 import { getErrorMessage } from "../../utils/ExtensionUtils"
 import { Token } from "../../pages/Homepage/Homepage"
+import { useToast } from "@chakra-ui/react"
 
 const { Text } = Typography
 
@@ -33,6 +33,7 @@ const MintToken: React.FC<{ accountAddress: string; token: Token }> = ({
   accountAddress,
   token,
 }) => {
+  const toast = useToast()
   const [mintTokenForm] = Form.useForm<MintTokenForm>()
   const { onFormBlur, onFormFocus } = useFormEvents(mintTokenForm)
 
@@ -42,7 +43,12 @@ const MintToken: React.FC<{ accountAddress: string; token: Token }> = ({
 
   const mintToken = async (form: MintTokenForm) => {
     setError(null)
-    if (!token.address) return toast.error("Token address not found")
+    if (!token.address)
+      return toast({
+        title: "Token address not found",
+        status: "error",
+        position: "bottom-left",
+      })
 
     try {
       setTxStatus(TxStage.NONE)
@@ -76,15 +82,23 @@ const MintToken: React.FC<{ accountAddress: string; token: Token }> = ({
       if (receipt.reverted) {
         const revertReason = await TransactionsService.explainRevertReason(txid)
         setTxStatus(TxStage.REVERTED)
-        return toast.error(revertReason)
+        return toast({
+          title: revertReason,
+          status: "error",
+          position: "bottom-left",
+        })
       }
 
       setTxStatus(TxStage.COMPLETE)
       mintTokenForm.resetFields()
     } catch (e) {
       console.error(e)
-      toast.error("Error minting token")
       setError(getErrorMessage(e))
+      return toast({
+        title: "Error minting token",
+        status: "error",
+        position: "bottom-left",
+      })
     }
   }
 

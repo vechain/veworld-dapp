@@ -3,29 +3,35 @@ import ReactDOM from "react-dom/client"
 
 import reportWebVitals from "./reportWebVitals"
 
-import CustomToast from "./components/CustomToast"
 import { WalletProvider } from "./context/walletContext"
 import Router from "./router"
 
-import "./styles/index.css"
-import "react-toastify/dist/ReactToastify.css"
 import NavBar from "./components/Layout/Navbar"
-import { ChakraProvider, Container } from "@chakra-ui/react"
+import { ChakraProvider } from "@chakra-ui/react"
 import Fonts from "./styles/Fonts"
 import theme from "./styles/Theme"
+import StyledContainer from "./components/Shared/StyledContainer/StyledContainer"
 
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
-root.render(
-  <React.StrictMode>
+import "./styles/index.css"
+
+const Index = () => {
+  return (
     <ChakraProvider theme={theme}>
       <WalletProvider>
-        <CustomToast />
         <NavBar />
-        <Container maxW="6xl" centerContent>
+        <StyledContainer>
           <Router />
-        </Container>
+        </StyledContainer>
       </WalletProvider>
     </ChakraProvider>
+  )
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
+
+root.render(
+  <React.StrictMode>
+    <Index />
   </React.StrictMode>
 )
 

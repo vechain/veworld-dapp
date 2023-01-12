@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import VIP180Service from "../../service/VIP180Service"
 import { TxStage } from "../../model/Transaction"
-import { toast } from "react-toastify"
 import { Alert, Button, Card, Form, Input, Layout, Row, Typography } from "antd"
 import { Content, Footer } from "antd/es/layout/layout"
 import useFormEvents from "../../hooks/FormEvents"
@@ -9,6 +8,7 @@ import TransactionStatus from "../TransactionStatus/TransactionStatus"
 import TransactionsService from "../../service/TransactionsService"
 import { getErrorMessage } from "../../utils/ExtensionUtils"
 import { Token } from "../../pages/Homepage/Homepage"
+import { useToast } from "@chakra-ui/react"
 
 const { Text } = Typography
 
@@ -23,6 +23,7 @@ const DeployToken: React.FC<{
   setToken: (token: Token) => void
   accountAddress: string
 }> = ({ setToken, accountAddress }) => {
+  const toast = useToast()
   const [txStatus, setTxStatus] = useState<TxStage>(TxStage.NONE)
   const [txId, setTxId] = useState<string | undefined>()
   const [deployTokenForm] = Form.useForm<DeployTokenForm>()
@@ -64,7 +65,11 @@ const DeployToken: React.FC<{
       if (receipt.reverted) {
         const revertReason = await TransactionsService.explainRevertReason(txid)
         setTxStatus(TxStage.REVERTED)
-        return toast.error(revertReason)
+        return toast({
+          title: revertReason,
+          position: "bottom-left",
+          status: "error",
+        })
       }
 
       const address = receipt.outputs[0].contractAddress as string
@@ -74,12 +79,14 @@ const DeployToken: React.FC<{
       setTxStatus(TxStage.COMPLETE)
     } catch (e) {
       console.error(e)
-      toast.error(
-        "Transaction failed for some unknown reason. Last know status: " +
-          txStatus
-      )
       setTxStatus(TxStage.FAILURE)
       setError(getErrorMessage(e))
+      return toast({
+        title: "Transaction failed for some unknown reason. Last know status: ",
+        description: txStatus,
+        position: "bottom-left",
+        status: "error",
+      })
     }
   }
 

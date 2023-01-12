@@ -1,10 +1,5 @@
 import {
-  Alert,
-  AlertIcon,
   Button,
-  ButtonGroup,
-  Card,
-  CardBody,
   Icon,
   Heading,
   HStack,
@@ -13,17 +8,26 @@ import {
   Box,
   Flex,
   Tooltip,
+  useDisclosure,
 } from "@chakra-ui/react"
 import React from "react"
 import { useWallet } from "../../../context/walletContext"
 import { CurrencyDollarIcon, WalletIcon } from "@heroicons/react/24/solid"
+import StyledCard from "../../Shared/StyledCard/StyledCard"
+import DeployTokenDialog from "../../DeployToken/DeployTokenDialog"
+import { IAccount } from "../../../model/State"
 
+interface IFeatureDialog {
+  isOpen: boolean
+  onClose: () => void
+  account: IAccount
+}
 interface IFeature {
   name: string
   desc: string
   requireWallet: boolean
   icon?: React.ReactNode
-  path?: string
+  featureDialog: React.FC<IFeatureDialog>
 }
 const FeatureList: IFeature[] = [
   {
@@ -31,6 +35,7 @@ const FeatureList: IFeature[] = [
     desc: "Create a new token on VeChain in seconds!",
     icon: <CurrencyDollarIcon />,
     requireWallet: true,
+    featureDialog: DeployTokenDialog,
   },
 ]
 
@@ -39,9 +44,9 @@ const Features: React.FC = () => {
     <VStack spacing={4} align="flex-start">
       <Heading> Features </Heading>
       <HStack spacing={4}>
-        {FeatureList.map((feature) => (
-          <FeatureCard key={feature.name} feature={feature} />
-        ))}
+        {FeatureList.map((feature) => {
+          return <FeatureCard key={feature.name} feature={feature} />
+        })}
       </HStack>
     </VStack>
   )
@@ -55,10 +60,18 @@ const FeatureCard: React.FC<IFeatureCard> = ({ feature }) => {
     state: { account, network },
   } = useWallet()
 
-  const isDisabled = feature.requireWallet && !account
+  const { isOpen, onClose, onOpen } = useDisclosure()
+  const isDisabled = feature.requireWallet && (!account || !network)
 
   return (
     <Box position={"relative"}>
+      {account && (
+        <feature.featureDialog
+          isOpen={isOpen}
+          onClose={onClose}
+          account={account}
+        />
+      )}
       {isDisabled && (
         <Tooltip label="Connect your wallet first" placement="top">
           <Flex
@@ -75,21 +88,20 @@ const FeatureCard: React.FC<IFeatureCard> = ({ feature }) => {
           </Flex>
         </Tooltip>
       )}
-      <Card>
-        <CardBody>
-          <VStack spacing={2} align="flex-start">
-            <Heading fontSize={"2xl"}>{feature.name}</Heading>
-            <Text fontSize={"md"}>{feature.desc}</Text>
-            <Button
-              disabled={isDisabled}
-              colorScheme={"blue"}
-              variant="outline"
-            >
-              Get started
-            </Button>
-          </VStack>
-        </CardBody>
-      </Card>
+      <StyledCard>
+        <VStack spacing={2} align="flex-start">
+          <Heading fontSize={"2xl"}>{feature.name}</Heading>
+          <Text fontSize={"md"}>{feature.desc}</Text>
+          <Button
+            onClick={onOpen}
+            disabled={isDisabled}
+            colorScheme={"blue"}
+            variant="outline"
+          >
+            Get started
+          </Button>
+        </VStack>
+      </StyledCard>
     </Box>
   )
 }
