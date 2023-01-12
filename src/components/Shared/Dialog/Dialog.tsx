@@ -26,7 +26,7 @@ const Dialog: React.FC<IDialog> = ({
   showCloseButton = true,
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal trapFocus={false} isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         {header && <ModalHeader>{header}</ModalHeader>}
