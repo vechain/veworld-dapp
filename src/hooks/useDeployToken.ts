@@ -58,12 +58,12 @@ const useDeployToken = () => {
       console.error(e)
       setTxStatus(TxStage.FAILURE)
       setError(getErrorMessage(e))
-      return toast({
-        title: "Transaction failed for some unknown reason. Last know status: ",
-        description: txStatus,
-        position: "bottom-left",
-        status: "error",
-      })
+      //   return toast({
+      //     title: "Transaction failed for some unknown reason. Last know status: ",
+      //     description: txStatus,
+      //     position: "bottom-left",
+      //     status: "error",
+      //   })
     }
   }
 
