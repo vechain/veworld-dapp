@@ -9,6 +9,7 @@ import {
   Alert,
   AlertIcon,
   HStack,
+  useToast,
 } from "@chakra-ui/react"
 import { LinkIcon, WalletIcon } from "@heroicons/react/24/solid"
 import React, { useState } from "react"
@@ -21,6 +22,7 @@ import {
 } from "../../model/enums"
 import { connectToWalletHandler } from "../../service/ConnexService"
 import { getErrorMessage } from "../../utils/ExtensionUtils"
+import { humanAddress } from "../../utils/FormattingUtils"
 import AccountSourceRadio from "../Account/AccountSourceRadio/AccountSourceRadio"
 import NetworkSelect from "../NetworkSelect/NetworkSelect"
 import { Dialog } from "../Shared"
@@ -55,6 +57,8 @@ interface IConnectWalletBody {
 }
 const ConnectWalletBody: React.FC<IConnectWalletBody> = ({ onClose }) => {
   const { dispatch } = useWallet()
+  const toast = useToast()
+
   const [connectionLoading, setConnectionLoading] = useState(false)
   const [connectionError, setConnectionError] = useState("")
   const [selectedNetwork, setSelectedNework] =
@@ -78,6 +82,16 @@ const ConnectWalletBody: React.FC<IConnectWalletBody> = ({ onClose }) => {
         },
       })
       onClose()
+      toast({
+        title: "Wallet connected.",
+        description: `You've succesfully connected with wallet ${humanAddress(
+          cert.signer
+        )}`,
+        status: "success",
+        position: "bottom-left",
+        duration: 5000,
+        isClosable: true,
+      })
     } catch (e: unknown) {
       const em = getErrorMessage(e)
       console.log(em)

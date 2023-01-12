@@ -2,16 +2,21 @@ import {
   Alert,
   AlertIcon,
   Button,
+  ButtonGroup,
   Card,
   CardBody,
+  Icon,
   Heading,
   HStack,
   Text,
   VStack,
+  Box,
+  Flex,
+  Tooltip,
 } from "@chakra-ui/react"
-import { CurrencyDollarIcon } from "@heroicons/react/24/solid"
 import React from "react"
 import { useWallet } from "../../../context/walletContext"
+import { CurrencyDollarIcon, WalletIcon } from "@heroicons/react/24/solid"
 
 interface IFeature {
   name: string
@@ -51,17 +56,41 @@ const FeatureCard: React.FC<IFeatureCard> = ({ feature }) => {
   } = useWallet()
 
   const isDisabled = feature.requireWallet && !account
+
   return (
-    <Card>
-      <CardBody>
-        <Heading fontSize={"2xl"}>{feature.name}</Heading>
-        <Text fontSize={"md"}>{feature.desc}</Text>
-        <Button disabled={isDisabled} mt={4} w="full" colorScheme={"blue"}>
-          Get started
-        </Button>
-        {isDisabled && <Text as="u">Connect a wallet first</Text>}
-      </CardBody>
-    </Card>
+    <Box position={"relative"}>
+      {isDisabled && (
+        <Tooltip label="Connect your wallet first" placement="top">
+          <Flex
+            position={"absolute"}
+            right={-2}
+            zIndex={10}
+            top={-2}
+            p={2}
+            rounded="full"
+            bg="orange.500"
+            alignItems={"center"}
+          >
+            <Icon color={"white"} fontSize={"xl"} as={WalletIcon} />
+          </Flex>
+        </Tooltip>
+      )}
+      <Card>
+        <CardBody>
+          <VStack spacing={2} align="flex-start">
+            <Heading fontSize={"2xl"}>{feature.name}</Heading>
+            <Text fontSize={"md"}>{feature.desc}</Text>
+            <Button
+              disabled={isDisabled}
+              colorScheme={"blue"}
+              variant="outline"
+            >
+              Get started
+            </Button>
+          </VStack>
+        </CardBody>
+      </Card>
+    </Box>
   )
 }
 
