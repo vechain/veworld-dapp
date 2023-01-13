@@ -16,6 +16,7 @@ import { CurrencyDollarIcon, WalletIcon } from "@heroicons/react/24/solid"
 import StyledCard from "../../Shared/StyledCard/StyledCard"
 import DeployTokenDialog from "../../DeployToken/DeployTokenDialog"
 import { IAccount } from "../../../model/State"
+import TokensDialog from "../../TokensDialog/TokensDialog"
 
 interface IFeatureDialog {
   isOpen: boolean
@@ -37,13 +38,20 @@ const FeatureList: IFeature[] = [
     requireWallet: true,
     featureDialog: DeployTokenDialog,
   },
+  {
+    name: "Your tokens",
+    desc: "See and mint the tokens deployed from this dapp",
+    icon: <CurrencyDollarIcon />,
+    requireWallet: true,
+    featureDialog: TokensDialog,
+  },
 ]
 
 const Features: React.FC = () => {
   return (
     <VStack spacing={4} align="flex-start">
       <Heading> Features </Heading>
-      <HStack spacing={4}>
+      <HStack spacing={4} w={"full"}>
         {FeatureList.map((feature) => {
           return <FeatureCard key={feature.name} feature={feature} />
         })}
