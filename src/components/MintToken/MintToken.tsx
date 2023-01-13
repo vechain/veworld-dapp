@@ -29,7 +29,6 @@ const MintToken: React.FC<IMintTokenForm> = ({ token }) => {
   const {
     handleSubmit,
     register,
-    getValues,
     formState: { errors },
   } = useForm<MintTokenForm>({
     mode: "onTouched",

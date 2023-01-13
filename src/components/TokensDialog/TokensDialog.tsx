@@ -36,17 +36,12 @@ const TokensDialog: React.FC<IDeployTokenDialog> = ({ isOpen, onClose }) => {
 
 const TokensDialogBody: React.FC = () => {
   const {
-    dispatch,
     state: { tokens },
   } = useWallet()
 
   const [selected, setSelected] = useState<IToken>(tokens[0])
 
-  const {
-    onOpen: openMintView,
-    onClose: closeMintView,
-    isOpen: isMintView,
-  } = useDisclosure()
+  const { onOpen: openMintView, isOpen: isMintView } = useDisclosure()
 
   const onTokenChange = (token: IToken) => setSelected(token)
 

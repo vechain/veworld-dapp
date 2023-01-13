@@ -53,7 +53,6 @@ const DeployTokenDialogBody: React.FC<IDeployTokenDialogBody> = ({
   const {
     handleSubmit,
     register,
-    getValues,
     formState: { errors },
   } = useForm<DeployTokenForm>({
     mode: "onTouched",

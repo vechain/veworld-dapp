@@ -1,4 +1,3 @@
-import { useToast } from "@chakra-ui/react"
 import { useState } from "react"
 import { TxStage } from "../model/Transaction"
 import TransactionsService from "../service/TransactionsService"
@@ -9,7 +8,6 @@ const useDeployToken = () => {
   const [txId, setTxId] = useState<string>()
   const [txStatus, setTxStatus] = useState(TxStage.NONE)
   const [error, setError] = useState<string>()
-  const toast = useToast()
 
   const deployToken = async (
     accountAddress: string,
