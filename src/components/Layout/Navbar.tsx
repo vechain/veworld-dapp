@@ -1,10 +1,9 @@
-import { Icon, Box, Flex, Text, HStack, Badge, Tag } from "@chakra-ui/react"
+import { Icon, Box, Flex, Text, HStack, Tag } from "@chakra-ui/react"
 import React from "react"
 import Logo from "../Logo/Logo"
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher"
-import NetworkSwitcher from "../NetworkSelect/NetworkSelect"
 import ConnectWalletButton from "../ConnectWalletButton/ConnectWalletButton"
-import { ActionType, useWallet } from "../../context/walletContext"
+import { useWallet } from "../../context/walletContext"
 import { Network, NetworkInfo } from "../../model/enums"
 import { GlobeAltIcon } from "@heroicons/react/24/solid"
 
@@ -52,20 +51,6 @@ const NetworkBadge: React.FC<INetworkBadge> = ({ network }) => {
       </HStack>
     </Tag>
   )
-}
-const GlobalNetworkSwitcher = () => {
-  const {
-    state: { network },
-    dispatch,
-  } = useWallet()
-
-  const onNetworkChange = (newNetwork: Network) =>
-    dispatch({
-      type: ActionType.SET_NETWORK,
-      payload: newNetwork,
-    })
-
-  return <NetworkSwitcher selected={network} onChange={onNetworkChange} />
 }
 
 export default NavBar

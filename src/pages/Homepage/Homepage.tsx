@@ -1,8 +1,6 @@
-import React, { useState } from "react"
-import LocalStorageService from "../../service/LocalStorageService"
-import { ActionType, useWallet } from "../../context/walletContext"
+import React from "react"
 
-import { Divider, Grid, GridItem } from "@chakra-ui/react"
+import { Grid, GridItem } from "@chakra-ui/react"
 import Welcome from "../../components/Homepage/Welcome/Welcome"
 import Features from "../../components/Homepage/Features/Features"
 import MeetVeWorld from "../../components/Homepage/MeetVeWorld/MeetVeWorld"
@@ -14,11 +12,6 @@ export interface Token {
 }
 
 const Homepage: React.FC = () => {
-  const {
-    state: { account, network },
-    dispatch,
-  } = useWallet()
-
   return (
     <Grid
       w="full"

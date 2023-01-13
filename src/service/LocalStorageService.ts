@@ -1,9 +1,8 @@
-import { Token } from "../pages/Homepage/Homepage"
-import { IAccount } from "../model/State"
+import { IAccount, IToken } from "../model/State"
 import { Network } from "../model/enums"
 
 export const ACCOUNT_KEY = "PREVIOUS_ACCOUNT_KEY"
-export const TOKEN_KEY = "TOKEN_KEY"
+export const TOKENS_KEY = "TOKENS_KEY"
 export const NETWORK_KEY = "NETWORK_KEY"
 
 const setAccount = (account: IAccount) => {
@@ -28,22 +27,20 @@ const getNetwork = (): Network | undefined => {
   if (network === Network.MAIN || network === Network.TEST) return network
 }
 
-const setToken = (token: Token) => {
-  localStorage.setItem(TOKEN_KEY, JSON.stringify(token))
+const setTokens = (token: IToken[]) => {
+  localStorage.setItem(TOKENS_KEY, JSON.stringify(token))
 }
 
-const getToken = (): Token | undefined => {
-  const token = localStorage.getItem(TOKEN_KEY)
-
-  if (token) {
-    return JSON.parse(token)
-  }
+const getTokens = (): IToken[] => {
+  const token = localStorage.getItem(TOKENS_KEY)
+  if (token) return JSON.parse(token)
+  return []
 }
 
 const clear = () => {
   localStorage.removeItem(ACCOUNT_KEY)
   localStorage.removeItem(NETWORK_KEY)
-  localStorage.removeItem(TOKEN_KEY)
+  localStorage.removeItem(TOKENS_KEY)
 }
 
 export default {
@@ -51,7 +48,7 @@ export default {
   getAccount,
   setNetwork,
   getNetwork,
-  setToken,
-  getToken,
+  setTokens,
+  getTokens,
   clear,
 }
