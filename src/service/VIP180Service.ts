@@ -43,7 +43,10 @@ const buildMintClause = async (
       .method(VIP180Abi.mint)
       .asClause(address, tokenAmount)
 
-    clauses.push(clause)
+    clauses.push({
+      ...clause,
+      abi: VIP180Abi.mint,
+    })
   }
 
   return clauses
