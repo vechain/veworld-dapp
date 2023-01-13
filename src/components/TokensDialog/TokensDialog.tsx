@@ -13,7 +13,7 @@ import { useWallet } from "../../context/walletContext"
 import useTokenBalance from "../../hooks/useTokenBalance"
 import { IAccount, IToken } from "../../model/State"
 import Address from "../Account/Address/Address"
-import MintToken from "../MintToken/MintTokenForm"
+import MintToken from "../MintToken/MintToken"
 import { Dialog } from "../Shared"
 import TokensSelect from "../TokensSelect/TokensSelect"
 

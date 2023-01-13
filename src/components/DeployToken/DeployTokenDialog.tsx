@@ -4,13 +4,9 @@ import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
-  Grid,
   Input,
   Spinner,
-  Tag,
-  Text,
   VStack,
-  Divider,
 } from "@chakra-ui/react"
 import React from "react"
 import { RegisterOptions, useForm } from "react-hook-form"
@@ -84,8 +80,9 @@ const DeployTokenDialogBody: React.FC<IDeployTokenDialogBody> = ({
       dispatch({ type: ActionType.ADD_TOKEN, payload: deployedData.token })
   }
 
-  console.log(txStatus, error)
-  const isTxToInitialize = txStatus === TxStage.NONE
+  const isTxPending = [TxStage.IN_EXTENSION, TxStage.POLLING_TX].includes(
+    txStatus
+  )
 
   const decimalsRules: RegisterOptions = {
     validate: (value) =>
@@ -114,104 +111,50 @@ const DeployTokenDialogBody: React.FC<IDeployTokenDialogBody> = ({
     },
   }
 
-  if (isTxToInitialize)
-    return (
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <VStack spacing={4} w="full">
-          <FormControl isRequired isInvalid={!!errors.name?.message}>
-            <FormLabel>Name</FormLabel>
-            <Input type="text" {...register("name", nameRules)} />
-            <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl isRequired isInvalid={!!errors.symbol?.message}>
-            <FormLabel>Symbol</FormLabel>
-            <Input type="text" {...register("symbol", symbolRules)} />
-            <FormErrorMessage>{errors.symbol?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl isRequired isInvalid={!!errors.decimals?.message}>
-            <FormLabel>Decimals</FormLabel>
-            <Input type="number" {...register("decimals", decimalsRules)} />
-            <FormErrorMessage>{errors.decimals?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={!!errors.delegateUrl?.message}>
-            <FormLabel>Delegate URL</FormLabel>
-            <Input type="text" {...register("delegateUrl", delegateUrlRules)} />
-            {errors.delegateUrl?.message ? (
-              <FormErrorMessage>{errors.delegateUrl.message}</FormErrorMessage>
-            ) : (
-              <FormHelperText>
-                Sample URL: https://sponsor-testnet.vechain.energy/by/147
-              </FormHelperText>
-            )}
-          </FormControl>
-        </VStack>
-        <Button mt={8} w="full" type="submit" colorScheme="blue">
-          Deploy token
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <VStack spacing={4} w="full">
+        <FormControl isRequired isInvalid={!!errors.name?.message}>
+          <FormLabel>Name</FormLabel>
+          <Input type="text" {...register("name", nameRules)} />
+          <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+        </FormControl>
+        <FormControl isRequired isInvalid={!!errors.symbol?.message}>
+          <FormLabel>Symbol</FormLabel>
+          <Input type="text" {...register("symbol", symbolRules)} />
+          <FormErrorMessage>{errors.symbol?.message}</FormErrorMessage>
+        </FormControl>
+        <FormControl isRequired isInvalid={!!errors.decimals?.message}>
+          <FormLabel>Decimals</FormLabel>
+          <Input type="number" {...register("decimals", decimalsRules)} />
+          <FormErrorMessage>{errors.decimals?.message}</FormErrorMessage>
+        </FormControl>
+        <FormControl isInvalid={!!errors.delegateUrl?.message}>
+          <FormLabel>Delegate URL</FormLabel>
+          <Input type="text" {...register("delegateUrl", delegateUrlRules)} />
+          {errors.delegateUrl?.message ? (
+            <FormErrorMessage>{errors.delegateUrl.message}</FormErrorMessage>
+          ) : (
+            <FormHelperText>
+              Sample URL: https://sponsor-testnet.vechain.energy/by/147
+            </FormHelperText>
+          )}
+        </FormControl>
+      </VStack>
+      <VStack mt={8} spacing={4}>
+        <TransactionStatus txStage={txStatus} txId={txId} error={error} />
+
+        <Button
+          w="full"
+          disabled={isTxPending}
+          type="submit"
+          colorScheme="blue"
+          leftIcon={isTxPending ? <Spinner /> : <></>}
+        >
+          {isTxPending ? "Deploying..." : "Deploy token"}
         </Button>
-      </form>
-    )
-
-  return (
-    <DeployTokenInitialized
-      values={getValues()}
-      txStatus={txStatus}
-      txId={txId}
-      error={error}
-    />
-  )
-}
-
-interface IDeployTokenInitialized {
-  values: DeployTokenForm
-  txStatus: TxStage
-  txId?: string
-  error?: string
-}
-const DeployTokenInitialized: React.FC<IDeployTokenInitialized> = ({
-  values,
-  txStatus,
-  txId,
-  error,
-}) => {
-  const isTxPending = [TxStage.IN_EXTENSION, TxStage.POLLING_TX].includes(
-    txStatus
-  )
-
-  return (
-    <VStack spacing={8}>
-      <Grid w="full" gap={4} templateColumns={"repeat(2, auto)"}>
-        <Text as="b" fontSize="md">
-          Name
-        </Text>
-        <Tag colorScheme="blue">{values.name}</Tag>
-
-        <Text as="b" fontSize="md">
-          Symbol
-        </Text>
-        <Tag colorScheme="blue">{values.symbol}</Tag>
-
-        <Text as="b" fontSize="md">
-          Decimals
-        </Text>
-        <Tag colorScheme="blue">{values.decimals}</Tag>
-
-        <Text as="b" fontSize="md">
-          Delegate
-        </Text>
-        <Tag colorScheme="blue">{values.delegateUrl}</Tag>
-      </Grid>
-      <Divider />
-      {isTxPending && (
-        <Spinner
-          thickness="4px"
-          speed="0.5s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      )}
-      <TransactionStatus txStage={txStatus} txId={txId} error={error} />
-    </VStack>
+      </VStack>
+    </form>
   )
 }
 
