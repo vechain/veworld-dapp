@@ -1,20 +1,9 @@
-import React, { useEffect, useState } from "react"
-import { Layout } from "antd"
-import ConnectToExtension from "../../components/ConnectToExtension/ConnectToExtension"
-import DeployToken from "../../components/DeployToken/DeployToken"
-import TokenBalance from "../../components/TokenBalance/TokenBalance"
-import MintToken from "../../components/MintToken/MintToken"
-import ConnexService, { Network } from "../../service/ConnexService"
-import LocalStorageService, {
-  WalletSource,
-} from "../../service/LocalStorageService"
-import Account from "../../components/Account/Account"
+import React from "react"
 
-export interface AccountState {
-  address: string
-  source: WalletSource
-}
-
+import { Grid, GridItem } from "@chakra-ui/react"
+import Welcome from "../../components/Homepage/Welcome/Welcome"
+import Features from "../../components/Homepage/Features/Features"
+import MeetVeWorld from "../../components/Homepage/MeetVeWorld/MeetVeWorld"
 export interface Token {
   address?: string
   name?: string
@@ -23,76 +12,34 @@ export interface Token {
 }
 
 const Homepage: React.FC = () => {
-  const [account, setAccount] = useState<AccountState | undefined>(
-    LocalStorageService.getAccount()
-  )
-  const [network, setNetwork] = useState<Network | undefined>(
-    LocalStorageService.getNetwork()
-  )
-  const [token, setToken] = useState<Token | undefined>(
-    LocalStorageService.getToken()
-  )
-
-  useEffect(() => {
-    if (account?.source && network) {
-      ConnexService.initialise(account.source, network)
-    }
-  }, [account, network, token])
-
-  const persistAccount = (account: AccountState) => {
-    setAccount(account)
-    LocalStorageService.setAccount(account)
-  }
-
-  const persistNetwork = (network: Network) => {
-    setNetwork(network)
-    LocalStorageService.setNetwork(network)
-  }
-
-  const persistToken = (token: Token) => {
-    setToken(token)
-    LocalStorageService.setToken(token)
-  }
-
-  const clearState = () => {
-    LocalStorageService.clear()
-    ConnexService.clear()
-    setAccount(undefined)
-    setToken(undefined)
-    setNetwork(undefined)
-  }
-
   return (
-    <div
-      className={
-        "h-full w-full py-10 flex flex-col justify-center items-center"
-      }
+    <Grid
+      w="full"
+      templateRows="repeat(3, 1fr)"
+      templateColumns="repeat(5, 1fr)"
+      gap={8}
+      alignItems="stretch"
     >
-      <Layout className={"w-[80%] float-center"}>
-        {account ? (
-          <>
-            <Account account={account} clearState={clearState} />
+      <GridItem rowSpan={1} colSpan={3}>
+        <Welcome />
+      </GridItem>
+      <GridItem rowSpan={1} colSpan={2}>
+        <MeetVeWorld />
+      </GridItem>
+      <GridItem rowSpan={1} colSpan={5}>
+        <Features />
+      </GridItem>
 
-            {token?.address ? (
-              <>
-                <TokenBalance accountAddress={account.address} token={token} />
-                <MintToken accountAddress={account.address} token={token} />
-              </>
-            ) : (
-              <DeployToken
-                setToken={persistToken}
-                accountAddress={account.address}
-              />
-            )}
-          </>
-        ) : (
-          <ConnectToExtension
-            setAccount={persistAccount}
-            setNetwork={persistNetwork}
-          />
-        )}
-      </Layout>
-    </div>
+      {/* 
+      {token?.address ? (
+        <>
+          <TokenBalance accountAddress={account.address} token={token} />
+          <MintToken accountAddress={account.address} token={token} />
+        </>
+      ) : (
+        <DeployToken setToken={persistToken} accountAddress={account.address} />
+      )} */}
+    </Grid>
   )
 }
 

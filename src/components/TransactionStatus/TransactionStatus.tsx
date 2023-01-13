@@ -1,70 +1,92 @@
-import React from "react"
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Box,
+  HStack,
+  Text,
+} from "@chakra-ui/react"
+import React, { useCallback } from "react"
 import { TxStage } from "../../model/Transaction"
-import { Alert } from "antd"
+import Address from "../Account/Address/Address"
 
 interface TransactionStatusProps {
-  setTxStage: (txStage: TxStage) => void
+  setTxStage?: (txStage: TxStage) => void
   txStage: TxStage
+  error?: string
   txId?: string
-  componentName: string
+  componentName?: string
 }
 
 const TransactionStatus: React.FC<TransactionStatusProps> = ({
-  setTxStage,
   txStage,
   txId,
-  componentName,
+  error,
 }) => {
-  const description = txId ? `Transaction ID: ${txId}` : undefined
+  const getDescription = useCallback(() => {
+    if (error) return error
+    if (txId)
+      return (
+        <HStack spacing={2}>
+          <Text>Transaction ID: </Text>
+          <Address address={txId} />
+        </HStack>
+      )
+  }, [error, txId])
 
   switch (txStage) {
     case TxStage.NONE:
       return <></>
     case TxStage.IN_EXTENSION:
       return (
-        <Alert
-          message={`${componentName} - Waiting for confirmation in extension`}
-          type={"warning"}
-          showIcon
-        />
+        <Alert status={"warning"}>
+          <AlertIcon />
+          <Box>
+            <AlertTitle>Waiting for confirmation in extension!</AlertTitle>
+            <AlertDescription>{getDescription()}</AlertDescription>
+          </Box>
+        </Alert>
       )
     case TxStage.POLLING_TX:
       return (
-        <Alert
-          message={`${componentName} - Polling the blockchain for the transaction`}
-          type={"warning"}
-          description={description}
-          showIcon
-        />
+        <Alert status={"warning"}>
+          <AlertIcon />
+          <Box>
+            <AlertTitle>Polling the blockchain for the transaction</AlertTitle>
+            <AlertDescription>{getDescription()}</AlertDescription>
+          </Box>
+        </Alert>
       )
     case TxStage.FAILURE:
       return (
-        <Alert
-          onClick={() => setTxStage(TxStage.NONE)}
-          message={`${componentName} - Transaction failed`}
-          type={"error"}
-          description={description}
-        />
+        <Alert status={"error"}>
+          <AlertIcon />
+          <Box>
+            <AlertTitle>Transaction failed</AlertTitle>
+            <AlertDescription>{getDescription()}</AlertDescription>
+          </Box>
+        </Alert>
       )
     case TxStage.COMPLETE:
       return (
-        <Alert
-          onClick={() => setTxStage(TxStage.NONE)}
-          message={`${componentName} - Transaction successful`}
-          type={"success"}
-          showIcon
-          description={description}
-        />
+        <Alert status={"success"}>
+          <AlertIcon />
+          <Box>
+            <AlertTitle>Transaction successful</AlertTitle>
+            <AlertDescription>{getDescription()}</AlertDescription>
+          </Box>
+        </Alert>
       )
     case TxStage.REVERTED:
       return (
-        <Alert
-          onClick={() => setTxStage(TxStage.NONE)}
-          message={`${componentName} - Transaction reverted`}
-          type={"error"}
-          showIcon
-          description={description}
-        />
+        <Alert status={"error"}>
+          <AlertIcon />
+          <Box>
+            <AlertTitle>Transaction reverted</AlertTitle>
+            <AlertDescription>{getDescription()}</AlertDescription>
+          </Box>
+        </Alert>
       )
     default:
       return <></>

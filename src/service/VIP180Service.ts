@@ -3,8 +3,7 @@ import ConnexService from "./ConnexService"
 import { ClauseType } from "../model/Transaction"
 import Web3 from "web3"
 import VIP180Abi from "../vechain/VIP180.abi"
-import { Connex } from "@vechain/connex"
-import { Token } from "../pages/Homepage/Homepage"
+import { IToken } from "../model/State"
 
 const web3 = new Web3()
 
@@ -53,7 +52,7 @@ const buildMintClause = async (
   return clauses
 }
 
-const getToken = async (address: string): Promise<Token> => {
+const getToken = async (address: string): Promise<IToken> => {
   try {
     const connex = await ConnexService.getConnex()
 
