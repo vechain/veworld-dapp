@@ -38,6 +38,7 @@ const useDeployToken = () => {
       setTxStatus(TxStage.POLLING_TX)
 
       const receipt = await TransactionsService.pollForReceipt(txid)
+      console.log(receipt)
 
       if (receipt.reverted) {
         const revertReason = await TransactionsService.explainRevertReason(txid)

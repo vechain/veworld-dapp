@@ -4,9 +4,13 @@ import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
+  Grid,
   Input,
   Spinner,
+  Tag,
+  Text,
   VStack,
+  Divider,
 } from "@chakra-ui/react"
 import React from "react"
 import { RegisterOptions, useForm } from "react-hook-form"
@@ -52,6 +56,7 @@ const DeployTokenDialogBody: React.FC<IDeployTokenDialogBody> = ({
   const {
     handleSubmit,
     register,
+    getValues,
     formState: { errors },
   } = useForm<DeployTokenForm>({
     mode: "onTouched",
@@ -76,9 +81,6 @@ const DeployTokenDialogBody: React.FC<IDeployTokenDialogBody> = ({
 
   console.log(txStatus, error)
   const isTxToInitialize = txStatus === TxStage.NONE
-  const isTxPending = [TxStage.IN_EXTENSION, TxStage.POLLING_TX].includes(
-    txStatus
-  )
 
   const decimalsRules: RegisterOptions = {
     validate: (value) =>
@@ -145,7 +147,55 @@ const DeployTokenDialogBody: React.FC<IDeployTokenDialogBody> = ({
     )
 
   return (
+    <DeployTokenInitialized
+      values={getValues()}
+      txStatus={txStatus}
+      txId={txId}
+      error={error}
+    />
+  )
+}
+
+interface IDeployTokenInitialized {
+  values: DeployTokenForm
+  txStatus: TxStage
+  txId?: string
+  error?: string
+}
+const DeployTokenInitialized: React.FC<IDeployTokenInitialized> = ({
+  values,
+  txStatus,
+  txId,
+  error,
+}) => {
+  const isTxPending = [TxStage.IN_EXTENSION, TxStage.POLLING_TX].includes(
+    txStatus
+  )
+
+  return (
     <VStack spacing={8}>
+      <Grid w="full" gap={4} templateColumns={"repeat(2, auto)"}>
+        <Text as="b" fontSize="md">
+          Name
+        </Text>
+        <Tag colorScheme="blue">{values.name}</Tag>
+
+        <Text as="b" fontSize="md">
+          Symbol
+        </Text>
+        <Tag colorScheme="blue">{values.symbol}</Tag>
+
+        <Text as="b" fontSize="md">
+          Decimals
+        </Text>
+        <Tag colorScheme="blue">{values.decimals}</Tag>
+
+        <Text as="b" fontSize="md">
+          Delegate
+        </Text>
+        <Tag colorScheme="blue">{values.delegateUrl}</Tag>
+      </Grid>
+      <Divider />
       {isTxPending && (
         <Spinner
           thickness="4px"

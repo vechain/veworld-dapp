@@ -67,6 +67,7 @@ interface IWalletProvider {
 }
 const WalletProvider = ({ children }: IWalletProvider) => {
   const [state, dispatch] = useReducer(walletReducer, walletReducerDefaultValue)
+  const { account, network } = state
 
   const value = useMemo(
     () => ({
@@ -77,10 +78,15 @@ const WalletProvider = ({ children }: IWalletProvider) => {
   )
 
   useEffect(() => {
-    const { account, network } = state
-    if (account?.source && network) {
-      ConnexService.initialise(account.source, network)
+    const initialiseConnex = async () => {
+      if (account?.source && network) {
+        const connex = ConnexService.initialise(account.source, network)
+        console.log("connex initialised", connex)
+        const acc = await ConnexService.getAccount(account.address)
+        console.log(acc)
+      }
     }
+    initialiseConnex()
   }, [state])
 
   return (

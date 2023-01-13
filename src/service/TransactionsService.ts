@@ -1,4 +1,3 @@
-import { Connex } from "@vechain/connex"
 import ConnexService from "./ConnexService"
 
 const pollForReceipt = async (

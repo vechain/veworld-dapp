@@ -17,6 +17,7 @@ import "./styles/index.css"
 const Index = () => {
   return (
     <ChakraProvider theme={theme}>
+      <Fonts />
       <WalletProvider>
         <NavBar />
         <StyledContainer>

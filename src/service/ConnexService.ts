@@ -6,6 +6,7 @@ let connex: Connex | undefined
 
 const initialise = (walletSource: WalletSource, network: Network) => {
   const enhancedNetwork = NetworkInfo[network]
+  console.log(walletSource, network, enhancedNetwork)
   connex = new Connex({
     node: enhancedNetwork.url,
     network,
@@ -15,7 +16,7 @@ const initialise = (walletSource: WalletSource, network: Network) => {
   return connex
 }
 
-const getConnex = async () => {
+const getConnex = () => {
   if (!connex) throw new Error("Connex not initialised")
 
   return connex
@@ -57,8 +58,17 @@ export const connectToWalletHandler = async (
   return cert
 }
 
+const getAccount = async (
+  accountAddress: string
+): Promise<Connex.Thor.Account> => {
+  const connex = getConnex()
+  const account = await connex.thor.account(accountAddress).get()
+  return account
+}
+
 export default {
   getConnex,
+  getAccount,
   initialise,
   clear,
 }

@@ -22,11 +22,11 @@ export enum Network {
 export const NetworkInfo: Record<Network, { name: string; url: string }> = {
   [Network.MAIN]: {
     name: "Mainnet",
-    url: "https://vethor-node-test.vechaindev.com",
+    url: "https://vethor-node.vechain.com",
   },
   [Network.TEST]: {
     name: "Testnet",
-    url: "https://vethor-node.vechain.com",
+    url: "https://vethor-node-test.vechaindev.com",
   },
 }
 
