@@ -16,15 +16,17 @@ import "./styles/index.css"
 
 const Index = () => {
   return (
-    <ChakraProvider theme={theme}>
+    <>
       <Fonts />
-      <WalletProvider>
-        <NavBar />
-        <StyledContainer>
-          <Router />
-        </StyledContainer>
-      </WalletProvider>
-    </ChakraProvider>
+      <ChakraProvider theme={theme}>
+        <WalletProvider>
+          <NavBar />
+          <StyledContainer>
+            <Router />
+          </StyledContainer>
+        </WalletProvider>
+      </ChakraProvider>
+    </>
   )
 }
 
