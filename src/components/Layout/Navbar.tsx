@@ -1,4 +1,12 @@
-import { Icon, Box, Flex, Text, HStack, Tag } from "@chakra-ui/react"
+import {
+  Icon,
+  Box,
+  Flex,
+  Text,
+  HStack,
+  Tag,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import React from "react"
 import Logo from "../Logo/Logo"
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher"
@@ -11,8 +19,15 @@ const NavBar: React.FC = () => {
   const {
     state: { account, network },
   } = useWallet()
+
+  const bg = useColorModeValue("gray.50", "gray.900")
   return (
     <Flex
+      position={"sticky"}
+      top={0}
+      zIndex={1}
+      bg={bg}
+      shadow="xs"
       py={2}
       px={20}
       w={"full"}

@@ -1,8 +1,8 @@
 import { Button, Icon, useDisclosure } from "@chakra-ui/react"
 import { WalletIcon } from "@heroicons/react/24/solid"
 import { useWallet } from "../../context/walletContext"
-import { humanAddress } from "../../utils/FormattingUtils"
-import AccountDetailModal from "../AccountDetailModal/AccountDetailModal"
+import AddressButton from "../Account/Address/AddressButton"
+import AccountDetailModal from "../ConnectedWalletDialog/ConnectedWalletDialog"
 import ConnectWalletModal from "../ConnectWalletModal/ConnectWalletModal"
 
 const ConnectWalletButton = () => {
@@ -21,13 +21,11 @@ const ConnectWalletButton = () => {
           account={account}
           network={network}
         />
-        <Button
-          colorScheme={"blue"}
+        <AddressButton
+          address={account.address}
+          showCopyIcon={false}
           onClick={onOpen}
-          leftIcon={<Icon as={WalletIcon} />}
-        >
-          {humanAddress(account.address)}
-        </Button>
+        />
       </>
     )
 

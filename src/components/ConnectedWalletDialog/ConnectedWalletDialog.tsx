@@ -1,10 +1,10 @@
-import { Button, Icon, HStack, Text, VStack, Tag } from "@chakra-ui/react"
-import { WalletIcon } from "@heroicons/react/24/solid"
+import { Button, HStack, Text, VStack, Tag } from "@chakra-ui/react"
 import React from "react"
 import { ActionType, useWallet } from "../../context/walletContext"
 import { Network, NetworkInfo, WalletSourceInfo } from "../../model/enums"
 import { IAccount } from "../../model/State"
-import Address from "../Account/Address/Address"
+import { getPicassoImgSrc } from "../../utils/PicassoUtils"
+import AddressButton from "../Account/Address/AddressButton"
 import { Dialog } from "../Shared"
 
 interface IConnectWalletModal {
@@ -27,9 +27,14 @@ const AccountDetailModal: React.FC<IConnectWalletModal> = ({
   }
 
   const header = (
-    <HStack spacing={2}>
-      <Icon as={WalletIcon} />
-      <Text>Connected Wallet</Text>
+    <HStack
+      spacing={2}
+      p={4}
+      bgImage={`url(${getPicassoImgSrc(account.address, true)})`}
+      bgRepeat={"no-repeat"}
+      bgSize="cover"
+    >
+      <Text color={"white"}>Connected Wallet</Text>
     </HStack>
   )
 
@@ -39,6 +44,8 @@ const AccountDetailModal: React.FC<IConnectWalletModal> = ({
       isOpen={isOpen}
       onClose={onClose}
       header={header}
+      headerStyle={{ p: 0 }}
+      closeButtonStyle={{ color: "white" }}
       body={
         <AccountDetailBody
           account={account}
@@ -67,7 +74,7 @@ const AccountDetailBody: React.FC<IAccountDetailBody> = ({
           <Text as="b" fontSize="md">
             Account
           </Text>
-          <Address address={account.address} />
+          <AddressButton address={account.address} />
         </HStack>
         <HStack justifyContent={"space-between"} w="full">
           <Text as="b" fontSize="md">

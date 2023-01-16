@@ -27,11 +27,11 @@ import AccountSourceRadio from "../Account/AccountSourceRadio/AccountSourceRadio
 import NetworkSelect from "../NetworkSelect/NetworkSelect"
 import { Dialog } from "../Shared"
 
-interface IConnectWalletModal {
+interface IConnectedWalletDialog {
   isOpen: boolean
   onClose: () => void
 }
-const ConnectWalletModal: React.FC<IConnectWalletModal> = ({
+const ConnectedWalletDialog: React.FC<IConnectedWalletDialog> = ({
   isOpen,
   onClose,
 }) => {
@@ -47,15 +47,15 @@ const ConnectWalletModal: React.FC<IConnectWalletModal> = ({
       isOpen={isOpen}
       onClose={onClose}
       header={header}
-      body={<ConnectWalletBody onClose={onClose} />}
+      body={<ConnectedWalletBody onClose={onClose} />}
     />
   )
 }
 
-interface IConnectWalletBody {
+interface IConnectedWalletBody {
   onClose: () => void
 }
-const ConnectWalletBody: React.FC<IConnectWalletBody> = ({ onClose }) => {
+const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
   const { dispatch } = useWallet()
   const toast = useToast()
 
@@ -147,4 +147,4 @@ const ConnectWalletBody: React.FC<IConnectWalletBody> = ({ onClose }) => {
   )
 }
 
-export default ConnectWalletModal
+export default ConnectedWalletDialog
