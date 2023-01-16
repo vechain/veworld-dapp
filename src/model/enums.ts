@@ -3,12 +3,18 @@ export enum WalletSource {
   SYNC2 = "sync2",
 }
 
-export const WalletSourceInfo: Record<WalletSource, { name: string }> = {
+const logosUrl = process.env.PUBLIC_URL + "/images/logo"
+export const WalletSourceInfo: Record<
+  WalletSource,
+  { name: string; logo?: string }
+> = {
   [WalletSource.VEWORLD]: {
     name: "VeWorld",
+    logo: `${logosUrl}/veWorld.png`,
   },
   [WalletSource.SYNC2]: {
     name: "Sync2",
+    logo: `${logosUrl}/sync2.png`,
   },
 }
 
