@@ -24,7 +24,7 @@ import { connectToWalletHandler } from "../../service/ConnexService"
 import { getErrorMessage } from "../../utils/ExtensionUtils"
 import { humanAddress } from "../../utils/FormattingUtils"
 import AccountSourceRadio from "../Account/AccountSourceRadio/AccountSourceRadio"
-import NetworkSelect from "../NetworkSelect/NetworkSelect"
+import NetworkSelect from "../Network/NetworkSelect/NetworkSelect"
 import { Dialog } from "../Shared"
 
 interface IConnectedWalletDialog {
