@@ -1,10 +1,11 @@
-import { Button, HStack, Text, VStack, Tag } from "@chakra-ui/react"
+import { Button, HStack, Text, VStack, Image } from "@chakra-ui/react"
 import React from "react"
 import { ActionType, useWallet } from "../../context/walletContext"
-import { Network, NetworkInfo, WalletSourceInfo } from "../../model/enums"
+import { Network, WalletSourceInfo } from "../../model/enums"
 import { IAccount } from "../../model/State"
 import { getPicassoImgSrc } from "../../utils/PicassoUtils"
 import AddressButton from "../Account/Address/AddressButton"
+import NetworkBadge from "../Network/NetworkBadge/NetworkBadge"
 import { Dialog } from "../Shared"
 
 interface IConnectWalletModal {
@@ -67,6 +68,7 @@ const AccountDetailBody: React.FC<IAccountDetailBody> = ({
   network,
   disconnectWallet,
 }) => {
+  const sourceInfo = WalletSourceInfo[account.source]
   return (
     <>
       <VStack spacing={4} w="100%">
@@ -80,13 +82,22 @@ const AccountDetailBody: React.FC<IAccountDetailBody> = ({
           <Text as="b" fontSize="md">
             Source
           </Text>
-          <Tag colorScheme="blue">{WalletSourceInfo[account.source].name}</Tag>
+          <HStack spacing={2}>
+            <Image
+              objectFit={"cover"}
+              w={35}
+              h={35}
+              alt={`${sourceInfo.name}-logo`}
+              src={sourceInfo.logo}
+            />
+            <Text>{sourceInfo.name}</Text>
+          </HStack>
         </HStack>
         <HStack justifyContent={"space-between"} w="full">
           <Text as="b" fontSize="md">
             Network
           </Text>
-          <Tag colorScheme="blue">{NetworkInfo[network].name}</Tag>
+          <NetworkBadge network={network} />
         </HStack>
       </VStack>
       <Button mt={8} onClick={disconnectWallet} w="full" colorScheme={"red"}>

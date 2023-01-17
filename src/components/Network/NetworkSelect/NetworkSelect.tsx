@@ -2,7 +2,7 @@ import { Flex, Icon, Text } from "@chakra-ui/react"
 import React, { useMemo } from "react"
 
 import { Select, SingleValue } from "chakra-react-select"
-import { Network, NetworkInfo } from "../../model/enums"
+import { Network, NetworkInfo } from "../../../model/enums"
 import { GlobeAltIcon } from "@heroicons/react/24/solid"
 
 interface INetworkSelectOption {

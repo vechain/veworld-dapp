@@ -1,19 +1,10 @@
-import {
-  Icon,
-  Box,
-  Flex,
-  Text,
-  HStack,
-  Tag,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Box, Flex, HStack, useColorModeValue } from "@chakra-ui/react"
 import React from "react"
 import Logo from "../Logo/Logo"
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher"
 import ConnectWalletButton from "../ConnectWalletButton/ConnectWalletButton"
 import { useWallet } from "../../context/walletContext"
-import { Network, NetworkInfo } from "../../model/enums"
-import { GlobeAltIcon } from "@heroicons/react/24/solid"
+import NetworkBadge from "../Network/NetworkBadge/NetworkBadge"
 
 const NavBar: React.FC = () => {
   const {
@@ -51,20 +42,6 @@ const NavBarWalletConnect = () => {
       <ConnectWalletButton />
       <ThemeSwitcher />
     </HStack>
-  )
-}
-
-interface INetworkBadge {
-  network: Network
-}
-const NetworkBadge: React.FC<INetworkBadge> = ({ network }) => {
-  return (
-    <Tag size="lg">
-      <HStack fontSize={"lg"} spacing={2}>
-        <Icon as={GlobeAltIcon} />
-        <Text>{NetworkInfo[network].name}</Text>
-      </HStack>
-    </Tag>
   )
 }
 
