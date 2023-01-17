@@ -7,7 +7,6 @@ import {
   Input,
   Spinner,
   VStack,
-  FormHelperText,
 } from "@chakra-ui/react"
 import { CurrencyDollarIcon } from "@heroicons/react/24/solid"
 import React from "react"
