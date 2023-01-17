@@ -1,8 +1,9 @@
-import { IAccount, IToken } from "../model/State"
+import { IAccount, INonFungibleToken, IToken } from "../model/State"
 import { Network } from "../model/enums"
 
 export const ACCOUNT_KEY = "PREVIOUS_ACCOUNT_KEY"
 export const TOKENS_KEY = "TOKENS_KEY"
+export const NFTS_KEY = "NFTS_KEY"
 export const NETWORK_KEY = "NETWORK_KEY"
 
 const setAccount = (account: IAccount) => {
@@ -37,10 +38,21 @@ const getTokens = (): IToken[] => {
   return []
 }
 
+const setNfts = (nfts: INonFungibleToken[]) => {
+  localStorage.setItem(NFTS_KEY, JSON.stringify(nfts))
+}
+
+const getNfts = (): INonFungibleToken[] => {
+  const nft = localStorage.getItem(NFTS_KEY)
+  if (nft) return JSON.parse(nft)
+  return []
+}
+
 const clear = () => {
   localStorage.removeItem(ACCOUNT_KEY)
   localStorage.removeItem(NETWORK_KEY)
   localStorage.removeItem(TOKENS_KEY)
+  localStorage.removeItem(NFTS_KEY)
 }
 
 export default {
@@ -50,5 +62,7 @@ export default {
   getNetwork,
   setTokens,
   getTokens,
+  setNfts,
+  getNfts,
   clear,
 }
