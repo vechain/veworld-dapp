@@ -17,6 +17,8 @@ import StyledCard from "../../Shared/StyledCard/StyledCard"
 import DeployTokenDialog from "../../DeployToken/DeployTokenDialog"
 import { IAccount } from "../../../model/State"
 import TokensDialog from "../../TokensDialog/TokensDialog"
+import DeployNFTDialog from "../../DeployNFT/DeployNFTDialog"
+import NFTsDialog from "../../NFTsDialog/NFTsDialog"
 
 interface IFeatureDialog {
   isOpen: boolean
@@ -44,6 +46,20 @@ const FeatureList: IFeature[] = [
     icon: <CurrencyDollarIcon />,
     requireWallet: true,
     featureDialog: TokensDialog,
+  },
+  {
+    name: "Deploy an NFT",
+    desc: "Create a new NFT contract on VeChain in seconds!",
+    icon: <CurrencyDollarIcon />,
+    requireWallet: true,
+    featureDialog: DeployNFTDialog,
+  },
+  {
+    name: "Your NFTs",
+    desc: "See and mint NFTs deployed from this dapp",
+    icon: <CurrencyDollarIcon />,
+    requireWallet: true,
+    featureDialog: NFTsDialog,
   },
 ]
 

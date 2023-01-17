@@ -7,7 +7,7 @@ import React, {
 } from "react"
 import LocalStorageService from "../service/LocalStorageService"
 import ConnexService from "../service/ConnexService"
-import { IAccount, IToken } from "../model/State"
+import { IAccount, INonFungibleToken, IToken } from "../model/State"
 
 import { Network } from "../model/enums"
 
@@ -16,6 +16,7 @@ export enum ActionType {
   SET_NETWORK = "SET_NETWORK",
   SET_ACCOUNT = "SET_ACCOUNT",
   ADD_TOKEN = "ADD_TOKEN",
+  ADD_NFT = "ADD_NFT",
   CLEAR = "CLEAR",
 }
 
@@ -27,11 +28,17 @@ type Action =
   | { type: ActionType.SET_NETWORK; payload: Network }
   | { type: ActionType.SET_ACCOUNT; payload: IAccount }
   | { type: ActionType.ADD_TOKEN; payload: IToken }
+  | { type: ActionType.ADD_NFT; payload: INonFungibleToken }
   | { type: ActionType.CLEAR }
 
 type Dispatch = (action: Action) => void
 
-export type State = { account?: IAccount; network?: Network; tokens: IToken[] }
+export type State = {
+  account?: IAccount
+  network?: Network
+  tokens: IToken[]
+  nfts: INonFungibleToken[]
+}
 
 type ContextStateProps = { state: State; dispatch: Dispatch }
 
@@ -39,9 +46,10 @@ const walletReducerDefaultValue = {
   account: LocalStorageService.getAccount(),
   network: LocalStorageService.getNetwork(),
   tokens: LocalStorageService.getTokens(),
+  nfts: LocalStorageService.getNfts(),
 }
 
-const walletReducer = (state: State, action: Action) => {
+const walletReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case ActionType.SET_ALL:
       LocalStorageService.setAccount(action.payload.account)
@@ -55,13 +63,18 @@ const walletReducer = (state: State, action: Action) => {
       LocalStorageService.setTokens(updatedTokens)
       return { ...state, tokens: updatedTokens }
     }
+    case ActionType.ADD_NFT: {
+      const updatedNfts = [...state.nfts, action.payload]
+      LocalStorageService.setNfts(updatedNfts)
+      return { ...state, nfts: updatedNfts }
+    }
     case ActionType.SET_NETWORK:
       LocalStorageService.setNetwork(action.payload)
       return { ...state, network: action.payload }
     case ActionType.CLEAR:
       LocalStorageService.clear()
       ConnexService.clear()
-      return { network: undefined, account: undefined, tokens: [] }
+      return { network: undefined, account: undefined, tokens: [], nfts: [] }
     default: {
       throw new Error(`Unhandled action type: ${action}`)
     }

@@ -11,3 +11,10 @@ export interface IToken {
   symbol: string
   decimals: string
 }
+
+export interface INonFungibleToken {
+  address: string
+  name: string
+  symbol: string
+  tokenURI: string
+}
