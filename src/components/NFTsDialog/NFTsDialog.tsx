@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react"
 import { useWallet } from "../../context/walletContext"
 import useNFTBalance from "../../hooks/useNFTBalance"
 import { IAccount, INonFungibleToken } from "../../model/State"
-import Address from "../Account/Address/Address"
+import AddressButton from "../Account/Address/AddressButton"
 import MintNFT from "../MintNFT/MintNFT"
 import NFTsSelect from "../NFTSelect/NFTsSelect"
 import { Dialog } from "../Shared"
@@ -78,7 +78,7 @@ const NFTDetails: React.FC<INftsDetails> = ({ nft, onMintClick }) => {
         <Text as="b" fontSize={"lg"}>
           Address
         </Text>
-        <Address address={nft.address} />
+        <AddressButton address={nft.address} showAddressIcon={false} />
       </HStack>
       <HStack justify={"space-between"} w="full">
         <Text as="b" fontSize={"lg"}>

@@ -13,15 +13,22 @@ import AddressIcon from "./AddressIcon"
 
 interface IAddress {
   address: string
+  showAddressIcon?: boolean
   copyable?: boolean
 }
-const AddressTag: React.FC<IAddress> = ({ address, copyable = true }) => {
+const AddressTag: React.FC<IAddress> = ({
+  address,
+  showAddressIcon = true,
+  copyable = true,
+}) => {
   const { onCopy, hasCopied } = useClipboard(address)
 
   if (copyable)
     return (
-      <HStack spacing={2}>
-        <AddressIcon address={address} h={6} rounded="md" />
+      <HStack spacing={1}>
+        {showAddressIcon && (
+          <AddressIcon address={address} h={6} rounded="md" />
+        )}
         <Text as="b">{humanAddress(address)}</Text>
         <IconButton
           variant={"ghost"}

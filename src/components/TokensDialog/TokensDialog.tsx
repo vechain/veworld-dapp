@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react"
 import { useWallet } from "../../context/walletContext"
 import useTokenBalance from "../../hooks/useTokenBalance"
 import { IAccount, IToken } from "../../model/State"
-import Address from "../Account/Address/Address"
+import AddressButton from "../Account/Address/AddressButton"
 import MintToken from "../MintToken/MintToken"
 import { Dialog } from "../Shared"
 import TokensSelect from "../TokensSelect/TokensSelect"
@@ -80,9 +80,9 @@ const TokenDetails: React.FC<ITokenDetails> = ({ token, onMintClick }) => {
     <VStack spacing={4}>
       <HStack justify={"space-between"} w="full">
         <Text as="b" fontSize={"lg"}>
-          Address
+          Contract address
         </Text>
-        <Address address={token.address} />
+        <AddressButton address={token.address} showAddressIcon={false} />
       </HStack>
       <HStack justify={"space-between"} w="full">
         <Text as="b" fontSize={"lg"}>
