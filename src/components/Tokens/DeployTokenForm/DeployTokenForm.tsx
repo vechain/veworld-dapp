@@ -4,39 +4,20 @@ import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
+  HStack,
   Input,
   Spinner,
   VStack,
+  Icon,
 } from "@chakra-ui/react"
+import { ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
 import React from "react"
 import { RegisterOptions, useForm } from "react-hook-form"
-import { ActionType, useWallet } from "../../context/walletContext"
-import useDeployToken from "../../hooks/useDeployToken"
-import { IAccount } from "../../model/State"
-import { TxStage } from "../../model/Transaction"
-import { Dialog } from "../Shared"
-import TransactionStatus from "../TransactionStatus/TransactionStatus"
-
-interface IDeployTokenDialog {
-  isOpen: boolean
-  onClose: () => void
-  account: IAccount
-}
-
-const DeployTokenDialog: React.FC<IDeployTokenDialog> = ({
-  isOpen,
-  onClose,
-  account,
-}) => {
-  return (
-    <Dialog
-      isOpen={isOpen}
-      onClose={onClose}
-      header={"Deploy Token"}
-      body={<DeployTokenDialogBody account={account} />}
-    />
-  )
-}
+import { ActionType, useWallet } from "../../../context/walletContext"
+import useDeployToken from "../../../hooks/useDeployToken"
+import { IAccount } from "../../../model/State"
+import { TxStage } from "../../../model/Transaction"
+import TransactionStatus from "../../TransactionStatus/TransactionStatus"
 
 type DeployTokenForm = {
   name: string
@@ -46,9 +27,11 @@ type DeployTokenForm = {
 }
 interface IDeployTokenDialogBody {
   account: IAccount
+  goToYourTokens: () => void
 }
-const DeployTokenDialogBody: React.FC<IDeployTokenDialogBody> = ({
+const DeployTokenForm: React.FC<IDeployTokenDialogBody> = ({
   account,
+  goToYourTokens,
 }) => {
   const {
     handleSubmit,
@@ -143,18 +126,29 @@ const DeployTokenDialogBody: React.FC<IDeployTokenDialogBody> = ({
       <VStack mt={8} spacing={4}>
         <TransactionStatus txStage={txStatus} txId={txId} error={error} />
 
-        <Button
-          w="full"
-          disabled={isTxPending}
-          type="submit"
-          colorScheme="blue"
-          leftIcon={isTxPending ? <Spinner /> : <></>}
-        >
-          {isTxPending ? "Deploying..." : "Deploy token"}
-        </Button>
+        <HStack spacing={4} w="full">
+          <Button
+            w="full"
+            variant={"outline"}
+            colorScheme="blue"
+            onClick={goToYourTokens}
+            leftIcon={<Icon as={ArrowSmallLeftIcon} />}
+          >
+            Back
+          </Button>
+          <Button
+            w="full"
+            disabled={isTxPending}
+            type="submit"
+            colorScheme="blue"
+            leftIcon={isTxPending ? <Spinner /> : <></>}
+          >
+            {isTxPending ? "Deploying..." : "Deploy token"}
+          </Button>
+        </HStack>
       </VStack>
     </form>
   )
 }
 
-export default DeployTokenDialog
+export default DeployTokenForm

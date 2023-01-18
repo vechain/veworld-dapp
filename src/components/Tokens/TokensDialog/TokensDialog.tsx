@@ -6,15 +6,18 @@ import {
   Flex,
   Text,
   Divider,
+  Icon,
   useDisclosure,
 } from "@chakra-ui/react"
-import React, { useEffect, useState } from "react"
-import { useWallet } from "../../context/walletContext"
-import useTokenBalance from "../../hooks/useTokenBalance"
-import { IAccount, IToken } from "../../model/State"
-import AddressButton from "../Account/Address/AddressButton"
-import MintToken from "../MintToken/MintToken"
-import { Dialog } from "../Shared"
+import { ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
+import React, { useEffect, useMemo, useState } from "react"
+import { useWallet } from "../../../context/walletContext"
+import useTokenBalance from "../../../hooks/useTokenBalance"
+import { IAccount, IToken } from "../../../model/State"
+import AddressButton from "../../Account/Address/AddressButton"
+import MintToken from "../../MintToken/MintToken"
+import { Dialog } from "../../Shared"
+import DeployTokenForm from "../DeployTokenForm/DeployTokenForm"
 import TokensSelect from "../TokensSelect/TokensSelect"
 
 interface IDeployTokenDialog {
@@ -24,12 +27,44 @@ interface IDeployTokenDialog {
 }
 
 const TokensDialog: React.FC<IDeployTokenDialog> = ({ isOpen, onClose }) => {
+  const { isOpen: isDeployToken, onToggle: toggleDeployToken } = useDisclosure()
+  const {
+    state: { tokens, account },
+  } = useWallet()
+
+  const header = useMemo(
+    () => (
+      <HStack w="full" justify={"space-between"}>
+        <Text>{isDeployToken ? "Deploy new token" : "Your tokens"}</Text>
+        <Button
+          {...(isDeployToken && { leftIcon: <Icon as={ArrowSmallLeftIcon} /> })}
+          onClick={toggleDeployToken}
+          colorScheme={"blue"}
+          size="sm"
+          variant={isDeployToken ? "outline" : "solid"}
+        >
+          {!isDeployToken ? "Deploy new token" : "Back"}
+        </Button>
+      </HStack>
+    ),
+    [toggleDeployToken, isDeployToken]
+  )
   return (
     <Dialog
       isOpen={isOpen}
+      showCloseButton={false}
       onClose={onClose}
-      header={"Your tokens"}
-      body={<TokensDialogBody />}
+      header={header}
+      body={
+        isDeployToken && account ? (
+          <DeployTokenForm
+            account={account}
+            goToYourTokens={toggleDeployToken}
+          />
+        ) : (
+          <TokensDialogBody />
+        )
+      }
     />
   )
 }
@@ -48,16 +83,24 @@ const TokensDialogBody: React.FC = () => {
   if (isMintView) return <MintToken token={selected} />
   return (
     <Flex gap={4} direction="column" w="full">
-      <Box>
-        <Text mb="8px">Token</Text>
-        <TokensSelect
-          tokens={tokens}
-          selected={selected}
-          onChange={onTokenChange}
-        />
-      </Box>
-      <Divider />
-      {selected && <TokenDetails token={selected} onMintClick={openMintView} />}
+      {tokens.length ? (
+        <>
+          <Box>
+            <Text mb="8px">Token</Text>
+            <TokensSelect
+              tokens={tokens}
+              selected={selected}
+              onChange={onTokenChange}
+            />
+          </Box>
+          <Divider />
+          {selected && (
+            <TokenDetails token={selected} onMintClick={openMintView} />
+          )}
+        </>
+      ) : (
+        <Text fontSize="xl"> You have deployed no tokens </Text>
+      )}
     </Flex>
   )
 }

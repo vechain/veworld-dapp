@@ -2,7 +2,7 @@ import { Flex, Text } from "@chakra-ui/react"
 import React, { useMemo } from "react"
 
 import { Select, SingleValue } from "chakra-react-select"
-import { IToken } from "../../model/State"
+import { IToken } from "../../../model/State"
 
 interface ITokenSelectOption {
   label: React.ReactNode

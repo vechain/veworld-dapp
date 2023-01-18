@@ -9,13 +9,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react"
-import { useWallet } from "../../context/walletContext"
-import useNFTBalance from "../../hooks/useNFTBalance"
-import { IAccount, INonFungibleToken } from "../../model/State"
-import AddressButton from "../Account/Address/AddressButton"
-import MintNFT from "../MintNFT/MintNFT"
-import NFTsSelect from "../NFTSelect/NFTsSelect"
-import { Dialog } from "../Shared"
+import { useWallet } from "../../../context/walletContext"
+import useNFTBalance from "../../../hooks/useNFTBalance"
+import { IAccount, INonFungibleToken } from "../../../model/State"
+import AddressButton from "../../Account/Address/AddressButton"
+import MintNFT from "../../MintNFT/MintNFT"
+import NFTsSelect from "../NFTsSelect/NFTsSelect"
+import { Dialog } from "../../Shared"
 
 interface IDeployNFTDialog {
   isOpen: boolean

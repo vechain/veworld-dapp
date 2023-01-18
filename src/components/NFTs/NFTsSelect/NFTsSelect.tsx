@@ -2,7 +2,7 @@ import { Flex, Text } from "@chakra-ui/react"
 import React, { useMemo } from "react"
 
 import { Select, SingleValue } from "chakra-react-select"
-import { INonFungibleToken } from "../../model/State"
+import { INonFungibleToken } from "../../../model/State"
 
 interface INFTSelectOption {
   label: React.ReactNode

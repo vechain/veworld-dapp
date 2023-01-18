@@ -7,7 +7,7 @@ import {
   Icon,
 } from "@chakra-ui/react"
 import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/react/24/solid"
-import React from "react"
+import React, { useEffect } from "react"
 import { humanAddress } from "../../../utils/FormattingUtils"
 import AddressIcon from "./AddressIcon"
 
@@ -22,9 +22,10 @@ const AddressButton: React.FC<IAddressButton> = ({
   showCopyIcon = true,
   ...props
 }) => {
-  const { onCopy, hasCopied } = useClipboard(address)
+  const { onCopy, hasCopied, setValue } = useClipboard(address)
 
   const { onClick, ...otherProps } = props
+
   const onClickHandler = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -33,7 +34,9 @@ const AddressButton: React.FC<IAddressButton> = ({
     if (showCopyIcon) onCopy()
   }
 
-  console.log(onClickHandler)
+  useEffect(() => {
+    setValue(address)
+  }, [address])
 
   return (
     <Button
