@@ -125,7 +125,7 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
         {connectionLoading && (
           <Alert status="warning">
             <AlertIcon />
-            Approve the request in the wallet
+            Waiting for wallet approval...
           </Alert>
         )}
         {connectionError && (
