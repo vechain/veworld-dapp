@@ -10,7 +10,7 @@ import {
   VStack,
   Icon,
 } from "@chakra-ui/react"
-import { ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
+import { ArrowPathIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
 import React from "react"
 import { RegisterOptions, useForm } from "react-hook-form"
 import { ActionType, useWallet } from "../../../context/walletContext"
@@ -41,6 +41,8 @@ const DeployTokenForm: React.FC<IDeployTokenDialogBody> = ({
     mode: "onTouched",
   })
   const { deployToken, txStatus, txId, error } = useDeployToken()
+
+  const isFirstDeploy = !txId
 
   const { dispatch } = useWallet()
 
@@ -141,9 +143,21 @@ const DeployTokenForm: React.FC<IDeployTokenDialogBody> = ({
             disabled={isTxPending}
             type="submit"
             colorScheme="blue"
-            leftIcon={isTxPending ? <Spinner /> : <></>}
+            leftIcon={
+              isTxPending ? (
+                <Spinner />
+              ) : !isFirstDeploy ? (
+                <Icon as={ArrowPathIcon} />
+              ) : (
+                <></>
+              )
+            }
           >
-            {isTxPending ? "Deploying..." : "Deploy token"}
+            {isTxPending
+              ? "Deploying..."
+              : !isFirstDeploy
+              ? "Deploy again"
+              : "Deploy"}
           </Button>
         </HStack>
       </VStack>

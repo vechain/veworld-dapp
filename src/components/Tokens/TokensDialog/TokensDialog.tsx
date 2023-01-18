@@ -15,7 +15,7 @@ import { useWallet } from "../../../context/walletContext"
 import useTokenBalance from "../../../hooks/useTokenBalance"
 import { IAccount, IToken } from "../../../model/State"
 import AddressButton from "../../Account/Address/AddressButton"
-import MintToken from "../../MintToken/MintToken"
+import MintToken from "../MintToken/MintToken"
 import { Dialog } from "../../Shared"
 import DeployTokenForm from "../DeployTokenForm/DeployTokenForm"
 import TokensSelect from "../TokensSelect/TokensSelect"
@@ -76,11 +76,17 @@ const TokensDialogBody: React.FC = () => {
 
   const [selected, setSelected] = useState<IToken>(tokens[0])
 
-  const { onOpen: openMintView, isOpen: isMintView } = useDisclosure()
+  const {
+    onOpen: openMintView,
+    onClose: closeMintView,
+    isOpen: isMintView,
+  } = useDisclosure()
 
   const onTokenChange = (token: IToken) => setSelected(token)
 
-  if (isMintView) return <MintToken token={selected} />
+  if (isMintView)
+    return <MintToken token={selected} navigateBack={closeMintView} />
+
   return (
     <Flex gap={4} direction="column" w="full">
       {tokens.length ? (
