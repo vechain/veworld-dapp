@@ -39,7 +39,7 @@ const AddressButton: React.FC<IAddressButton> = ({
     <Button
       colorScheme={"gray"}
       onClick={onClickHandler}
-      paddingLeft={0}
+      {...(showAddressIcon && { paddingLeft: 0 })}
       paddingY={0}
       variant="outline"
       {...otherProps}

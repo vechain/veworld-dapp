@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react"
 import React, { useCallback } from "react"
 import { TxStage } from "../../model/Transaction"
-import Address from "../Account/Address/Address"
+import AddressButton from "../Account/Address/AddressButton"
 
 interface TransactionStatusProps {
   setTxStage?: (txStage: TxStage) => void
@@ -30,7 +30,7 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
       return (
         <HStack spacing={2}>
           <Text>Transaction ID: </Text>
-          <Address address={txId} />
+          <AddressButton address={txId} showAddressIcon={false} />
         </HStack>
       )
   }, [error, txId])
