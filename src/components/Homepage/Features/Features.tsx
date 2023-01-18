@@ -1,14 +1,14 @@
 import {
+  Box,
   Button,
-  Icon,
+  Flex,
   Heading,
   HStack,
+  Icon,
   Text,
-  VStack,
-  Box,
-  Flex,
   Tooltip,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react"
 import React from "react"
 import { useWallet } from "../../../context/walletContext"
@@ -25,6 +25,7 @@ interface IFeatureDialog {
   onClose: () => void
   account: IAccount
 }
+
 interface IFeature {
   name: string
   desc: string
@@ -32,17 +33,18 @@ interface IFeature {
   icon?: React.ReactNode
   featureDialog: React.FC<IFeatureDialog>
 }
+
 const FeatureList: IFeature[] = [
   {
-    name: "Deploy a token",
+    name: "Deploy a VIP180 token",
     desc: "Create a new token on VeChain in seconds!",
     icon: <CurrencyDollarIcon />,
     requireWallet: true,
     featureDialog: DeployTokenDialog,
   },
   {
-    name: "Your tokens",
-    desc: "See and mint the tokens deployed from this dapp",
+    name: "Your VIP180 tokens",
+    desc: "See and mint the tokens deployed from this DApp",
     icon: <CurrencyDollarIcon />,
     requireWallet: true,
     featureDialog: TokensDialog,
@@ -56,7 +58,7 @@ const FeatureList: IFeature[] = [
   },
   {
     name: "Your NFTs",
-    desc: "See and mint NFTs deployed from this dapp",
+    desc: "See and mint NFTs deployed from this DApp",
     icon: <CurrencyDollarIcon />,
     requireWallet: true,
     featureDialog: NFTsDialog,
@@ -79,6 +81,7 @@ const Features: React.FC = () => {
 interface IFeatureCard {
   feature: IFeature
 }
+
 const FeatureCard: React.FC<IFeatureCard> = ({ feature }) => {
   const {
     state: { account, network },

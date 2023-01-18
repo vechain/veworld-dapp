@@ -1,15 +1,15 @@
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
   Flex,
-  Text,
+  HStack,
   Icon,
   Spinner,
-  VStack,
-  Alert,
-  AlertIcon,
-  HStack,
+  Text,
   useToast,
+  VStack,
 } from "@chakra-ui/react"
 import { LinkIcon, WalletIcon } from "@heroicons/react/24/solid"
 import React, { useState } from "react"
@@ -31,6 +31,7 @@ interface IConnectedWalletDialog {
   isOpen: boolean
   onClose: () => void
 }
+
 const ConnectedWalletDialog: React.FC<IConnectedWalletDialog> = ({
   isOpen,
   onClose,
@@ -55,6 +56,7 @@ const ConnectedWalletDialog: React.FC<IConnectedWalletDialog> = ({
 interface IConnectedWalletBody {
   onClose: () => void
 }
+
 const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
   const { dispatch } = useWallet()
   const toast = useToast()
