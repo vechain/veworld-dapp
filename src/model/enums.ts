@@ -4,21 +4,30 @@ export enum WalletSource {
 }
 
 const logosUrl = process.env.PUBLIC_URL + "/images/logo"
-export const WalletSourceInfo: Record<
-  WalletSource,
-  { name: string; logo?: string }
-> = {
+interface IWalletSourceInfo {
+  name: string
+  logo?: string
+  url?: string
+  isAvailable: boolean
+}
+export const WalletSourceInfo: Record<WalletSource, IWalletSourceInfo> = {
   [WalletSource.VEWORLD]: {
     name: "VeWorld",
     logo: `${logosUrl}/veWorld.png`,
+    url: "https://chrome.google.com/webstore/detail/veworld/hhfpdhagbfbekjjnjihikhefohocnlni?hl=en-GB&authuser=1",
+    isAvailable: !!window.vechain,
   },
   [WalletSource.SYNC2]: {
     name: "Sync2",
     logo: `${logosUrl}/sync2.png`,
+    url: "https://docs.vechain.org/sync2/get-started.html",
+    isAvailable: true,
   },
 }
 
-export const DEFAULT_SOURCE = WalletSource.VEWORLD
+export const DEFAULT_SOURCE = window.vechain
+  ? WalletSource.VEWORLD
+  : WalletSource.SYNC2
 
 export enum Network {
   MAIN = "main",

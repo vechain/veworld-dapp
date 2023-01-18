@@ -1,34 +1,29 @@
-import { Box, Flex, HStack, HTMLChakraProps } from "@chakra-ui/react"
+import { Box, Button, Flex, HStack, HTMLChakraProps } from "@chakra-ui/react"
 import React from "react"
 
-interface IRadioCard {
+interface IRadioCard extends HTMLChakraProps<"button"> {
   children: React.ReactNode
   selected: boolean
   onClick: () => void
 }
-const RadioCard: React.FC<IRadioCard> = ({ children, selected, onClick }) => {
+const RadioCard: React.FC<IRadioCard> = ({
+  children,
+  selected,
+  onClick,
+  ...props
+}) => {
   return (
-    <HStack
-      spacing={2}
+    <Button
       w="full"
-      onClick={onClick}
-      cursor="pointer"
-      justify={"space-between"}
-      borderWidth="1px"
-      borderRadius="md"
-      boxShadow="md"
-      // backgroundColor={backgroundBorderColor}
+      variant={"outline"}
       shadow={selected ? "outline" : "none"}
-      // color={textColor}
-      _focus={{
-        boxShadow: "outline",
-      }}
-      px={3}
-      py={1.5}
+      {...props}
     >
-      {children}
-      <RadioCircle filled={selected} />
-    </HStack>
+      <HStack spacing={2} w="full" onClick={onClick} justify={"space-between"}>
+        {children}
+        <RadioCircle filled={selected} />
+      </HStack>
+    </Button>
   )
 }
 
