@@ -11,11 +11,11 @@ import {
   Icon,
 } from "@chakra-ui/react"
 import { ArrowPathIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
-import React from "react"
+import React, { useCallback } from "react"
 import { RegisterOptions, useForm } from "react-hook-form"
 import { ActionType, useWallet } from "../../../context/walletContext"
 import useDeployToken from "../../../hooks/useDeployToken"
-import { IAccount } from "../../../model/State"
+import { IAccount, IToken } from "../../../model/State"
 import { TxStage } from "../../../model/Transaction"
 import TransactionStatus from "../../TransactionStatus/TransactionStatus"
 
@@ -25,14 +25,11 @@ type DeployTokenForm = {
   decimals: number
   delegateUrl?: string
 }
-interface IDeployTokenDialogBody {
+interface IDeployToken {
   account: IAccount
-  goToYourTokens: () => void
+  navigateBack: (token?: IToken) => void
 }
-const DeployTokenForm: React.FC<IDeployTokenDialogBody> = ({
-  account,
-  goToYourTokens,
-}) => {
+const DeployToken: React.FC<IDeployToken> = ({ account, navigateBack }) => {
   const {
     handleSubmit,
     register,
@@ -45,6 +42,8 @@ const DeployTokenForm: React.FC<IDeployTokenDialogBody> = ({
   const isFirstDeploy = !txId
 
   const { dispatch } = useWallet()
+
+  const onBackClick = useCallback(() => navigateBack(), [navigateBack])
 
   const comment =
     "To become a Pragmatic Programmer, you need to think about what you are doing while you are doing it. It is not enough to do an isolated audit to get positive results, but to make it a habit to make a constant critical assessment of every decision you have made or intend to make. In other words, it is necessary to turn off the autopilot and to be present and aware of every action taken, to be constantly thinking and criticizing your work based on the Principles of Pragmatism.\n" +
@@ -133,7 +132,7 @@ const DeployTokenForm: React.FC<IDeployTokenDialogBody> = ({
             w="full"
             variant={"outline"}
             colorScheme="blue"
-            onClick={goToYourTokens}
+            onClick={onBackClick}
             leftIcon={<Icon as={ArrowSmallLeftIcon} />}
           >
             Back
@@ -165,4 +164,4 @@ const DeployTokenForm: React.FC<IDeployTokenDialogBody> = ({
   )
 }
 
-export default DeployTokenForm
+export default DeployToken

@@ -1,24 +1,11 @@
-import {
-  Button,
-  VStack,
-  HStack,
-  Box,
-  Flex,
-  Text,
-  Divider,
-  Icon,
-  useDisclosure,
-} from "@chakra-ui/react"
-import { ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
-import React, { useEffect, useMemo, useState } from "react"
+import { Button, HStack, Text } from "@chakra-ui/react"
+import React, { useCallback, useState } from "react"
 import { useWallet } from "../../../context/walletContext"
-import useTokenBalance from "../../../hooks/useTokenBalance"
 import { IAccount, IToken } from "../../../model/State"
-import AddressButton from "../../Account/Address/AddressButton"
 import MintToken from "../MintToken/MintToken"
 import { Dialog } from "../../Shared"
-import DeployTokenForm from "../DeployTokenForm/DeployTokenForm"
-import TokensSelect from "../TokensSelect/TokensSelect"
+import DeployToken from "../DeployToken/DeployToken"
+import Tokens from "../Tokens/Tokens"
 
 interface IDeployTokenDialog {
   isOpen: boolean
@@ -26,143 +13,122 @@ interface IDeployTokenDialog {
   account: IAccount
 }
 
+enum TokensDialogView {
+  TOKENS,
+  DEPLOY_TOKEN,
+  MINT_TOKEN,
+}
+
+type ICurrentView =
+  | { view: TokensDialogView.TOKENS; data?: IToken }
+  | { view: TokensDialogView.DEPLOY_TOKEN }
+  | { view: TokensDialogView.MINT_TOKEN; data: IToken }
+
 const TokensDialog: React.FC<IDeployTokenDialog> = ({ isOpen, onClose }) => {
-  const { isOpen: isDeployToken, onToggle: toggleDeployToken } = useDisclosure()
+  const [currentView, setCurrentView] = useState<ICurrentView>({
+    view: TokensDialogView.TOKENS,
+  })
+
   const {
-    state: { tokens, account },
+    state: { account },
   } = useWallet()
 
-  const header = useMemo(
-    () => (
-      <HStack w="full" justify={"space-between"}>
-        <Text>{isDeployToken ? "Deploy new token" : "Your tokens"}</Text>
-        <Button
-          {...(isDeployToken && { leftIcon: <Icon as={ArrowSmallLeftIcon} /> })}
-          onClick={toggleDeployToken}
-          colorScheme={"blue"}
-          size="sm"
-          variant={isDeployToken ? "outline" : "solid"}
-        >
-          {!isDeployToken ? "Deploy new token" : "Back"}
-        </Button>
-      </HStack>
-    ),
-    [toggleDeployToken, isDeployToken]
-  )
+  if (!account) return <></>
+
   return (
     <Dialog
       isOpen={isOpen}
       showCloseButton={false}
       onClose={onClose}
-      header={header}
+      header={
+        <TokensDialogHeader
+          currentView={currentView}
+          setCurrentView={setCurrentView}
+        />
+      }
       body={
-        isDeployToken && account ? (
-          <DeployTokenForm
-            account={account}
-            goToYourTokens={toggleDeployToken}
-          />
-        ) : (
-          <TokensDialogBody />
-        )
+        <TokensDialogBody
+          account={account}
+          currentView={currentView}
+          setCurrentView={setCurrentView}
+        />
       }
     />
   )
 }
 
-const TokensDialogBody: React.FC = () => {
-  const {
-    state: { tokens },
-  } = useWallet()
+interface ITokensDialogHeader {
+  currentView: ICurrentView
+  setCurrentView: (data: ICurrentView) => void
+}
+const TokensDialogHeader: React.FC<ITokensDialogHeader> = ({
+  currentView,
+  setCurrentView,
+}) => {
+  const { view } = currentView
+  const isTokens = view === TokensDialogView.TOKENS
+  const title =
+    view === TokensDialogView.DEPLOY_TOKEN
+      ? "Deploy token"
+      : view === TokensDialogView.MINT_TOKEN
+      ? "Mint Token"
+      : "Your tokens"
 
-  const [selected, setSelected] = useState<IToken>(tokens[0])
-
-  const {
-    onOpen: openMintView,
-    onClose: closeMintView,
-    isOpen: isMintView,
-  } = useDisclosure()
-
-  const onTokenChange = (token: IToken) => setSelected(token)
-
-  if (isMintView)
-    return <MintToken token={selected} navigateBack={closeMintView} />
+  const goToDeployToken = useCallback(
+    () => setCurrentView({ view: TokensDialogView.DEPLOY_TOKEN }),
+    [setCurrentView]
+  )
 
   return (
-    <Flex gap={4} direction="column" w="full">
-      {tokens.length ? (
-        <>
-          <Box>
-            <Text mb="8px">Token</Text>
-            <TokensSelect
-              tokens={tokens}
-              selected={selected}
-              onChange={onTokenChange}
-            />
-          </Box>
-          <Divider />
-          {selected && (
-            <TokenDetails token={selected} onMintClick={openMintView} />
-          )}
-        </>
-      ) : (
-        <Text fontSize="xl"> You have deployed no tokens </Text>
+    <HStack w="full" justify={"space-between"}>
+      <Text>{title}</Text>
+      {isTokens && (
+        <Button
+          onClick={goToDeployToken}
+          colorScheme={"blue"}
+          size="sm"
+          variant={"solid"}
+        >
+          Deploy new token
+        </Button>
       )}
-    </Flex>
+    </HStack>
   )
 }
 
-interface ITokenDetails {
-  token: IToken
-  onMintClick: () => void
+interface ITokensDialogBody extends ITokensDialogHeader {
+  account: IAccount
 }
-const TokenDetails: React.FC<ITokenDetails> = ({ token, onMintClick }) => {
-  const {
-    state: { account },
-  } = useWallet()
-  const { balance, getBalance } = useTokenBalance()
 
-  useEffect(() => {
-    if (account) getBalance(token, account.address)
-  }, [account, token])
-
-  return (
-    <VStack spacing={4}>
-      <HStack justify={"space-between"} w="full">
-        <Text as="b" fontSize={"lg"}>
-          Contract address
-        </Text>
-        <AddressButton address={token.address} showAddressIcon={false} />
-      </HStack>
-      <HStack justify={"space-between"} w="full">
-        <Text as="b" fontSize={"lg"}>
-          Name
-        </Text>
-        <Text fontSize={"md"}>{token.name}</Text>
-      </HStack>
-      <HStack justify={"space-between"} w="full">
-        <Text as="b" fontSize={"lg"}>
-          Symbol
-        </Text>
-        <Text fontSize={"md"}>{token.symbol}</Text>
-      </HStack>
-      <HStack justify={"space-between"} w="full">
-        <Text as="b" fontSize={"lg"}>
-          Decimals
-        </Text>
-        <Text fontSize={"md"}>{token.decimals}</Text>
-      </HStack>
-      <Divider />
-      <HStack justify={"space-between"} w="full">
-        <Text as="b" fontSize={"lg"}>
-          Your balance
-        </Text>
-        <Text fontSize={"md"}>{balance || "Not available"}</Text>
-      </HStack>
-      <Button onClick={onMintClick} colorScheme={"blue"} w="full">
-        Mint
-      </Button>
-    </VStack>
+const TokensDialogBody: React.FC<ITokensDialogBody> = ({
+  account,
+  currentView,
+  setCurrentView,
+}) => {
+  const openMintView = useCallback(
+    (token: IToken) =>
+      setCurrentView({ view: TokensDialogView.MINT_TOKEN, data: token }),
+    []
   )
+
+  const openTokensView = useCallback(
+    (token?: IToken) =>
+      setCurrentView({ view: TokensDialogView.TOKENS, data: token }),
+    []
+  )
+
+  if (currentView.view === TokensDialogView.TOKENS)
+    return (
+      <Tokens selectedToken={currentView.data} openMintView={openMintView} />
+    )
+
+  if (currentView.view === TokensDialogView.DEPLOY_TOKEN)
+    return <DeployToken account={account} navigateBack={openTokensView} />
+
+  if (currentView.view === TokensDialogView.MINT_TOKEN)
+    return <MintToken token={currentView.data} navigateBack={openTokensView} />
+
+  return <></>
 }
 
 export default TokensDialog

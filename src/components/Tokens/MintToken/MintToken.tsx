@@ -11,23 +11,23 @@ import {
   HStack,
 } from "@chakra-ui/react"
 import { ArrowPathIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
-import React from "react"
+import React, { useCallback } from "react"
 import { RegisterOptions, useForm } from "react-hook-form"
 import useMintToken from "../../../hooks/useMintToken"
 import { IToken } from "../../../model/State"
 import { TxStage } from "../../../model/Transaction"
 import TransactionStatus from "../../TransactionStatus/TransactionStatus"
 
-interface IMintTokenForm {
+interface IMintToken {
   token: IToken
-  navigateBack: () => void
+  navigateBack: (token?: IToken) => void
 }
 export type MintTokenForm = {
   address: string
   amount: number
   clausesNumber: number
 }
-const MintToken: React.FC<IMintTokenForm> = ({ token, navigateBack }) => {
+const MintToken: React.FC<IMintToken> = ({ token, navigateBack }) => {
   const {
     handleSubmit,
     register,
@@ -36,6 +36,11 @@ const MintToken: React.FC<IMintTokenForm> = ({ token, navigateBack }) => {
     mode: "onTouched",
   })
   const { mintToken, txStatus, txId, error } = useMintToken()
+
+  const onBackClick = useCallback(
+    () => navigateBack(token),
+    [token, navigateBack]
+  )
 
   const isFistMint = !txId
 
@@ -94,7 +99,7 @@ const MintToken: React.FC<IMintTokenForm> = ({ token, navigateBack }) => {
             w="full"
             variant={"outline"}
             colorScheme="blue"
-            onClick={navigateBack}
+            onClick={onBackClick}
             leftIcon={<Icon as={ArrowSmallLeftIcon} />}
           >
             Back
