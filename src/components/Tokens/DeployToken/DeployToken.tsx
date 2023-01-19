@@ -4,39 +4,20 @@ import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
+  HStack,
   Input,
   Spinner,
   VStack,
+  Icon,
 } from "@chakra-ui/react"
-import React from "react"
+import { ArrowPathIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
+import React, { useCallback } from "react"
 import { RegisterOptions, useForm } from "react-hook-form"
-import { ActionType, useWallet } from "../../context/walletContext"
-import useDeployToken from "../../hooks/useDeployToken"
-import { IAccount } from "../../model/State"
-import { TxStage } from "../../model/Transaction"
-import { Dialog } from "../Shared"
-import TransactionStatus from "../TransactionStatus/TransactionStatus"
-
-interface IDeployTokenDialog {
-  isOpen: boolean
-  onClose: () => void
-  account: IAccount
-}
-
-const DeployTokenDialog: React.FC<IDeployTokenDialog> = ({
-  isOpen,
-  onClose,
-  account,
-}) => {
-  return (
-    <Dialog
-      isOpen={isOpen}
-      onClose={onClose}
-      header={"Deploy Token"}
-      body={<DeployTokenDialogBody account={account} />}
-    />
-  )
-}
+import { ActionType, useWallet } from "../../../context/walletContext"
+import useDeployToken from "../../../hooks/useDeployToken"
+import { IAccount, IToken } from "../../../model/State"
+import { TxStage } from "../../../model/Transaction"
+import TransactionStatus from "../../TransactionStatus/TransactionStatus"
 
 type DeployTokenForm = {
   name: string
@@ -44,12 +25,11 @@ type DeployTokenForm = {
   decimals: number
   delegateUrl?: string
 }
-interface IDeployTokenDialogBody {
+interface IDeployToken {
   account: IAccount
+  navigateBack: (token?: IToken) => void
 }
-const DeployTokenDialogBody: React.FC<IDeployTokenDialogBody> = ({
-  account,
-}) => {
+const DeployToken: React.FC<IDeployToken> = ({ account, navigateBack }) => {
   const {
     handleSubmit,
     register,
@@ -59,7 +39,11 @@ const DeployTokenDialogBody: React.FC<IDeployTokenDialogBody> = ({
   })
   const { deployToken, txStatus, txId, error } = useDeployToken()
 
+  const isFirstDeploy = !txId
+
   const { dispatch } = useWallet()
+
+  const onBackClick = useCallback(() => navigateBack(), [navigateBack])
 
   const comment =
     "To become a Pragmatic Programmer, you need to think about what you are doing while you are doing it. It is not enough to do an isolated audit to get positive results, but to make it a habit to make a constant critical assessment of every decision you have made or intend to make. In other words, it is necessary to turn off the autopilot and to be present and aware of every action taken, to be constantly thinking and criticizing your work based on the Principles of Pragmatism.\n" +
@@ -143,18 +127,41 @@ const DeployTokenDialogBody: React.FC<IDeployTokenDialogBody> = ({
       <VStack mt={8} spacing={4}>
         <TransactionStatus txStage={txStatus} txId={txId} error={error} />
 
-        <Button
-          w="full"
-          disabled={isTxPending}
-          type="submit"
-          colorScheme="blue"
-          leftIcon={isTxPending ? <Spinner /> : <></>}
-        >
-          {isTxPending ? "Deploying..." : "Deploy token"}
-        </Button>
+        <HStack spacing={4} w="full">
+          <Button
+            w="full"
+            variant={"outline"}
+            colorScheme="blue"
+            onClick={onBackClick}
+            leftIcon={<Icon as={ArrowSmallLeftIcon} />}
+          >
+            Back
+          </Button>
+          <Button
+            w="full"
+            disabled={isTxPending}
+            type="submit"
+            colorScheme="blue"
+            leftIcon={
+              isTxPending ? (
+                <Spinner />
+              ) : !isFirstDeploy ? (
+                <Icon as={ArrowPathIcon} />
+              ) : (
+                <></>
+              )
+            }
+          >
+            {isTxPending
+              ? "Deploying..."
+              : !isFirstDeploy
+              ? "Deploy again"
+              : "Deploy"}
+          </Button>
+        </HStack>
       </VStack>
     </form>
   )
 }
 
-export default DeployTokenDialog
+export default DeployToken

@@ -3,8 +3,8 @@ import {
   Button,
   Flex,
   Heading,
-  HStack,
   Icon,
+  SimpleGrid,
   Text,
   Tooltip,
   useDisclosure,
@@ -14,11 +14,9 @@ import React from "react"
 import { useWallet } from "../../../context/walletContext"
 import { CurrencyDollarIcon, WalletIcon } from "@heroicons/react/24/solid"
 import StyledCard from "../../Shared/StyledCard/StyledCard"
-import DeployTokenDialog from "../../DeployToken/DeployTokenDialog"
 import { IAccount } from "../../../model/State"
-import TokensDialog from "../../TokensDialog/TokensDialog"
-import DeployNFTDialog from "../../DeployNFT/DeployNFTDialog"
-import NFTsDialog from "../../NFTsDialog/NFTsDialog"
+import TokensDialog from "../../Tokens/TokensDialog/TokensDialog"
+import NFTsDialog from "../../NFTs/NFTsDialog/NFTsDialog"
 
 interface IFeatureDialog {
   isOpen: boolean
@@ -36,29 +34,15 @@ interface IFeature {
 
 const FeatureList: IFeature[] = [
   {
-    name: "Deploy a VIP180 token",
-    desc: "Create a new token on VeChain in seconds!",
-    icon: <CurrencyDollarIcon />,
-    requireWallet: true,
-    featureDialog: DeployTokenDialog,
-  },
-  {
-    name: "Your VIP180 tokens",
-    desc: "See and mint the tokens deployed from this DApp",
+    name: "VIP180 tokens",
+    desc: "See, deploy and mint VIP180 tokens aka fungible tokens! Create a token is never been so easy",
     icon: <CurrencyDollarIcon />,
     requireWallet: true,
     featureDialog: TokensDialog,
   },
   {
-    name: "Deploy an NFT",
-    desc: "Create a new NFT contract on VeChain in seconds!",
-    icon: <CurrencyDollarIcon />,
-    requireWallet: true,
-    featureDialog: DeployNFTDialog,
-  },
-  {
-    name: "Your NFTs",
-    desc: "See and mint NFTs deployed from this DApp",
+    name: "VIP181 tokens",
+    desc: "See, deploy and mint VIP181 tokens aka NFTS!",
     icon: <CurrencyDollarIcon />,
     requireWallet: true,
     featureDialog: NFTsDialog,
@@ -69,11 +53,11 @@ const Features: React.FC = () => {
   return (
     <VStack spacing={4} align="flex-start">
       <Heading> Features </Heading>
-      <HStack spacing={4} w={"full"}>
+      <SimpleGrid columns={2} spacing={4} w={"full"}>
         {FeatureList.map((feature) => {
           return <FeatureCard key={feature.name} feature={feature} />
         })}
-      </HStack>
+      </SimpleGrid>
     </VStack>
   )
 }

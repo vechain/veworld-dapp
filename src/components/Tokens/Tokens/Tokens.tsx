@@ -1,51 +1,46 @@
 import {
-  Button,
-  VStack,
-  HStack,
   Box,
-  Flex,
-  Text,
+  Button,
   Divider,
-  useDisclosure,
+  Flex,
+  HStack,
+  Text,
+  VStack,
 } from "@chakra-ui/react"
-import React, { useEffect, useState } from "react"
-import { useWallet } from "../../context/walletContext"
-import useTokenBalance from "../../hooks/useTokenBalance"
-import { IAccount, IToken } from "../../model/State"
-import AddressButton from "../Account/Address/AddressButton"
-import MintToken from "../MintToken/MintToken"
-import { Dialog } from "../Shared"
+import React, { useCallback, useEffect, useState } from "react"
+import { useWallet } from "../../../context/walletContext"
+import useTokenBalance from "../../../hooks/useTokenBalance"
+import { IToken } from "../../../model/State"
+import AddressButton from "../../Account/Address/AddressButton"
 import TokensSelect from "../TokensSelect/TokensSelect"
 
-interface IDeployTokenDialog {
-  isOpen: boolean
-  onClose: () => void
-  account: IAccount
+interface ITokens {
+  selectedToken?: IToken
+  openMintView: (token: IToken) => void
 }
-
-const TokensDialog: React.FC<IDeployTokenDialog> = ({ isOpen, onClose }) => {
-  return (
-    <Dialog
-      isOpen={isOpen}
-      onClose={onClose}
-      header={"Your tokens"}
-      body={<TokensDialogBody />}
-    />
-  )
-}
-
-const TokensDialogBody: React.FC = () => {
+const Tokens: React.FC<ITokens> = ({ selectedToken, openMintView }) => {
   const {
     state: { tokens },
   } = useWallet()
 
-  const [selected, setSelected] = useState<IToken>(tokens[0])
+  console.log(selectedToken)
 
-  const { onOpen: openMintView, isOpen: isMintView } = useDisclosure()
+  const [selected, setSelected] = useState<IToken>(selectedToken || tokens[0])
 
-  const onTokenChange = (token: IToken) => setSelected(token)
+  useEffect(() => {
+    console.log(selected)
+  }, [selected])
 
-  if (isMintView) return <MintToken token={selected} />
+  const onTokenChange = useCallback((token: IToken) => setSelected(token), [])
+
+  const onMintClick = useCallback(
+    () => openMintView(selected),
+    [openMintView, selected]
+  )
+
+  if (!tokens.length)
+    return <Text fontSize="xl"> You have deployed no tokens </Text>
+
   return (
     <Flex gap={4} direction="column" w="full">
       <Box>
@@ -57,7 +52,7 @@ const TokensDialogBody: React.FC = () => {
         />
       </Box>
       <Divider />
-      {selected && <TokenDetails token={selected} onMintClick={openMintView} />}
+      {selected && <TokenDetails token={selected} onMintClick={onMintClick} />}
     </Flex>
   )
 }
@@ -107,7 +102,9 @@ const TokenDetails: React.FC<ITokenDetails> = ({ token, onMintClick }) => {
         <Text as="b" fontSize={"lg"}>
           Your balance
         </Text>
-        <Text fontSize={"md"}>{balance || "Not available"}</Text>
+        <Text fontSize={"md"}>
+          {`${balance} ${token.symbol}` || "Not available"}
+        </Text>
       </HStack>
       <Button onClick={onMintClick} colorScheme={"blue"} w="full">
         Mint
@@ -116,4 +113,4 @@ const TokenDetails: React.FC<ITokenDetails> = ({ token, onMintClick }) => {
   )
 }
 
-export default TokensDialog
+export default Tokens
