@@ -4,7 +4,7 @@ import ConnexService from "../service/ConnexService"
 import VIP180Service from "../service/VIP180Service"
 
 const useTokenBalance = () => {
-  const [balance, setBalance] = useState()
+  const [balance, setBalance] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>()
 

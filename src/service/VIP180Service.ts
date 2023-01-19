@@ -4,6 +4,7 @@ import { ClauseType } from "../model/Transaction"
 import Web3 from "web3"
 import VIP180Abi from "../vechain/VIP180.abi"
 import { IToken } from "../model/State"
+import { scaleNumberUp } from "../utils/FormattingUtils"
 
 const web3 = new Web3()
 
@@ -31,7 +32,8 @@ const buildMintClause = async (
   address: string,
   tokenAmount: number,
   clauseAmount: number,
-  tokenAddress: string
+  tokenAddress: string,
+  tokenDecimals: number
 ): Promise<Connex.Vendor.TxMessage> => {
   const connex = await ConnexService.getConnex()
 
@@ -41,7 +43,7 @@ const buildMintClause = async (
     const clause = connex.thor
       .account(tokenAddress)
       .method(VIP180Abi.mint)
-      .asClause(address, tokenAmount)
+      .asClause(address, scaleNumberUp(tokenAmount, tokenDecimals))
 
     clauses.push({
       ...clause,
@@ -74,13 +76,17 @@ const getToken = async (address: string): Promise<IToken> => {
   }
 }
 
-const getBalance = async (address: string, tokenAddress: string) => {
+const getBalance = async (
+  address: string,
+  tokenAddress: string
+): Promise<string> => {
   try {
     const connex = await ConnexService.getConnex()
 
-    const token = connex.thor.account(tokenAddress)
-
-    const balance = await token.method(VIP180Abi.balanceOf).call(address)
+    const balance = await connex.thor
+      .account(tokenAddress)
+      .method(VIP180Abi.balanceOf)
+      .call(address)
 
     return balance.decoded[0]
   } catch (e) {
