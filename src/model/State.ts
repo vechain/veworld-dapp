@@ -9,7 +9,7 @@ export interface IToken {
   address: string
   name: string
   symbol: string
-  decimals: string
+  decimals: number
 }
 
 export interface INonFungibleToken {

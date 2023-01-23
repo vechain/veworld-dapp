@@ -32,7 +32,8 @@ const useMintToken = () => {
         data.address,
         data.amount,
         data.clausesNumber,
-        token.address
+        token.address,
+        token.decimals
       )
 
       const clausesWithComments = clauses.map((clause) => {

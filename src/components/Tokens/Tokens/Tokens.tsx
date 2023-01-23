@@ -11,6 +11,7 @@ import React, { useCallback, useEffect, useState } from "react"
 import { useWallet } from "../../../context/walletContext"
 import useTokenBalance from "../../../hooks/useTokenBalance"
 import { IToken } from "../../../model/State"
+import { scaleNumberDown } from "../../../utils/FormattingUtils"
 import AddressButton from "../../Account/Address/AddressButton"
 import EmptyState from "../../Icons/EmptyState"
 import TokensSelect from "../TokensSelect/TokensSelect"
@@ -70,7 +71,7 @@ const TokenDetails: React.FC<ITokenDetails> = ({ token, onMintClick }) => {
   const { balance, getBalance } = useTokenBalance()
 
   useEffect(() => {
-    if (account) getBalance(token, account.address)
+    if (account && token) getBalance(token, account.address)
   }, [account, token])
 
   return (
@@ -105,7 +106,9 @@ const TokenDetails: React.FC<ITokenDetails> = ({ token, onMintClick }) => {
           Your balance
         </Text>
         <Text fontSize={"md"}>
-          {`${balance} ${token.symbol}` || "Not available"}
+          {balance
+            ? `${scaleNumberDown(balance, token.decimals)} ${token.symbol}`
+            : "Not available"}
         </Text>
       </HStack>
       <Button onClick={onMintClick} colorScheme={"blue"} w="full">

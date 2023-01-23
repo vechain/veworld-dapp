@@ -1,6 +1,8 @@
-# Getting Started with Create React App
+# VeWorld Sample DApp
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A sample DApp that demonstrates how to create Connex instances for VeWorld <b>OR</b> Sync2.
+
+This DApp was built with create-react-app
 
 ## Available Scripts
 
@@ -29,24 +31,35 @@ If you wish to serve the production build locally:
 `npm install -g serve`
 `serve -s build`
 
-### `yarn eject`
+## Connex Initialization
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Pre-requisites
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will
-remove the single build dependency from your project.
+- `@vechain/connex` (`2.0.14` or higher)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right
-into your project so you have full control over them. All of the commands except `eject` will still work, but they will
-point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Check if VeWorld is installed
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you
-shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t
-customize it when you are ready for it.
+```typescript
+console.log('VeWorld is installed: ', !!window.vechain);
+```
 
-## Learn More
+### Initialise Connex for VeWorld (No changes required):
 
-You can learn more in
-the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```typescript
+const connex = new Connex({
+  node: "https://vethor-node.vechain.com",
+  network: "main"
+})
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- If VeWorld is not installed, Sync2 will be used instead.
+
+### Initialise Connex for Sync2:
+
+```typescript
+const connex = new Connex({
+  node: "https://vethor-node.vechain.com",
+  network: "main",
+  noExtension: true,
+})
+```
