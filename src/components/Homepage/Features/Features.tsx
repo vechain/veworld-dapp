@@ -35,7 +35,7 @@ interface IFeature {
 const FeatureList: IFeature[] = [
   {
     name: "VIP180 tokens",
-    desc: "See, deploy and mint VIP180 tokens aka fungible tokens! Create a token is never been so easy",
+    desc: "See, deploy and mint VIP180 tokens aka fungible tokens! Create a token has never been so easy",
     icon: <CurrencyDollarIcon />,
     requireWallet: true,
     featureDialog: TokensDialog,

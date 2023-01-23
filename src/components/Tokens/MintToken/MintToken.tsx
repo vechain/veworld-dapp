@@ -16,6 +16,7 @@ import { RegisterOptions, useForm } from "react-hook-form"
 import useMintToken from "../../../hooks/useMintToken"
 import { IToken } from "../../../model/State"
 import { TxStage } from "../../../model/Transaction"
+import { isValid } from "../../../utils/AddressUtils"
 import TransactionStatus from "../../TransactionStatus/TransactionStatus"
 
 interface IMintToken {
@@ -58,14 +59,28 @@ const MintToken: React.FC<IMintToken> = ({ token, navigateBack }) => {
   )
 
   const addressRules: RegisterOptions = {
-    minLength: { value: 1, message: "Required" },
+    validate: (value: string) => isValid(value) || "Address is not valid",
   }
 
   const amountRules: RegisterOptions = {
     min: { value: 0, message: "Must be > 0" },
   }
 
-  const clausesNumberRules: RegisterOptions = {}
+  const clausesNumberRules: RegisterOptions = {
+    min: { value: 0, message: "Must be > 0" },
+  }
+
+  const getSubmitButtonLeftIcon = useCallback(() => {
+    if (isTxPending) return <Spinner />
+    if (!isFistMint) return <Icon as={ArrowPathIcon} />
+    return <></>
+  }, [isTxPending, isFistMint])
+
+  const getSubmitButtonText = useCallback(() => {
+    if (isTxPending) return "Minting..."
+    if (!isFistMint) return "Mint again"
+    return "Mint"
+  }, [isTxPending, isFistMint])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -110,17 +125,9 @@ const MintToken: React.FC<IMintToken> = ({ token, navigateBack }) => {
             disabled={isTxPending}
             type="submit"
             colorScheme="blue"
-            leftIcon={
-              isTxPending ? (
-                <Spinner />
-              ) : !isFistMint ? (
-                <Icon as={ArrowPathIcon} />
-              ) : (
-                <></>
-              )
-            }
+            leftIcon={getSubmitButtonLeftIcon()}
           >
-            {isTxPending ? "Minting..." : isFistMint ? "Mint" : "Mint again"}
+            {getSubmitButtonText()}
           </Button>
         </HStack>
       </VStack>

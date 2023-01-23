@@ -9,104 +9,95 @@ import {
 } from "@chakra-ui/react"
 import React, { useCallback, useEffect, useState } from "react"
 import { useWallet } from "../../../context/walletContext"
-import useTokenBalance from "../../../hooks/useTokenBalance"
-import { IToken } from "../../../model/State"
+import useNFTBalance from "../../../hooks/useNFTBalance"
+import { INonFungibleToken } from "../../../model/State"
 import AddressButton from "../../Account/Address/AddressButton"
 import EmptyState from "../../Icons/EmptyState"
-import TokensSelect from "../TokensSelect/TokensSelect"
+import NFTsSelect from "../NFTsSelect/NFTsSelect"
 
 interface ITokens {
-  selectedToken?: IToken
-  openMintView: (token: IToken) => void
+  selectedNft?: INonFungibleToken
+  openMintView: (token: INonFungibleToken) => void
 }
-const Tokens: React.FC<ITokens> = ({ selectedToken, openMintView }) => {
+const NFTs: React.FC<ITokens> = ({ selectedNft, openMintView }) => {
   const {
-    state: { tokens },
+    state: { nfts },
   } = useWallet()
 
-  console.log(selectedToken)
-
-  const [selected, setSelected] = useState<IToken>(selectedToken || tokens[0])
+  const [selected, setSelected] = useState<INonFungibleToken>(
+    selectedNft || nfts[0]
+  )
 
   useEffect(() => {
     console.log(selected)
   }, [selected])
 
-  const onTokenChange = useCallback((token: IToken) => setSelected(token), [])
+  const onNftChange = useCallback(
+    (token: INonFungibleToken) => setSelected(token),
+    []
+  )
 
   const onMintClick = useCallback(
     () => openMintView(selected),
     [openMintView, selected]
   )
 
-  if (!tokens.length)
-    return <EmptyState description="You have no deployed tokens " />
+  if (!nfts.length)
+    return <EmptyState description="You have no deployed NFTs " />
   // return <Text fontSize="xl"> You have deployed no tokens </Text>
 
   return (
     <Flex gap={4} direction="column" w="full">
       <Box>
         <Text mb="8px">Token</Text>
-        <TokensSelect
-          tokens={tokens}
-          selected={selected}
-          onChange={onTokenChange}
-        />
+        <NFTsSelect nfts={nfts} selected={selected} onChange={onNftChange} />
       </Box>
       <Divider />
-      {selected && <TokenDetails token={selected} onMintClick={onMintClick} />}
+      {selected && <NFTDetails nft={selected} onMintClick={onMintClick} />}
     </Flex>
   )
 }
 
-interface ITokenDetails {
-  token: IToken
+interface INftsDetails {
+  nft: INonFungibleToken
   onMintClick: () => void
 }
-const TokenDetails: React.FC<ITokenDetails> = ({ token, onMintClick }) => {
+const NFTDetails: React.FC<INftsDetails> = ({ nft, onMintClick }) => {
   const {
     state: { account },
   } = useWallet()
-  const { balance, getBalance } = useTokenBalance()
+  const { balance, getNFTBalance } = useNFTBalance()
 
   useEffect(() => {
-    if (account) getBalance(token, account.address)
-  }, [account, token])
+    if (account) getNFTBalance(nft, account.address)
+  }, [account, nft])
 
   return (
     <VStack spacing={4}>
       <HStack justify={"space-between"} w="full">
         <Text as="b" fontSize={"lg"}>
-          Contract address
+          Address
         </Text>
-        <AddressButton address={token.address} showAddressIcon={false} />
+        <AddressButton address={nft.address} showAddressIcon={false} />
       </HStack>
       <HStack justify={"space-between"} w="full">
         <Text as="b" fontSize={"lg"}>
           Name
         </Text>
-        <Text fontSize={"md"}>{token.name}</Text>
+        <Text fontSize={"md"}>{nft.name}</Text>
       </HStack>
       <HStack justify={"space-between"} w="full">
         <Text as="b" fontSize={"lg"}>
           Symbol
         </Text>
-        <Text fontSize={"md"}>{token.symbol}</Text>
-      </HStack>
-      <HStack justify={"space-between"} w="full">
-        <Text as="b" fontSize={"lg"}>
-          Decimals
-        </Text>
-        <Text fontSize={"md"}>{token.decimals}</Text>
+        <Text fontSize={"md"}>{nft.symbol}</Text>
       </HStack>
       <Divider />
       <HStack justify={"space-between"} w="full">
         <Text as="b" fontSize={"lg"}>
           Your balance
         </Text>
-        <Text fontSize={"md"}>
-          {`${balance} ${token.symbol}` || "Not available"}
-        </Text>
+        <Text fontSize={"md"}>{balance || "Not available"}</Text>
       </HStack>
       <Button onClick={onMintClick} colorScheme={"blue"} w="full">
         Mint
@@ -115,4 +106,4 @@ const TokenDetails: React.FC<ITokenDetails> = ({ token, onMintClick }) => {
   )
 }
 
-export default Tokens
+export default NFTs

@@ -4,39 +4,20 @@ import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
+  HStack,
   Input,
   Spinner,
   VStack,
+  Icon,
 } from "@chakra-ui/react"
-import React from "react"
+import { ArrowPathIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
+import React, { useCallback } from "react"
 import { RegisterOptions, useForm } from "react-hook-form"
-import { ActionType, useWallet } from "../../context/walletContext"
-import useDeployNonFungibleToken from "../../hooks/useDeployNonFungibleToken"
-import { IAccount } from "../../model/State"
-import { TxStage } from "../../model/Transaction"
-import { Dialog } from "../Shared"
-import TransactionStatus from "../TransactionStatus/TransactionStatus"
-
-interface IDeployNFTDialog {
-  isOpen: boolean
-  onClose: () => void
-  account: IAccount
-}
-
-const DeployNFTDialog: React.FC<IDeployNFTDialog> = ({
-  isOpen,
-  onClose,
-  account,
-}) => {
-  return (
-    <Dialog
-      isOpen={isOpen}
-      onClose={onClose}
-      header={"Deploy NFT"}
-      body={<DeployNFTDialogBody account={account} />}
-    />
-  )
-}
+import { ActionType, useWallet } from "../../../context/walletContext"
+import useDeployNonFungibleToken from "../../../hooks/useDeployNonFungibleToken"
+import { IAccount, INonFungibleToken } from "../../../model/State"
+import { TxStage } from "../../../model/Transaction"
+import TransactionStatus from "../../TransactionStatus/TransactionStatus"
 
 type DeployNFTForm = {
   name: string
@@ -44,10 +25,11 @@ type DeployNFTForm = {
   baseTokenURI: string
   delegateUrl?: string
 }
-interface IDeployNFTDialogBody {
+interface IDeployNFT {
   account: IAccount
+  navigateBack: (nft?: INonFungibleToken) => void
 }
-const DeployNFTDialogBody: React.FC<IDeployNFTDialogBody> = ({ account }) => {
+const DeployNFT: React.FC<IDeployNFT> = ({ account, navigateBack }) => {
   const {
     handleSubmit,
     register,
@@ -58,7 +40,11 @@ const DeployNFTDialogBody: React.FC<IDeployNFTDialogBody> = ({ account }) => {
   const { deployNftContract, txStatus, txId, error } =
     useDeployNonFungibleToken()
 
+  const isFirstDeploy = !txId
+
   const { dispatch } = useWallet()
+
+  const onBackClick = useCallback(() => navigateBack(), [navigateBack])
 
   const comment =
     "To become a Pragmatic Programmer, you need to think about what you are doing while you are doing it. It is not enough to do an isolated audit to get positive results, but to make it a habit to make a constant critical assessment of every decision you have made or intend to make. In other words, it is necessary to turn off the autopilot and to be present and aware of every action taken, to be constantly thinking and criticizing your work based on the Principles of Pragmatism.\n" +
@@ -108,6 +94,18 @@ const DeployNFTDialogBody: React.FC<IDeployNFTDialogBody> = ({ account }) => {
     },
   }
 
+  const getSubmitButtonLeftIcon = useCallback(() => {
+    if (isTxPending) return <Spinner />
+    if (!isFirstDeploy) return <Icon as={ArrowPathIcon} />
+    return <></>
+  }, [isTxPending, isFirstDeploy])
+
+  const getSubmitButtonText = useCallback(() => {
+    if (isTxPending) return "Deploying..."
+    if (!isFirstDeploy) return "Deploy again"
+    return "Deploy"
+  }, [isTxPending, isFirstDeploy])
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <VStack spacing={4} w="full">
@@ -141,18 +139,29 @@ const DeployNFTDialogBody: React.FC<IDeployNFTDialogBody> = ({ account }) => {
       <VStack mt={8} spacing={4}>
         <TransactionStatus txStage={txStatus} txId={txId} error={error} />
 
-        <Button
-          w="full"
-          disabled={isTxPending}
-          type="submit"
-          colorScheme="blue"
-          leftIcon={isTxPending ? <Spinner /> : <></>}
-        >
-          {isTxPending ? "Deploying..." : "Deploy NFT"}
-        </Button>
+        <HStack spacing={4} w="full">
+          <Button
+            w="full"
+            variant={"outline"}
+            colorScheme="blue"
+            onClick={onBackClick}
+            leftIcon={<Icon as={ArrowSmallLeftIcon} />}
+          >
+            Back
+          </Button>
+          <Button
+            w="full"
+            disabled={isTxPending}
+            type="submit"
+            colorScheme="blue"
+            leftIcon={getSubmitButtonLeftIcon()}
+          >
+            {getSubmitButtonText()}
+          </Button>
+        </HStack>
       </VStack>
     </form>
   )
 }
 
-export default DeployNFTDialog
+export default DeployNFT
