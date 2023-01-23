@@ -43,7 +43,7 @@ If you wish to serve the production build locally:
 console.log('VeWorld is installed: ', !!window.vechain);
 ```
 
-### Initialise Connex to for VeWorld (No changes required):
+### Initialise Connex for VeWorld (No changes required):
 
 ```typescript
 const connex = new Connex({
@@ -59,7 +59,7 @@ const connex = new Connex({
 ```typescript
 const connex = new Connex({
   node: "https://vethor-node.vechain.com",
-  network: "main"
+  network: "main",
   noExtension: true,
 })
 ```
