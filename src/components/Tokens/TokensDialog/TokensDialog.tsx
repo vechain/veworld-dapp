@@ -71,7 +71,7 @@ const TokensDialogHeader: React.FC<ITokensDialogHeader> = ({
     view === TokensDialogView.DEPLOY_TOKEN
       ? "Deploy token"
       : view === TokensDialogView.MINT_TOKEN
-      ? "Mint Token"
+      ? `Mint Token (${currentView.data.symbol})`
       : "Your tokens"
 
   const goToDeployToken = useCallback(

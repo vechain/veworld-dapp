@@ -13,6 +13,7 @@ import useTokenBalance from "../../../hooks/useTokenBalance"
 import { IToken } from "../../../model/State"
 import { scaleNumberDown } from "../../../utils/FormattingUtils"
 import AddressButton from "../../Account/Address/AddressButton"
+import EmptyState from "../../Icons/EmptyState"
 import TokensSelect from "../TokensSelect/TokensSelect"
 
 interface ITokens {
@@ -40,7 +41,8 @@ const Tokens: React.FC<ITokens> = ({ selectedToken, openMintView }) => {
   )
 
   if (!tokens.length)
-    return <Text fontSize="xl"> You have deployed no tokens </Text>
+    return <EmptyState description="You have no deployed tokens " />
+  // return <Text fontSize="xl"> You have deployed no tokens </Text>
 
   return (
     <Flex gap={4} direction="column" w="full">

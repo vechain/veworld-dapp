@@ -94,6 +94,18 @@ const DeployToken: React.FC<IDeployToken> = ({ account, navigateBack }) => {
     },
   }
 
+  const getSubmitButtonLeftIcon = useCallback(() => {
+    if (isTxPending) return <Spinner />
+    if (!isFirstDeploy) return <Icon as={ArrowPathIcon} />
+    return <></>
+  }, [isTxPending, isFirstDeploy])
+
+  const getSubmitButtonText = useCallback(() => {
+    if (isTxPending) return "Deploying..."
+    if (!isFirstDeploy) return "Deploy again"
+    return "Deploy"
+  }, [isTxPending, isFirstDeploy])
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <VStack spacing={4} w="full">
@@ -142,21 +154,9 @@ const DeployToken: React.FC<IDeployToken> = ({ account, navigateBack }) => {
             disabled={isTxPending}
             type="submit"
             colorScheme="blue"
-            leftIcon={
-              isTxPending ? (
-                <Spinner />
-              ) : !isFirstDeploy ? (
-                <Icon as={ArrowPathIcon} />
-              ) : (
-                <></>
-              )
-            }
+            leftIcon={getSubmitButtonLeftIcon()}
           >
-            {isTxPending
-              ? "Deploying..."
-              : !isFirstDeploy
-              ? "Deploy again"
-              : "Deploy"}
+            {getSubmitButtonText()}
           </Button>
         </HStack>
       </VStack>

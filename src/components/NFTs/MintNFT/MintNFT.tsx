@@ -7,22 +7,25 @@ import {
   Input,
   Spinner,
   VStack,
+  HStack,
 } from "@chakra-ui/react"
-import { CurrencyDollarIcon } from "@heroicons/react/24/solid"
-import React from "react"
+import { ArrowPathIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
+import React, { useCallback } from "react"
 import { RegisterOptions, useForm } from "react-hook-form"
-import useMintNonFungibleToken from "../../hooks/useMintNonFungibleToken"
-import { INonFungibleToken } from "../../model/State"
-import { TxStage } from "../../model/Transaction"
-import TransactionStatus from "../TransactionStatus/TransactionStatus"
+import useMintNonFungibleToken from "../../../hooks/useMintNonFungibleToken"
+import { INonFungibleToken } from "../../../model/State"
+import { TxStage } from "../../../model/Transaction"
+import { isValid } from "../../../utils/AddressUtils"
+import TransactionStatus from "../../TransactionStatus/TransactionStatus"
 
 interface IMintNFTForm {
   nft: INonFungibleToken
+  navigateBack: (token?: INonFungibleToken) => void
 }
 export type MintNFTForm = {
   address: string
 }
-const MintNFT: React.FC<IMintNFTForm> = ({ nft }) => {
+const MintNFT: React.FC<IMintNFTForm> = ({ nft, navigateBack }) => {
   const {
     handleSubmit,
     register,
@@ -32,6 +35,10 @@ const MintNFT: React.FC<IMintNFTForm> = ({ nft }) => {
   })
   const { mintNonFungibleToken, txStatus, txId, error } =
     useMintNonFungibleToken()
+
+  const onBackClick = useCallback(() => navigateBack(nft), [nft, navigateBack])
+
+  const isFistMint = !txId
 
   const comment =
     "NFT --- The concept of Pragmatic Programming has become a reference term to the Programmers who are looking to hone their skills. Pragmatic Programming has been designed through real case analysis based on practical market experience. We have established a set of principles and concepts throughout this book that understand the characteristics and responsibilities of a Pragmatic Programmer."
@@ -47,8 +54,20 @@ const MintNFT: React.FC<IMintNFTForm> = ({ nft }) => {
   )
 
   const addressRules: RegisterOptions = {
-    minLength: { value: 1, message: "Required" },
+    validate: (value: string) => isValid(value) || "Address is not valid",
   }
+
+  const getSubmitButtonLeftIcon = useCallback(() => {
+    if (isTxPending) return <Spinner />
+    if (!isFistMint) return <Icon as={ArrowPathIcon} />
+    return <></>
+  }, [isTxPending, isFistMint])
+
+  const getSubmitButtonText = useCallback(() => {
+    if (isTxPending) return "Minting..."
+    if (!isFistMint) return "Mint again"
+    return "Mint"
+  }, [isTxPending, isFistMint])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -61,17 +80,27 @@ const MintNFT: React.FC<IMintNFTForm> = ({ nft }) => {
       </VStack>
       <VStack w="full" mt={8} spacing={4}>
         <TransactionStatus txStage={txStatus} txId={txId} error={error} />
-        <Button
-          w="full"
-          disabled={isTxPending}
-          type="submit"
-          colorScheme="blue"
-          leftIcon={
-            isTxPending ? <Spinner /> : <Icon as={CurrencyDollarIcon} />
-          }
-        >
-          {isTxPending ? "Minting..." : "Mint NFT"}
-        </Button>
+        <HStack spacing={4} w="full">
+          <Button
+            w="full"
+            variant={"outline"}
+            colorScheme="blue"
+            onClick={onBackClick}
+            leftIcon={<Icon as={ArrowSmallLeftIcon} />}
+          >
+            Back
+          </Button>
+
+          <Button
+            w="full"
+            disabled={isTxPending}
+            type="submit"
+            colorScheme="blue"
+            leftIcon={getSubmitButtonLeftIcon()}
+          >
+            {getSubmitButtonText()}
+          </Button>
+        </HStack>
       </VStack>
     </form>
   )
