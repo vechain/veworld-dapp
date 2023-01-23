@@ -63,7 +63,7 @@ interface IAccountDetailBody {
   network: Network
   disconnectWallet: () => void
 }
-const AccountDetailBody: React.FC<IAccountDetailBody> = ({
+export const AccountDetailBody: React.FC<IAccountDetailBody> = ({
   account,
   network,
   disconnectWallet,

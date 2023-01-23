@@ -12,14 +12,16 @@ import {
   useDisclosure,
   useMediaQuery,
   VStack,
+  Text,
 } from "@chakra-ui/react"
-import React from "react"
+import React, { useCallback } from "react"
 import Logo from "../Logo/Logo"
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher"
 import ConnectWalletButton from "../ConnectWalletButton/ConnectWalletButton"
-import { useWallet } from "../../context/walletContext"
+import { ActionType, useWallet } from "../../context/walletContext"
 import NetworkBadge from "../Network/NetworkBadge/NetworkBadge"
 import { Bars3Icon } from "@heroicons/react/24/solid"
+import { AccountDetailBody } from "../ConnectedWalletDialog/ConnectedWalletDialog"
 
 const NavBar: React.FC = () => {
   const bg = useColorModeValue("gray.50", "gray.900")
@@ -87,8 +89,14 @@ const MobileNavBarDrawer: React.FC<IMobileNavBarDrawer> = ({
   onClose,
 }) => {
   const {
+    dispatch,
     state: { account, network },
   } = useWallet()
+
+  const disconnectWallet = useCallback(
+    () => dispatch({ type: ActionType.CLEAR }),
+    []
+  )
 
   return (
     <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
@@ -96,11 +104,19 @@ const MobileNavBarDrawer: React.FC<IMobileNavBarDrawer> = ({
       <DrawerContent>
         <DrawerBody w="full">
           <VStack justifyContent={"space-between"} w="full" h="full">
-            <VStack spacing={4} w="full">
-              <ConnectWalletButton />
-              {account && network && <NetworkBadge network={network} />}
+            <VStack spacing={4} w="full" alignItems={"flex-start"}>
+              <Text>Connected Wallet</Text>
+              {account && network ? (
+                <AccountDetailBody
+                  account={account}
+                  network={network}
+                  disconnectWallet={disconnectWallet}
+                />
+              ) : (
+                <ConnectWalletButton />
+              )}
             </VStack>
-            <ThemeSwitcher />
+            <ThemeSwitcher withText={true} />
           </VStack>
         </DrawerBody>
       </DrawerContent>
