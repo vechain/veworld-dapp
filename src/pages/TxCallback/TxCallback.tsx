@@ -1,8 +1,6 @@
+import { Text } from "@chakra-ui/react"
 import React from "react"
 import { useParams } from "react-router-dom"
-import { Typography } from "antd"
-
-const { Text } = Typography
 
 const TxCallback: React.FC = () => {
   const { txid } = useParams()
