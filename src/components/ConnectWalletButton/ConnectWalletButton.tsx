@@ -1,11 +1,17 @@
-import { Button, Icon, useDisclosure } from "@chakra-ui/react"
+import { Button, HTMLChakraProps, Icon, useDisclosure } from "@chakra-ui/react"
 import { WalletIcon } from "@heroicons/react/24/solid"
+import React from "react"
 import { useWallet } from "../../context/walletContext"
 import AddressButton from "../Account/Address/AddressButton"
 import AccountDetailModal from "../ConnectedWalletDialog/ConnectedWalletDialog"
 import ConnectWalletModal from "../ConnectWalletModal/ConnectWalletModal"
 
-const ConnectWalletButton = () => {
+interface IConnectWalletButton {
+  buttonProps?: HTMLChakraProps<"button">
+}
+const ConnectWalletButton: React.FC<IConnectWalletButton> = ({
+  buttonProps,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const {
@@ -22,6 +28,7 @@ const ConnectWalletButton = () => {
           network={network}
         />
         <AddressButton
+          {...buttonProps}
           address={account.address}
           showCopyIcon={false}
           onClick={onOpen}
@@ -32,7 +39,11 @@ const ConnectWalletButton = () => {
   return (
     <>
       <ConnectWalletModal isOpen={isOpen} onClose={onClose} />
-      <Button onClick={onOpen} leftIcon={<Icon as={WalletIcon} />}>
+      <Button
+        {...buttonProps}
+        onClick={onOpen}
+        leftIcon={<Icon as={WalletIcon} />}
+      >
         Connect Wallet
       </Button>
     </>

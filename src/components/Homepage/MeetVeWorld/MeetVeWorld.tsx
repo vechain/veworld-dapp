@@ -3,8 +3,8 @@ import StyledCard from "../../Shared/StyledCard/StyledCard"
 
 const MeetVeWorld = () => {
   return (
-    <StyledCard>
-      <VStack w="full" align={"flex-start"} spacing={4} p={[16, 8]}>
+    <StyledCard p={4} h={["auto", "auto", "full"]}>
+      <VStack w="full" align={"flex-start"} spacing={4}>
         <Heading>Meet VeWorld</Heading>
         <Text fontSize="xl">
           The new browser-based wallet coming straightly from the Vechain
