@@ -1,6 +1,6 @@
 import React from "react"
 
-import { Grid, GridItem } from "@chakra-ui/react"
+import { Box, Grid, GridItem, VStack } from "@chakra-ui/react"
 import Welcome from "../../components/Homepage/Welcome/Welcome"
 import Features from "../../components/Homepage/Features/Features"
 import MeetVeWorld from "../../components/Homepage/MeetVeWorld/MeetVeWorld"
@@ -13,33 +13,26 @@ export interface Token {
 
 const Homepage: React.FC = () => {
   return (
-    <Grid
-      w="full"
-      templateRows="repeat(3, 1fr)"
-      templateColumns="repeat(5, 1fr)"
-      gap={8}
-      alignItems="stretch"
-    >
-      <GridItem rowSpan={1} colSpan={3}>
-        <Welcome />
-      </GridItem>
-      <GridItem rowSpan={1} colSpan={2}>
-        <MeetVeWorld />
-      </GridItem>
-      <GridItem rowSpan={1} colSpan={5}>
+    <VStack w="full" spacing={8}>
+      <Grid
+        w="full"
+        templateRows="repeat(1, 1fr)"
+        templateColumns="repeat(5, 1fr)"
+        gap={8}
+        alignItems="stretch"
+        justifyItems={"stretch"}
+      >
+        <GridItem rowSpan={1} colSpan={[5, 5, 3]}>
+          <Welcome />
+        </GridItem>
+        <GridItem rowSpan={1} colSpan={[5, 5, 2]}>
+          <MeetVeWorld />
+        </GridItem>
+      </Grid>
+      <Box w="full">
         <Features />
-      </GridItem>
-
-      {/* 
-      {token?.address ? (
-        <>
-          <TokenBalance accountAddress={account.address} token={token} />
-          <MintToken accountAddress={account.address} token={token} />
-        </>
-      ) : (
-        <DeployToken setToken={persistToken} accountAddress={account.address} />
-      )} */}
-    </Grid>
+      </Box>
+    </VStack>
   )
 }
 

@@ -53,7 +53,12 @@ const Features: React.FC = () => {
   return (
     <VStack spacing={4} align="flex-start">
       <Heading> Features </Heading>
-      <SimpleGrid columns={2} spacing={4} w={"full"}>
+      <SimpleGrid
+        columns={[1, 1, 2]}
+        spacing={4}
+        w={"full"}
+        justifyItems="stretch"
+      >
         {FeatureList.map((feature) => {
           return <FeatureCard key={feature.name} feature={feature} />
         })}
@@ -99,8 +104,13 @@ const FeatureCard: React.FC<IFeatureCard> = ({ feature }) => {
           </Flex>
         </Tooltip>
       )}
-      <StyledCard>
-        <VStack spacing={2} align="flex-start">
+      <StyledCard p={4} h={["auto", "auto", "full"]}>
+        <VStack
+          spacing={2}
+          align="flex-start"
+          justifyContent={"space-between"}
+          h="full"
+        >
           <Heading fontSize={"2xl"}>{feature.name}</Heading>
           <Text fontSize={"md"}>{feature.desc}</Text>
           <Button
