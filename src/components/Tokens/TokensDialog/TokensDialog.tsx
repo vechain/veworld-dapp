@@ -65,14 +65,15 @@ const TokensDialogHeader: React.FC<ITokensDialogHeader> = ({
   currentView,
   setCurrentView,
 }) => {
-  const { view } = currentView
-  const isTokens = view === TokensDialogView.TOKENS
-  const title =
-    view === TokensDialogView.DEPLOY_TOKEN
-      ? "Deploy token"
-      : view === TokensDialogView.MINT_TOKEN
-      ? `Mint Token (${currentView.data.symbol})`
-      : "Your tokens"
+  const isTokens = currentView.view === TokensDialogView.TOKENS
+
+  const getTitle = useCallback(() => {
+    const { view } = currentView
+    if (view === TokensDialogView.DEPLOY_TOKEN) return "Deploy token"
+    if (view === TokensDialogView.MINT_TOKEN)
+      return `Mint Token (${currentView.data.symbol})`
+    return "Your tokens"
+  }, [currentView])
 
   const goToDeployToken = useCallback(
     () => setCurrentView({ view: TokensDialogView.DEPLOY_TOKEN }),
@@ -81,7 +82,7 @@ const TokensDialogHeader: React.FC<ITokensDialogHeader> = ({
 
   return (
     <HStack w="full" justify={"space-between"}>
-      <Text>{title}</Text>
+      <Text>{getTitle()}</Text>
       {isTokens && (
         <Button
           onClick={goToDeployToken}
