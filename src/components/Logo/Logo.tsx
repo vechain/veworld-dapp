@@ -19,8 +19,8 @@ export const VechainLogo: React.FC<IIMage> = ({ ...props }) => {
 }
 
 export const VeWorldLogo: React.FC<IIMage> = ({ ...props }) => {
-  const lightModeUrl = process.env.PUBLIC_URL + "/images/logo/veworld.png"
-  const darkModeUrl = process.env.PUBLIC_URL + "/images/logo/veWorld_black.png"
+  const lightModeUrl = process.env.PUBLIC_URL + "/images/logo/veWorld.png"
+  const darkModeUrl = process.env.PUBLIC_URL + "/images/logo/veworld_black.png"
   const logoUrl = useColorModeValue(lightModeUrl, darkModeUrl)
   return (
     <Image
