@@ -14,7 +14,6 @@ export const WalletSourceInfo: Record<WalletSource, IWalletSourceInfo> = {
   [WalletSource.VEWORLD]: {
     name: "VeWorld",
     logo: `${logosUrl}/veWorld.png`,
-    url: "https://chrome.google.com/webstore/detail/veworld/hhfpdhagbfbekjjnjihikhefohocnlni?hl=en-GB&authuser=1",
     isAvailable: !!window.vechain,
   },
   [WalletSource.SYNC2]: {

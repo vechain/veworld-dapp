@@ -6,11 +6,10 @@ import {
   Tooltip,
   VStack,
   Icon,
-  Link,
   Box,
 } from "@chakra-ui/react"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
-import React from "react"
+import React, { useCallback } from "react"
 import { WalletSource, WalletSourceInfo } from "../../../model/enums"
 import RadioCard from "../../Shared/RadioCard/RadioCard"
 
@@ -23,20 +22,25 @@ const AccountSourceRadio: React.FC<IAccountSourceRadio> = ({
   selected,
   onChange,
 }) => {
+  const handleSourceClick = useCallback(
+    (isDisabled: boolean, source: WalletSource) => () =>
+      !isDisabled && onChange(source),
+    [onChange]
+  )
   return (
     <VStack spacing={4} w="full">
       {Object.values(WalletSource).map((source) => {
         const sourceInfo = WalletSourceInfo[source]
         const isDisabled = !sourceInfo.isAvailable
         const isSelected = source === selected
-        const onClick = () => !isDisabled && onChange(source)
+
         return (
           <AccountSourceButton
             key={source}
             source={source}
             isSelected={isSelected}
             isDisabled={isDisabled}
-            onClick={onClick}
+            onClick={handleSourceClick(isDisabled, source)}
           />
         )
       })}
@@ -93,13 +97,11 @@ const SourceNotDetectedIcon: React.FC<ISourceNotDetectedIcon> = ({
   const sourceInfo = WalletSourceInfo[source]
 
   return (
-    <Link href={sourceInfo.url} isExternal>
-      <Tooltip label={`${sourceInfo.name} not detected`} placement="top">
-        <Flex p={1} rounded="full" bg="orange.500" alignItems={"center"}>
-          <Icon color={"white"} fontSize={"md"} as={ExclamationTriangleIcon} />
-        </Flex>
-      </Tooltip>
-    </Link>
+    <Tooltip label={`${sourceInfo.name} not detected`} placement="top">
+      <Flex p={1} rounded="full" bg="orange.500" alignItems={"center"}>
+        <Icon color={"white"} fontSize={"md"} as={ExclamationTriangleIcon} />
+      </Flex>
+    </Tooltip>
   )
 }
 

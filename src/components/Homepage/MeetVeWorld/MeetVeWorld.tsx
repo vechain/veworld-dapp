@@ -1,9 +1,7 @@
-import { Button, Heading, Link, Text, VStack } from "@chakra-ui/react"
+import { Button, Heading, Text, VStack } from "@chakra-ui/react"
 import StyledCard from "../../Shared/StyledCard/StyledCard"
-import { WalletSource, WalletSourceInfo } from "../../../model/enums"
 
 const MeetVeWorld = () => {
-  const veWorldSource = WalletSourceInfo[WalletSource.VEWORLD]
   return (
     <StyledCard p={4} h={["auto", "auto", "full"]}>
       <VStack w="full" align={"flex-start"} spacing={4}>
@@ -14,9 +12,7 @@ const MeetVeWorld = () => {
           ease of use in mind.
         </Text>
         <Button variant="link" colorScheme="blue">
-          <Link href={veWorldSource.url} isExternal>
-            Discover more
-          </Link>
+          Discover more
         </Button>
       </VStack>
     </StyledCard>

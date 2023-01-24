@@ -12,7 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { LinkIcon, WalletIcon } from "@heroicons/react/24/solid"
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import { ActionType, useWallet } from "../../context/walletContext"
 import {
   DEFAULT_NETWORK,
@@ -65,13 +65,20 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
   const [connectionError, setConnectionError] = useState("")
   const [selectedNetwork, setSelectedNework] =
     useState<Network>(DEFAULT_NETWORK)
-  const onNetworkChange = (network: Network) => setSelectedNework(network)
+  const onNetworkChange = useCallback(
+    (network: Network) => setSelectedNework(network),
+    []
+  )
 
   const [selectedSource, setSelectedSource] =
     useState<WalletSource>(DEFAULT_SOURCE)
-  const onSourceChange = (network: WalletSource) => setSelectedSource(network)
 
-  const connectHandler = async () => {
+  const onSourceChange = useCallback(
+    (network: WalletSource) => setSelectedSource(network),
+    []
+  )
+
+  const connectHandler = useCallback(async () => {
     try {
       setConnectionError("")
       setConnectionLoading(true)
@@ -101,7 +108,7 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
     } finally {
       setConnectionLoading(false)
     }
-  }
+  }, [selectedSource, selectedNetwork, onClose])
 
   return (
     <>
