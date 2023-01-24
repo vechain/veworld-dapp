@@ -11,7 +11,7 @@ export const VechainLogo: React.FC<IIMage> = ({ ...props }) => {
     <Image
       h="full"
       objectFit="cover"
-      alt="vechain logo"
+      alt="Vechain logo"
       src={logoUrl}
       {...props}
     />
@@ -20,13 +20,13 @@ export const VechainLogo: React.FC<IIMage> = ({ ...props }) => {
 
 export const VeWorldLogo: React.FC<IIMage> = ({ ...props }) => {
   const lightModeUrl = process.env.PUBLIC_URL + "/images/logo/veworld.png"
-  const darkModeUrl = process.env.PUBLIC_URL + "/images/logo/veworld_black.png"
+  const darkModeUrl = process.env.PUBLIC_URL + "/images/logo/veWorld_black.png"
   const logoUrl = useColorModeValue(lightModeUrl, darkModeUrl)
   return (
     <Image
       h="full"
       objectFit="cover"
-      alt="vechain logo"
+      alt="VeWorld logo"
       src={logoUrl}
       {...props}
     />
