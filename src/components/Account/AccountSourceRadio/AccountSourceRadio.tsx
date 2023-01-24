@@ -73,7 +73,7 @@ const AccountSourceButton: React.FC<IAccountSourceButton> = ({
           objectFit={"cover"}
           w={35}
           h={35}
-          roundedLeft="md"
+          rounded="lg"
           alt={`${sourceInfo.name}-logo`}
           src={sourceInfo.logo}
         />
