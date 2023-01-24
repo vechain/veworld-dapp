@@ -13,7 +13,7 @@ interface IWalletSourceInfo {
 export const WalletSourceInfo: Record<WalletSource, IWalletSourceInfo> = {
   [WalletSource.VEWORLD]: {
     name: "VeWorld",
-    logo: `${logosUrl}/veWorld.png`,
+    logo: `${logosUrl}/veworld_black.png`,
     isAvailable: !!window.vechain,
   },
   [WalletSource.SYNC2]: {

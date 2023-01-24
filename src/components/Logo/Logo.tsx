@@ -1,11 +1,34 @@
-import { Image, useColorModeValue } from "@chakra-ui/react"
+import { HTMLChakraProps, Image, useColorModeValue } from "@chakra-ui/react"
+import React from "react"
 
-const lightModeUrl = process.env.PUBLIC_URL + "/images/vechain_logo.png"
-const darkModeUrl = process.env.PUBLIC_URL + "/images/vechain_logo_white.png"
+type IIMage = HTMLChakraProps<"img">
 
-const Logo = () => {
+export const VechainLogo: React.FC<IIMage> = ({ ...props }) => {
+  const lightModeUrl = process.env.PUBLIC_URL + "/images/logo/vechain.png"
+  const darkModeUrl = process.env.PUBLIC_URL + "/images/logo/vechain_white.png"
   const logoUrl = useColorModeValue(lightModeUrl, darkModeUrl)
-  return <Image h="full" objectFit="cover" alt="vechain logo" src={logoUrl} />
+  return (
+    <Image
+      h="full"
+      objectFit="cover"
+      alt="vechain logo"
+      src={logoUrl}
+      {...props}
+    />
+  )
 }
 
-export default Logo
+export const VeWorldLogo: React.FC<IIMage> = ({ ...props }) => {
+  const lightModeUrl = process.env.PUBLIC_URL + "/images/logo/veworld.png"
+  const darkModeUrl = process.env.PUBLIC_URL + "/images/logo/veworld_black.png"
+  const logoUrl = useColorModeValue(lightModeUrl, darkModeUrl)
+  return (
+    <Image
+      h="full"
+      objectFit="cover"
+      alt="vechain logo"
+      src={logoUrl}
+      {...props}
+    />
+  )
+}

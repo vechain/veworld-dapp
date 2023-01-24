@@ -15,7 +15,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import React, { useCallback } from "react"
-import Logo from "../Logo/Logo"
+import { VechainLogo } from "../Logo/Logo"
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher"
 import ConnectWalletButton from "../ConnectWalletButton/ConnectWalletButton"
 import { ActionType, useWallet } from "../../context/walletContext"
@@ -54,7 +54,7 @@ const DesktopNavBar = () => {
   return (
     <>
       <Box h="30px">
-        <Logo />
+        <VechainLogo />
       </Box>
       {account && network && <NetworkBadge network={network} />}
       <NavBarWalletConnect />
@@ -68,7 +68,7 @@ const MobileNavBar = () => {
     <>
       <MobileNavBarDrawer isOpen={isOpen} onClose={onClose} />
       <Box h="30px">
-        <Logo />
+        <VechainLogo />
       </Box>
       <IconButton
         aria-label="light"

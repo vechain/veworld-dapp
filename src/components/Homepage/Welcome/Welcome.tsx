@@ -1,4 +1,4 @@
-import { Heading, Text, VStack } from "@chakra-ui/react"
+import { Button, Heading, HStack, Link, Text, VStack } from "@chakra-ui/react"
 import ConnectWalletButton from "../../ConnectWalletButton/ConnectWalletButton"
 import StyledCard from "../../Shared/StyledCard/StyledCard"
 
@@ -11,7 +11,23 @@ const Welcome = () => {
           You can use this dapp to familiarize and know more about creation on
           VeChain
         </Text>
-        <ConnectWalletButton />
+        <HStack
+          justifyContent={"space-between"}
+          w="full"
+          wrap={"wrap"}
+          spacing={4}
+        >
+          <ConnectWalletButton />
+          <Link
+            ml={0}
+            href="https://github.com/vechainfoundation/veworld-dapp"
+            isExternal
+          >
+            <Button variant="link" colorScheme="blue">
+              See the public repository
+            </Button>
+          </Link>
+        </HStack>
       </VStack>
     </StyledCard>
   )
