@@ -63,3 +63,9 @@ const connex = new Connex({
   noExtension: true,
 })
 ```
+
+### Connect wallet button
+
+You can check our implementation of the Connect Wallet Button [here](https://github.com/vechainfoundation/veworld-dapp/blob/main/src/components/ConnectWalletButton/ConnectWalletButton.tsx). Feel free to use or customize it based on your needs.
+
+
