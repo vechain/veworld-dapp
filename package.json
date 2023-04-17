@@ -9,7 +9,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@heroicons/react": "^2.0.13",
-    "@openzeppelin/contracts": "^4.7.3",
+    "@openzeppelin/contracts": "^4.8.3",
     "@vechain/connex": "^2.0.12",
     "@vechain/connex-types": "^2.0.2",
     "@vechain/picasso": "^2.1.1",
