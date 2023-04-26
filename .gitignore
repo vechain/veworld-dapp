@@ -23,8 +23,11 @@ yarn-debug.log*
 yarn-error.log*
 
 src/artifacts
+artifacts
 
 *.iml
 
 .idea
 cache
+
+

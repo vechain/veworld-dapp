@@ -2,8 +2,8 @@
 const hre = require("hardhat")
 
 async function main() {
-  const Token = await hre.thor.getContractFactory("MyVIP180")
-  const token = await Token.deploy("My Token", "MTK")
+  const Token = await hre.ethers.getContractFactory("MyVIP180")
+  const token = await Token.deploy("My Token", "MTK", 18)
 
   await token.deployed()
 

@@ -1,6 +1,6 @@
 import { Connex } from "@vechain/connex"
 import { Certificate } from "thor-devkit"
-import { WalletSource, NetworkInfo, Network } from "../model/enums"
+import { Network, NetworkInfo, WalletSource } from "../model/enums"
 
 let connex: Connex | undefined
 
@@ -62,8 +62,7 @@ const getAccount = async (
   accountAddress: string
 ): Promise<Connex.Thor.Account> => {
   const connex = getConnex()
-  const account = await connex.thor.account(accountAddress).get()
-  return account
+  return await connex.thor.account(accountAddress).get()
 }
 
 export default {

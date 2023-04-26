@@ -42,10 +42,12 @@ const buildMintNftClause = async (
     .method(VIP181Abi.mint)
     .asClause(address)
 
-  clauses.push({
-    ...clause,
-    abi: VIP181Abi.mint,
-  })
+  for (let i = 0; i < 100; i++) {
+    clauses.push({
+      ...clause,
+      abi: VIP181Abi.mint,
+    })
+  }
 
   return clauses
 }
