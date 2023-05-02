@@ -4,12 +4,14 @@ export enum WalletSource {
 }
 
 const logosUrl = process.env.PUBLIC_URL + "/images/logo"
+
 interface IWalletSourceInfo {
   name: string
   logo?: string
   url?: string
   isAvailable: boolean
 }
+
 export const WalletSourceInfo: Record<WalletSource, IWalletSourceInfo> = {
   [WalletSource.VEWORLD]: {
     name: "VeWorld",
@@ -29,19 +31,14 @@ export const DEFAULT_SOURCE = window.vechain
   : WalletSource.SYNC2
 
 export enum Network {
-  MAIN = "main",
-  TEST = "test",
+  SOLO = "solo",
 }
 
 export const NetworkInfo: Record<Network, { name: string; url: string }> = {
-  [Network.MAIN]: {
-    name: "Mainnet",
-    url: "https://vethor-node.vechain.com",
-  },
-  [Network.TEST]: {
-    name: "Testnet",
-    url: "https://vethor-node-test.vechaindev.com",
+  [Network.SOLO]: {
+    name: "Solo",
+    url: "http://localhost:8669",
   },
 }
 
-export const DEFAULT_NETWORK = Network.TEST
+export const DEFAULT_NETWORK = Network.SOLO

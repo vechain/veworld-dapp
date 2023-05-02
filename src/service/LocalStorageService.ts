@@ -25,7 +25,7 @@ const setNetwork = (network: Network) => {
 const getNetwork = (): Network | undefined => {
   const network = localStorage.getItem(NETWORK_KEY)
 
-  if (network === Network.MAIN || network === Network.TEST) return network
+  if (network === Network.SOLO) return network
 }
 
 const setTokens = (token: IToken[]) => {
