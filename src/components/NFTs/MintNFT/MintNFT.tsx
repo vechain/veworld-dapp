@@ -1,13 +1,14 @@
 import {
   Button,
-  Icon,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
+  HStack,
+  Icon,
   Input,
   Spinner,
   VStack,
-  HStack,
 } from "@chakra-ui/react"
 import { ArrowPathIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
 import React, { useCallback } from "react"
@@ -22,8 +23,10 @@ interface IMintNFTForm {
   nft: INonFungibleToken
   navigateBack: (token?: INonFungibleToken) => void
 }
+
 export type MintNFTForm = {
   address: string
+  clausesNumber: number
 }
 const MintNFT: React.FC<IMintNFTForm> = ({ nft, navigateBack }) => {
   const {
@@ -44,7 +47,12 @@ const MintNFT: React.FC<IMintNFTForm> = ({ nft, navigateBack }) => {
     "NFT --- The concept of Pragmatic Programming has become a reference term to the Programmers who are looking to hone their skills. Pragmatic Programming has been designed through real case analysis based on practical market experience. We have established a set of principles and concepts throughout this book that understand the characteristics and responsibilities of a Pragmatic Programmer."
 
   const onSubmit = async (data: MintNFTForm) => {
-    const mintResult = await mintNonFungibleToken(nft, data.address, comment)
+    const mintResult = await mintNonFungibleToken(
+      nft,
+      data.address,
+      comment,
+      data.clausesNumber
+    )
     console.log(mintResult)
   }
 
@@ -55,6 +63,10 @@ const MintNFT: React.FC<IMintNFTForm> = ({ nft, navigateBack }) => {
 
   const addressRules: RegisterOptions = {
     validate: (value: string) => isValid(value) || "Address is not valid",
+  }
+
+  const clausesNumberRules: RegisterOptions = {
+    min: { value: 0, message: "Must be > 0" },
   }
 
   const getSubmitButtonLeftIcon = useCallback(() => {
@@ -76,6 +88,17 @@ const MintNFT: React.FC<IMintNFTForm> = ({ nft, navigateBack }) => {
           <FormLabel>Address</FormLabel>
           <Input type="text" {...register("address", addressRules)} />
           <FormErrorMessage>{errors.address?.message}</FormErrorMessage>
+        </FormControl>
+        <FormControl isRequired isInvalid={!!errors.clausesNumber?.message}>
+          <FormLabel>Number of clauses</FormLabel>
+          <Input
+            type="number"
+            {...register("clausesNumber", clausesNumberRules)}
+          />
+          <FormHelperText>
+            For testing purposes. The number of clauses of the transaction
+          </FormHelperText>
+          <FormErrorMessage>{errors.clausesNumber?.message}</FormErrorMessage>
         </FormControl>
       </VStack>
       <VStack w="full" mt={8} spacing={4}>

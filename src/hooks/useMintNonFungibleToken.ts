@@ -19,7 +19,8 @@ const useMintNonFungibleToken = () => {
   const mintNonFungibleToken = async (
     nft: INonFungibleToken,
     toAddress: string,
-    comment?: string
+    comment: string,
+    clauseAmount: number
   ) => {
     setError(undefined)
 
@@ -29,7 +30,8 @@ const useMintNonFungibleToken = () => {
 
       const clauses = await VIP181Service.buildMintNftClause(
         toAddress,
-        nft.address
+        nft.address,
+        clauseAmount
       )
 
       const clausesWithComments = clauses.map((clause) => {
