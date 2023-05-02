@@ -12,21 +12,17 @@ on:
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
-  pages: write
   id-token: write
   packages: write
 
 # Allow one concurrent deployment
 concurrency:
-  group: "pages"
+  group: "solo-e2e"
   cancel-in-progress: true
 
 jobs:
   # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  publish-docker-image:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
