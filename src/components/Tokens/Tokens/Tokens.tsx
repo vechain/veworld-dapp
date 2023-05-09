@@ -20,6 +20,7 @@ interface ITokens {
   selectedToken?: IToken
   openMintView: (token: IToken) => void
 }
+
 const Tokens: React.FC<ITokens> = ({ selectedToken, openMintView }) => {
   const {
     state: { tokens },
@@ -64,6 +65,7 @@ interface ITokenDetails {
   token: IToken
   onMintClick: () => void
 }
+
 const TokenDetails: React.FC<ITokenDetails> = ({ token, onMintClick }) => {
   const {
     state: { account },
@@ -80,7 +82,11 @@ const TokenDetails: React.FC<ITokenDetails> = ({ token, onMintClick }) => {
         <Text as="b" fontSize={"lg"}>
           Contract address
         </Text>
-        <AddressButton address={token.address} showAddressIcon={false} />
+        <AddressButton
+          id={"fungible-token-address"}
+          address={token.address}
+          showAddressIcon={false}
+        />
       </HStack>
       <HStack justify={"space-between"} w="full">
         <Text as="b" fontSize={"lg"}>

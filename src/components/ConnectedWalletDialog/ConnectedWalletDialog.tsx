@@ -1,4 +1,4 @@
-import { Button, HStack, Text, VStack, Image } from "@chakra-ui/react"
+import { Button, HStack, Image, Text, VStack } from "@chakra-ui/react"
 import React from "react"
 import { ActionType, useWallet } from "../../context/walletContext"
 import { Network, WalletSourceInfo } from "../../model/enums"
@@ -14,6 +14,7 @@ interface IConnectWalletModal {
   account: IAccount
   network: Network
 }
+
 const AccountDetailModal: React.FC<IConnectWalletModal> = ({
   isOpen,
   onClose,
@@ -63,6 +64,7 @@ interface IAccountDetailBody {
   network: Network
   disconnectWallet: () => void
 }
+
 export const AccountDetailBody: React.FC<IAccountDetailBody> = ({
   account,
   network,
@@ -76,7 +78,10 @@ export const AccountDetailBody: React.FC<IAccountDetailBody> = ({
           <Text as="b" fontSize="md">
             Account
           </Text>
-          <AddressButton address={account.address} />
+          <AddressButton
+            id={"selected-account-address"}
+            address={account.address}
+          />
         </HStack>
         <HStack justifyContent={"space-between"} w="full">
           <Text as="b" fontSize="md">

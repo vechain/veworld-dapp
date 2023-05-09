@@ -19,6 +19,7 @@ interface ITokens {
   selectedNft?: INonFungibleToken
   openMintView: (token: INonFungibleToken) => void
 }
+
 const NFTs: React.FC<ITokens> = ({ selectedNft, openMintView }) => {
   const {
     state: { nfts },
@@ -62,6 +63,7 @@ interface INftsDetails {
   nft: INonFungibleToken
   onMintClick: () => void
 }
+
 const NFTDetails: React.FC<INftsDetails> = ({ nft, onMintClick }) => {
   const {
     state: { account },
@@ -78,7 +80,11 @@ const NFTDetails: React.FC<INftsDetails> = ({ nft, onMintClick }) => {
         <Text as="b" fontSize={"lg"}>
           Address
         </Text>
-        <AddressButton address={nft.address} showAddressIcon={false} />
+        <AddressButton
+          id={"nft-contract-address"}
+          address={nft.address}
+          showAddressIcon={false}
+        />
       </HStack>
       <HStack justify={"space-between"} w="full">
         <Text as="b" fontSize={"lg"}>

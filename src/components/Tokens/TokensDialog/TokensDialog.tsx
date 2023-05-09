@@ -61,6 +61,7 @@ interface ITokensDialogHeader {
   currentView: ICurrentView
   setCurrentView: (data: ICurrentView) => void
 }
+
 const TokensDialogHeader: React.FC<ITokensDialogHeader> = ({
   currentView,
   setCurrentView,
@@ -89,6 +90,7 @@ const TokensDialogHeader: React.FC<ITokensDialogHeader> = ({
           colorScheme={"blue"}
           size="sm"
           variant={"solid"}
+          id={"deploy-new-token-button"}
         >
           Deploy new token
         </Button>

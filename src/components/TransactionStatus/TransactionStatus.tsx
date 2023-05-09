@@ -30,7 +30,11 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
       return (
         <HStack spacing={2}>
           <Text>Transaction ID: </Text>
-          <AddressButton address={txId} showAddressIcon={false} />
+          <AddressButton
+            id={"tx-status-addr"}
+            address={txId}
+            showAddressIcon={false}
+          />
         </HStack>
       )
   }, [error, txId])
@@ -73,7 +77,9 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
         <Alert status={"success"}>
           <AlertIcon />
           <Box>
-            <AlertTitle>Transaction successful</AlertTitle>
+            <AlertTitle id={"transaction-successful-id"}>
+              Transaction successful
+            </AlertTitle>
             <AlertDescription>{getDescription()}</AlertDescription>
           </Box>
         </Alert>

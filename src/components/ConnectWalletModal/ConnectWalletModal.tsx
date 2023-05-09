@@ -148,6 +148,7 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
           onClick={connectHandler}
           colorScheme="blue"
           leftIcon={connectionLoading ? <Spinner /> : <Icon as={LinkIcon} />}
+          id={"connect-wallet-button"}
         >
           {connectionLoading ? "Connecting..." : "Connect"}
         </Button>

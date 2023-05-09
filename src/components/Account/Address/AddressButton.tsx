@@ -2,21 +2,23 @@ import {
   Button,
   HStack,
   HTMLChakraProps,
+  Icon,
   Text,
   useClipboard,
-  Icon,
 } from "@chakra-ui/react"
 import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/react/24/solid"
 import React, { useEffect } from "react"
-import { humanAddress } from "../../../utils/FormattingUtils"
 import AddressIcon from "./AddressIcon"
 
 interface IAddressButton extends HTMLChakraProps<"button"> {
+  id: string
   address: string
   showAddressIcon?: boolean
   showCopyIcon?: boolean
 }
+
 const AddressButton: React.FC<IAddressButton> = ({
+  id,
   address,
   showAddressIcon = true,
   showCopyIcon = true,
@@ -51,7 +53,9 @@ const AddressButton: React.FC<IAddressButton> = ({
         {showAddressIcon && (
           <AddressIcon address={address} roundedLeft={"md"} />
         )}
-        <Text fontSize={"md"}>{humanAddress(address, 6, 6)}</Text>
+        <Text id={id} fontSize={"md"}>
+          {address}
+        </Text>
         {showCopyIcon && (
           <Icon
             aria-label="Copy Address"

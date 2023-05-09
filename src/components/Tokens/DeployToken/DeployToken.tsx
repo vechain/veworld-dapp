@@ -5,10 +5,10 @@ import {
   FormHelperText,
   FormLabel,
   HStack,
+  Icon,
   Input,
   Spinner,
   VStack,
-  Icon,
 } from "@chakra-ui/react"
 import { ArrowPathIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
 import React, { useCallback } from "react"
@@ -25,10 +25,12 @@ type DeployTokenForm = {
   decimals: number
   delegateUrl?: string
 }
+
 interface IDeployToken {
   account: IAccount
   navigateBack: (token?: IToken) => void
 }
+
 const DeployToken: React.FC<IDeployToken> = ({ account, navigateBack }) => {
   const {
     handleSubmit,
@@ -111,17 +113,29 @@ const DeployToken: React.FC<IDeployToken> = ({ account, navigateBack }) => {
       <VStack spacing={4} w="full">
         <FormControl isRequired isInvalid={!!errors.name?.message}>
           <FormLabel>Name</FormLabel>
-          <Input type="text" {...register("name", nameRules)} />
+          <Input
+            id={"token-name"}
+            type="text"
+            {...register("name", nameRules)}
+          />
           <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isRequired isInvalid={!!errors.symbol?.message}>
           <FormLabel>Symbol</FormLabel>
-          <Input type="text" {...register("symbol", symbolRules)} />
+          <Input
+            id={"token-symbol"}
+            type="text"
+            {...register("symbol", symbolRules)}
+          />
           <FormErrorMessage>{errors.symbol?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isRequired isInvalid={!!errors.decimals?.message}>
           <FormLabel>Decimals</FormLabel>
-          <Input type="number" {...register("decimals", decimalsRules)} />
+          <Input
+            id={"token-decimals"}
+            type="number"
+            {...register("decimals", decimalsRules)}
+          />
           <FormErrorMessage>{errors.decimals?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.delegateUrl?.message}>
@@ -143,6 +157,7 @@ const DeployToken: React.FC<IDeployToken> = ({ account, navigateBack }) => {
           <Button
             w="full"
             variant={"outline"}
+            id={"back-deploy-token"}
             colorScheme="blue"
             onClick={onBackClick}
             leftIcon={<Icon as={ArrowSmallLeftIcon} />}
@@ -155,6 +170,7 @@ const DeployToken: React.FC<IDeployToken> = ({ account, navigateBack }) => {
             type="submit"
             colorScheme="blue"
             leftIcon={getSubmitButtonLeftIcon()}
+            id={"submit-deploy-token"}
           >
             {getSubmitButtonText()}
           </Button>

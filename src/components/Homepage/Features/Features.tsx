@@ -27,6 +27,7 @@ interface IFeatureDialog {
 interface IFeature {
   name: string
   desc: string
+  id: string
   requireWallet: boolean
   icon?: React.ReactNode
   featureDialog: React.FC<IFeatureDialog>
@@ -35,6 +36,7 @@ interface IFeature {
 const FeatureList: IFeature[] = [
   {
     name: "VIP180 tokens",
+    id: "fungible",
     desc: "See, deploy and mint VIP180 tokens aka fungible tokens! Create a token has never been so easy",
     icon: <CurrencyDollarIcon />,
     requireWallet: true,
@@ -42,6 +44,7 @@ const FeatureList: IFeature[] = [
   },
   {
     name: "VIP181 tokens",
+    id: "nfts",
     desc: "See, deploy and mint VIP181 tokens aka NFTS!",
     icon: <CurrencyDollarIcon />,
     requireWallet: true,
@@ -118,6 +121,7 @@ const FeatureCard: React.FC<IFeatureCard> = ({ feature }) => {
             disabled={isDisabled}
             colorScheme={"blue"}
             variant="outline"
+            id={`get-started-button-${feature.id}`}
           >
             Get started
           </Button>

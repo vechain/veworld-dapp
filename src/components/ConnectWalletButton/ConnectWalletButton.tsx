@@ -9,6 +9,7 @@ import ConnectWalletModal from "../ConnectWalletModal/ConnectWalletModal"
 interface IConnectWalletButton {
   buttonProps?: HTMLChakraProps<"button">
 }
+
 const ConnectWalletButton: React.FC<IConnectWalletButton> = ({
   buttonProps,
 }) => {
@@ -29,6 +30,7 @@ const ConnectWalletButton: React.FC<IConnectWalletButton> = ({
         />
         <AddressButton
           {...buttonProps}
+          id={"connect-wallet-address-button"}
           address={account.address}
           showCopyIcon={false}
           onClick={onOpen}
@@ -43,6 +45,7 @@ const ConnectWalletButton: React.FC<IConnectWalletButton> = ({
         {...buttonProps}
         onClick={onOpen}
         leftIcon={<Icon as={WalletIcon} />}
+        id={"connect-wallet-modal-button"}
       >
         Connect Wallet
       </Button>
