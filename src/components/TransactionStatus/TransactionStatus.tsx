@@ -68,7 +68,9 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
           <AlertIcon />
           <Box>
             <AlertTitle>Transaction failed</AlertTitle>
-            <AlertDescription>{getDescription()}</AlertDescription>
+            <AlertDescription id={"transaction-failed-description"}>
+              {getDescription()}
+            </AlertDescription>
           </Box>
         </Alert>
       )
