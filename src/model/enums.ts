@@ -1,6 +1,7 @@
 export enum WalletSource {
   VEWORLD = "veworld",
   SYNC2 = "sync2",
+  WALLET_CONNECT = "walletConnect",
 }
 
 const logosUrl = process.env.PUBLIC_URL + "/images/logo"
@@ -20,6 +21,11 @@ export const WalletSourceInfo: Record<WalletSource, IWalletSourceInfo> = {
     name: "Sync2",
     logo: `${logosUrl}/sync2.png`,
     url: "https://docs.vechain.org/sync2/get-started.html",
+    isAvailable: true,
+  },
+  [WalletSource.WALLET_CONNECT]: {
+    name: "Wallet Connect",
+    logo: `${logosUrl}/wallet-connect-logo.png`,
     isAvailable: true,
   },
 }
