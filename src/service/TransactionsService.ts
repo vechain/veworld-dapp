@@ -58,16 +58,43 @@ const requestTransaction = async (
   comment?: string,
   delegateUrl?: string
 ) => {
-  const connex = await ConnexService.getConnex()
-  const request = connex.vendor
-    .sign("tx", txMessage)
-    .signer(signer)
-    .link(window.location.href + "#/tx-callback/{txid}")
+  const signClient = ConnexService.getSignClient()
+  const session = ConnexService.getSession()
+  let result: Connex.Vendor.TxResponse
 
-  if (comment) request.comment(comment)
-  if (delegateUrl) request.delegate(delegateUrl, signer)
+  // console.log("signClient", signClient, "session", session)
 
-  return request.request()
+  if (session && signClient) {
+    console.log(`Sending delegate_transaction request to ${session.topic}`)
+    result = await signClient.request({
+      topic: session.topic,
+      chainId: "vechain:100010",
+      request: {
+        method: "delegate_transaction",
+        params: [
+          {
+            signer,
+            txMessage,
+            comment,
+            delegateUrl,
+          },
+        ],
+      },
+    })
+    // console.log(`Received delegate_transaction response from wallet`, result)
+  } else {
+    const connex = await ConnexService.getConnex()
+    const request = connex.vendor
+      .sign("tx", txMessage)
+      .signer(signer)
+      .link(window.location.href + "#/tx-callback/{txid}")
+
+    if (comment) request.comment(comment)
+    if (delegateUrl) request.delegate(delegateUrl, signer)
+    result = await request.request()
+    // console.log(`Received response from extension : ${result}`)
+  }
+  return result
 }
 
 export default {

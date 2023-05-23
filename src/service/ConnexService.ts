@@ -9,7 +9,7 @@ import { ActionType, useWallet } from "../context/walletContext"
 const SUPPORTED_CHAINS = ["vechain:100009", "vechain:100010"]
 const web3Modal = new Web3Modal({
   walletConnectVersion: 2,
-  projectId: "6755c2b1587a2f7f734c844f02d35724",
+  projectId: "8ffdf00680a52b1fe25940ea8b29853c",
   standaloneChains: SUPPORTED_CHAINS,
   themeVariables: {
     "--w3m-z-index": "99999999",
@@ -17,6 +17,8 @@ const web3Modal = new Web3Modal({
 })
 
 let connex: Connex | undefined
+let signClient: Client | undefined
+let session: any
 
 const initialise = (walletSource: WalletSource, network: Network) => {
   const enhancedNetwork = NetworkInfo[network]
@@ -38,6 +40,8 @@ const getConnex = () => {
 
 const clear = () => {
   connex = undefined
+  signClient = undefined
+  session = undefined
 }
 
 export const connectToWalletHandler = async (
@@ -55,14 +59,7 @@ export const connectToWalletHandler = async (
     const { uri, approval } = await signClient.connect({
       requiredNamespaces: {
         vechain: {
-          methods: [
-            "eth_sign",
-            "eth_sendTransaction",
-            "personal_sign",
-            "delegate_transaction",
-            "custom_call",
-            "identify",
-          ],
+          methods: ["delegate_transaction", "identify"],
           chains: [
             network === Network.MAIN ? "vechain:100009" : "vechain:100010",
           ],
@@ -71,7 +68,6 @@ export const connectToWalletHandler = async (
       },
     })
 
-    let session = null
     if (uri) {
       web3Modal.openModal({
         uri,
@@ -157,18 +153,27 @@ const getAccount = async (
 }
 
 const createClient = async () => {
-  const client: Client = await SignClient.init({
+  signClient = await SignClient.init({
     logger: "debug",
     relayUrl: "wss://relay.walletconnect.com",
-    projectId: "6755c2b1587a2f7f734c844f02d35724",
+    projectId: "8ffdf00680a52b1fe25940ea8b29853c",
     metadata: {
-      name: "My Stacks WalletConnect App",
-      description: "Awesome application",
+      name: "Official VeWorld Demo Dapp",
+      description:
+        "You can use this dapp to familiarize and know more about creation on VeChain",
       url: "https://your_app_url.com/",
       icons: ["https://avatars.githubusercontent.com/u/37784886"],
     },
   })
-  return client
+  return signClient
+}
+
+const getSignClient = () => {
+  return signClient
+}
+
+const getSession = () => {
+  return session
 }
 
 async function subscribeToEvents(client: Client) {
@@ -180,6 +185,7 @@ async function subscribeToEvents(client: Client) {
       console.log("user disconnected the session from their wallet")
       const { dispatch } = useWallet()
       dispatch({ type: ActionType.CLEAR })
+      clear()
     })
   } catch (e) {
     console.log(e)
@@ -191,4 +197,6 @@ export default {
   getAccount,
   initialise,
   clear,
+  getSignClient,
+  getSession,
 }
