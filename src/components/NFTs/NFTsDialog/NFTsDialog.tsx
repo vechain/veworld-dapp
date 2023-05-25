@@ -61,6 +61,7 @@ interface INFTsDialogHeader {
   currentView: ICurrentView
   setCurrentView: (data: ICurrentView) => void
 }
+
 const NFTsDialogHeader: React.FC<INFTsDialogHeader> = ({
   currentView,
   setCurrentView,
@@ -87,6 +88,7 @@ const NFTsDialogHeader: React.FC<INFTsDialogHeader> = ({
           onClick={goToDeployNft}
           colorScheme={"blue"}
           size="sm"
+          id={"deploy-nft-button"}
           variant={"solid"}
         >
           Deploy new NFT

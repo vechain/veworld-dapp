@@ -105,7 +105,12 @@ const NFTDetails: React.FC<INftsDetails> = ({ nft, onMintClick }) => {
         </Text>
         <Text fontSize={"md"}>{balance || "Not available"}</Text>
       </HStack>
-      <Button onClick={onMintClick} colorScheme={"blue"} w="full">
+      <Button
+        id={"mint-nfts-button"}
+        onClick={onMintClick}
+        colorScheme={"blue"}
+        w="full"
+      >
         Mint
       </Button>
     </VStack>
