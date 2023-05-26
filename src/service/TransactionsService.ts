@@ -59,10 +59,7 @@ const requestTransaction = async (
   delegateUrl?: string
 ) => {
   const connex = await ConnexService.getConnex()
-  const request = connex.vendor
-    .sign("tx", txMessage)
-    .signer(signer)
-    .delegate("https://sponsor.vechain.energy/by/153")
+  const request = connex.vendor.sign("tx", txMessage).signer(signer)
 
   if (comment) request.comment(comment)
   if (delegateUrl) request.delegate(delegateUrl, signer)
