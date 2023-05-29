@@ -28,3 +28,6 @@ src/artifacts
 
 .idea
 cache
+
+.env
+.vscode/
