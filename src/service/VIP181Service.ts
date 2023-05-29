@@ -32,7 +32,8 @@ const buildNftDeployClause = (
 
 const buildMintNftClause = async (
   address: string,
-  nftAddress: string
+  nftAddress: string,
+  clauseAmount: number
 ): Promise<Connex.Vendor.TxMessage> => {
   const connex = await ConnexService.getConnex()
   const clauses = []
@@ -42,10 +43,12 @@ const buildMintNftClause = async (
     .method(VIP181Abi.mint)
     .asClause(address)
 
-  clauses.push({
-    ...clause,
-    abi: VIP181Abi.mint,
-  })
+  for (let i = 0; i < clauseAmount; i++) {
+    clauses.push({
+      ...clause,
+      abi: VIP181Abi.mint,
+    })
+  }
 
   return clauses
 }

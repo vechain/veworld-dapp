@@ -51,7 +51,6 @@ const explainRevertReason = async (id: string): Promise<string> => {
 
   return "No revert reason found"
 }
-
 export default {
   pollForReceipt,
   explainRevertReason,
