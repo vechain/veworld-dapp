@@ -7,7 +7,7 @@ import { getPicassoImgSrc } from "../../utils/PicassoUtils"
 import AddressButton from "../Account/Address/AddressButton"
 import NetworkBadge from "../Network/NetworkBadge/NetworkBadge"
 import { Dialog } from "../Shared"
-import ConnexService from "../../service/ConnexService"
+import { useWalletConnect } from "../../context/walletConnectContext"
 
 interface IConnectWalletModal {
   isOpen: boolean
@@ -22,21 +22,16 @@ const AccountDetailModal: React.FC<IConnectWalletModal> = ({
   network,
 }) => {
   const { dispatch } = useWallet()
+  const { client, session, disconnect } = useWalletConnect()
 
   const disconnectWallet = () => {
     dispatch({ type: ActionType.CLEAR })
-    const signClient = ConnexService.getSignClient()
-    const session = ConnexService.getSession()
 
-    if (signClient) {
-      signClient.disconnect({
-        topic: session.topic,
-        reason: {
-          code: 6000,
-          message: "User disconnected.",
-        },
-      })
+    //TODO: add if (walletConnect is source) for better readability
+    if (client && session) {
+      disconnect()
     }
+
     onClose()
   }
 

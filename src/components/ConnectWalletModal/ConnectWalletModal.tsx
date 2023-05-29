@@ -26,6 +26,9 @@ import { humanAddress } from "../../utils/FormattingUtils"
 import AccountSourceRadio from "../Account/AccountSourceRadio/AccountSourceRadio"
 import NetworkSelect from "../Network/NetworkSelect/NetworkSelect"
 import { Dialog } from "../Shared"
+import { useWalletConnect } from "../../context/walletConnectContext"
+import { Certificate } from "thor-devkit"
+import { SessionTypes } from "@walletconnect/types"
 
 interface IConnectedWalletDialog {
   isOpen: boolean
@@ -60,6 +63,7 @@ interface IConnectedWalletBody {
 const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
   const { dispatch } = useWallet()
   const toast = useToast()
+  const { connect, identifyUser } = useWalletConnect()
 
   const [connectionLoading, setConnectionLoading] = useState(false)
   const [connectionError, setConnectionError] = useState("")
@@ -78,11 +82,23 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
     []
   )
 
-  const connectHandler = useCallback(async () => {
-    try {
-      setConnectionError("")
-      setConnectionLoading(true)
-      const cert = await connectToWalletHandler(selectedSource, selectedNetwork)
+  const onWalletConnectSuccess = useCallback(
+    async (session: SessionTypes.Struct) => {
+      let cert: Certificate
+      try {
+        cert = await identifyUser(selectedNetwork, session)
+        onSuccessfullConnection(cert)
+      } catch (e: unknown) {
+        const em = getErrorMessage(e)
+        console.log(em)
+        setConnectionError(em)
+      }
+    },
+    [selectedNetwork, identifyUser]
+  )
+
+  const onSuccessfullConnection = useCallback(
+    (cert: Certificate) => {
       dispatch({
         type: ActionType.SET_ALL,
         payload: {
@@ -101,6 +117,23 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
         duration: 5000,
         isClosable: true,
       })
+    },
+    [selectedNetwork, selectedSource]
+  )
+
+  const connectHandler = useCallback(async () => {
+    try {
+      setConnectionError("")
+      setConnectionLoading(true)
+
+      let cert: Certificate
+      if (selectedSource === WalletSource.WALLET_CONNECT) {
+        return await connect(onWalletConnectSuccess)
+      } else {
+        cert = await connectToWalletHandler(selectedSource, selectedNetwork)
+      }
+
+      onSuccessfullConnection(cert)
     } catch (e: unknown) {
       const em = getErrorMessage(e)
       console.log(em)

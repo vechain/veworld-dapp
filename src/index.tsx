@@ -13,6 +13,7 @@ import theme from "./styles/Theme"
 import StyledContainer from "./components/Shared/StyledContainer/StyledContainer"
 
 import "./styles/index.css"
+import { WalletConnectProvider } from "./context/walletConnectContext"
 
 const Index = () => {
   return (
@@ -20,10 +21,12 @@ const Index = () => {
       <Fonts />
       <ChakraProvider theme={theme}>
         <WalletProvider>
-          <NavBar />
-          <StyledContainer>
-            <Router />
-          </StyledContainer>
+          <WalletConnectProvider>
+            <NavBar />
+            <StyledContainer>
+              <Router />
+            </StyledContainer>
+          </WalletConnectProvider>
         </WalletProvider>
       </ChakraProvider>
     </>
