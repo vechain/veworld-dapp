@@ -4388,6 +4388,22 @@
     uuid "2.0.1"
     xmlhttprequest "1.8.0"
 
+"@vechain/hardhat-ethers@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@vechain/hardhat-ethers/-/hardhat-ethers-0.0.1.tgz#6926598b12231761c3e139e4d6a7901c404a99bf"
+  integrity sha512-IACQTXZ8A+8Sroa9gkQbvNp7+SWcV9PdaaLdmP4M7FgkH4NtXzLGMdT4P2Jbcn1q6LEulCan4Ylxe3FEKMmIrg==
+
+"@vechain/hardhat-vechain@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@vechain/hardhat-vechain/-/hardhat-vechain-0.0.1.tgz#b05395c029cae0ca5ecb8f321a026f1707608603"
+  integrity sha512-KFd2mDHcy1QG88hKxUIHMOhFO01A0u8OGObH5qo9bOlkBefglRQIXIClMYKS0rR1rd1AaZMXVmMCquuvZG2Glg==
+  dependencies:
+    "@vechain/connex-driver" "^2.0.12"
+    "@vechain/connex-framework" "^2.0.12"
+    "@vechain/web3-providers-connex" "^1.0.0"
+    ethers "^5.7.2"
+    thor-devkit "^2.0.6"
+
 "@vechain/picasso@^2.1.1":
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@vechain/picasso/-/picasso-2.1.1.tgz#a0adc594a3ce5047c606e7745566a65f341671fb"
@@ -4404,22 +4420,6 @@
     eventemitter3 "^4.0.4"
     thor-devkit "^2.0.4"
     web3-utils "^1.7.3"
-
-"@vechainfoundation/hardhat-ethers@0.0.1":
-  version "0.0.1"
-  resolved "https://npm.pkg.github.com/download/@vechainfoundation/hardhat-ethers/0.0.1/4e6fc95d5b3a12914c14bda4108503c4ae698774#4e6fc95d5b3a12914c14bda4108503c4ae698774"
-  integrity sha512-KLMoh55JNRh7oR84mmpVgaFu0EnFK3fYrZCrnz772TzXa6khp+7c32IQoPYpuJ7LytGB8bIYHEab/afFRT/mXA==
-
-"@vechainfoundation/hardhat-vechain@0.0.1":
-  version "0.0.1"
-  resolved "https://npm.pkg.github.com/download/@vechainfoundation/hardhat-vechain/0.0.1/5d90eecf34cac59310dcedf672af18c662bfdd24#5d90eecf34cac59310dcedf672af18c662bfdd24"
-  integrity sha512-n5bquG00k+03VHOgbGfTOxueg37srz6IcGu2pIcZmvQ7p7cPqxq5POqoBTkBSvuX5LK7bxvI/IrbiZK8aqjVPA==
-  dependencies:
-    "@vechain/connex-driver" "^2.0.12"
-    "@vechain/connex-framework" "^2.0.12"
-    "@vechain/web3-providers-connex" "^1.0.0"
-    ethers "^5.7.2"
-    thor-devkit "^2.0.6"
 
 "@walletconnect/core@2.7.3":
   version "2.7.3"
