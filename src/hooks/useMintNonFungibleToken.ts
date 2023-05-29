@@ -6,11 +6,13 @@ import { TxStage } from "../model/Transaction"
 import TransactionsService from "../service/TransactionsService"
 import VIP181Service from "../service/VIP181Service"
 import { getErrorMessage } from "../utils/ExtensionUtils"
+import { useTransaction } from "./useTransaction"
 
 const useMintNonFungibleToken = () => {
   const {
     state: { account },
   } = useWallet()
+  const { requestTransaction } = useTransaction()
   const [txId, setTxId] = useState<string>()
   const [txStatus, setTxStatus] = useState(TxStage.NONE)
   const [error, setError] = useState<string>()
@@ -38,7 +40,7 @@ const useMintNonFungibleToken = () => {
 
       setTxStatus(TxStage.IN_EXTENSION)
 
-      const { txid } = await TransactionsService.requestTransaction(
+      const { txid } = await requestTransaction(
         account.address,
         clausesWithComments
       )

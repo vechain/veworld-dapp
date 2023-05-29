@@ -3,11 +3,13 @@ import { TxStage } from "../model/Transaction"
 import TransactionsService from "../service/TransactionsService"
 import VIP180Service from "../service/VIP180Service"
 import { getErrorMessage } from "../utils/ExtensionUtils"
+import { useTransaction } from "./useTransaction"
 
 const useDeployToken = () => {
   const [txId, setTxId] = useState<string>()
   const [txStatus, setTxStatus] = useState(TxStage.NONE)
   const [error, setError] = useState<string>()
+  const { requestTransaction } = useTransaction()
 
   const deployToken = async (
     accountAddress: string,
@@ -26,7 +28,7 @@ const useDeployToken = () => {
 
       setTxStatus(TxStage.IN_EXTENSION)
 
-      const { txid } = await TransactionsService.requestTransaction(
+      const { txid } = await requestTransaction(
         accountAddress,
         clause,
         comment,

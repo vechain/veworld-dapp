@@ -7,11 +7,13 @@ import { TxStage } from "../model/Transaction"
 import TransactionsService from "../service/TransactionsService"
 import VIP180Service from "../service/VIP180Service"
 import { getErrorMessage } from "../utils/ExtensionUtils"
+import { useTransaction } from "./useTransaction"
 
 const useMintToken = () => {
   const {
     state: { account },
   } = useWallet()
+  const { requestTransaction } = useTransaction()
   const [txId, setTxId] = useState<string>()
   const [txStatus, setTxStatus] = useState(TxStage.NONE)
   const [error, setError] = useState<string>()
@@ -42,7 +44,7 @@ const useMintToken = () => {
 
       setTxStatus(TxStage.IN_EXTENSION)
 
-      const { txid } = await TransactionsService.requestTransaction(
+      const { txid } = await requestTransaction(
         account.address,
         clausesWithComments
       )
