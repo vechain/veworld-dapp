@@ -139,6 +139,8 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
           web3Modal.openModal({ uri, standaloneChains })
         }
 
+        //TODO: if modal closes before approval we should reset state
+
         session = await approval()
         console.log("Established session:", session)
 
@@ -149,7 +151,6 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
 
         await onSuccess(session)
       } catch (e) {
-        //TODO: handle when user closes modal
         web3Modal.closeModal()
         onError?.(e)
 
