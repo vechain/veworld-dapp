@@ -10,7 +10,7 @@ import React, {
 } from "react"
 import { SignClient } from "@walletconnect/sign-client"
 import { Web3Modal } from "@web3modal/standalone"
-import { Network } from "../model/enums"
+import { Network, WalletSource } from "../model/enums"
 import { getSdkError } from "@walletconnect/utils"
 import { Certificate } from "thor-devkit"
 import {
@@ -198,6 +198,13 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
         return cert
       } catch (error) {
         console.error("SignClient.identifyUser failed:", error)
+
+        // Disconnect from session if user rejects identify signature request.
+        await client.disconnect({
+          topic: session.topic,
+          reason: getSdkError("USER_DISCONNECTED"),
+        })
+
         throw error
       }
     },
@@ -225,7 +232,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
     }
   }, [client, session])
 
-  const _subscribeToEvents = useCallback(
+  const subscribeToEvents = useCallback(
     async (_client: Client) => {
       if (typeof _client === "undefined") {
         throw new Error("WalletConnect is not initialized")
@@ -249,60 +256,45 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
 
       _client.on("session_delete", () => {
         console.log("EVENT", "session_delete")
-        //TODO: also disconnect client from session
         reset()
       })
     },
     [onSessionConnected]
   )
 
-  const _checkPersistedState = useCallback(
+  const restoreExistingSession = useCallback(
     async (_client: Client) => {
       if (typeof _client === "undefined") {
         throw new Error("WalletConnect is not initialized")
       }
 
-      // populates existing pairings to state
-      setPairings(_client.pairing.getAll({ active: true }))
-      console.log(
-        "RESTORED PAIRINGS: ",
-        _client.pairing.getAll({ active: true })
-      )
-
       if (typeof session !== "undefined") return
+
       // populates (the last) existing session to state
       if (_client.session.length) {
         const lastKeyIndex = _client.session.keys.length - 1
         const _session = _client.session.get(_client.session.keys[lastKeyIndex])
         console.log("RESTORED SESSION:", _session)
         await onSessionConnected(_session)
+
+        //Set network and account
+        dispatch({
+          type: ActionType.SET_ALL,
+          payload: {
+            network: _session.namespaces.vechain.accounts[0].split(
+              ":"
+            )[1] as Network,
+            account: {
+              address: _session.namespaces.vechain.accounts[0].split(":")[2],
+              source: WalletSource.WALLET_CONNECT,
+            },
+          },
+        })
         return _session
       }
     },
     [session, onSessionConnected]
   )
-
-  const _deletePreviousPairings = useCallback(async (_client: Client) => {
-    if (typeof _client === "undefined") {
-      throw new Error("WalletConnect is not initialized")
-    }
-
-    // delete previous pairings
-    const allPairings = _client.pairing.getAll({ active: true })
-    for (const pairing of allPairings) {
-      console.log("Deleting pairing:", pairing.topic)
-      try {
-        await _client.disconnect({
-          topic: pairing.topic,
-          reason: getSdkError("USER_DISCONNECTED"),
-        })
-      } catch (error) {
-        console.error("SignClient.disconnect failed:", error)
-      }
-    }
-
-    reset()
-  }, [])
 
   const createClient = useCallback(async () => {
     try {
@@ -317,18 +309,15 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
 
       setClient(_client)
 
-      // Since we do not handle previous sessions delete old pairings instead of restoring them
-      // await _checkPersistedState(_client)
-      await _deletePreviousPairings(_client)
-
-      await _subscribeToEvents(_client)
+      await restoreExistingSession(_client)
+      await subscribeToEvents(_client)
     } catch (err) {
       console.error("Failed to initialize WalletConnect client:", err)
       throw err
     } finally {
       setIsInitializing(false)
     }
-  }, [_checkPersistedState, _subscribeToEvents])
+  }, [restoreExistingSession, subscribeToEvents])
 
   useEffect(() => {
     if (!client) {
