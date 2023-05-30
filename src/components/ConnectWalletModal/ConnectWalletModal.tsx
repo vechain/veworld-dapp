@@ -82,6 +82,28 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
     []
   )
 
+  const connectHandler = useCallback(async () => {
+    try {
+      setConnectionError("")
+      setConnectionLoading(true)
+
+      let cert: Certificate
+      if (selectedSource === WalletSource.WALLET_CONNECT) {
+        return await connect(selectedNetwork, onWalletConnectSuccess)
+      } else {
+        cert = await connectToWalletHandler(selectedSource, selectedNetwork)
+      }
+
+      onSuccessfullConnection(cert)
+    } catch (e: unknown) {
+      const em = getErrorMessage(e)
+      console.log(em)
+      setConnectionError(em)
+    } finally {
+      setConnectionLoading(false)
+    }
+  }, [selectedSource, selectedNetwork, onClose])
+
   const onWalletConnectSuccess = useCallback(
     async (session: SessionTypes.Struct) => {
       let cert: Certificate
@@ -120,28 +142,6 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
     },
     [selectedNetwork, selectedSource]
   )
-
-  const connectHandler = useCallback(async () => {
-    try {
-      setConnectionError("")
-      setConnectionLoading(true)
-
-      let cert: Certificate
-      if (selectedSource === WalletSource.WALLET_CONNECT) {
-        return await connect(selectedNetwork, onWalletConnectSuccess)
-      } else {
-        cert = await connectToWalletHandler(selectedSource, selectedNetwork)
-      }
-
-      onSuccessfullConnection(cert)
-    } catch (e: unknown) {
-      const em = getErrorMessage(e)
-      console.log(em)
-      setConnectionError(em)
-    } finally {
-      setConnectionLoading(false)
-    }
-  }, [selectedSource, selectedNetwork, onClose])
 
   return (
     <>
