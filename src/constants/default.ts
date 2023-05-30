@@ -5,9 +5,8 @@ export const DEFAULT_PROJECT_ID = process.env.REACT_APP_PUBLIC_PROJECT_ID
 // If undefined will use the Wallet Connect default
 export const DEFAULT_RELAY_URL = process.env.REACT_APP_RELAY_URL
 
-export const DEFAULT_LOGGER = process.env.REACT_APP_WALLET_CONNECT_DEBUGGER
-  ? "debug"
-  : ""
+export const DEFAULT_LOGGER =
+  process.env.REACT_APP_WALLET_CONNECT_DEBUGGER === "true" ? "debug" : ""
 
 export const DEFAULT_APP_METADATA = {
   name: "Official VeWorld Demo Dapp",
