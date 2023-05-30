@@ -29,7 +29,7 @@ const AddressButton: React.FC<IAddressButton> = ({
   const onClickHandler = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    console.log(onClick)
+    // console.log(onClick)
     if (onClick) onClick(e)
     if (showCopyIcon) onCopy()
   }
