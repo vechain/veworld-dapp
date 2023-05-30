@@ -22,7 +22,6 @@ export const useTransaction = () => {
       if (!client) throw new Error("Wallet Connect client not initialised")
       if (!session) throw new Error("Wallet Connect session not initialised")
 
-      // console.log(`Sending delegate_transaction request to ${session.topic}`)
       result = await client.request({
         topic: session.topic,
         chainId: `vechain:${network}`,

@@ -118,10 +118,6 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
             events: Object.values(DEFAULT_EVENTS),
           },
         }
-        console.log(
-          "requiredNamespaces config for connect:",
-          requiredNamespaces
-        )
 
         const { uri, approval } = await client.connect({
           pairingTopic: pairing?.topic,
@@ -177,11 +173,6 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
           },
         }
 
-        console.log(
-          "Asking wallet to sign the message and identify itself",
-          message
-        )
-
         const result: Connex.Vendor.CertResponse = await client.request({
           topic: session.topic,
           chainId: `vechain:${network}`,
@@ -191,7 +182,6 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
           },
         })
 
-        console.log("Wallet response", result)
         const cert: Certificate = {
           purpose: message.purpose,
           payload: message.payload,
@@ -216,7 +206,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
 
   const disconnect = useCallback(async () => {
     if (typeof client === "undefined") {
-      throw new Error("WalletConnect is not initialized")
+      throw new Error("WalletConnect client is not initialized")
     }
     if (typeof session === "undefined") {
       throw new Error("Session is not connected")
@@ -259,6 +249,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
 
       _client.on("session_delete", () => {
         console.log("EVENT", "session_delete")
+        //TODO: also disconnect client from session
         reset()
       })
     },
@@ -325,8 +316,11 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
       })
 
       setClient(_client)
-      await _deletePreviousPairings(_client)
+
+      // Since we do not handle previous sessions delete old pairings instead of restoring them
       // await _checkPersistedState(_client)
+      await _deletePreviousPairings(_client)
+
       await _subscribeToEvents(_client)
     } catch (err) {
       console.error("Failed to initialize WalletConnect client:", err)
