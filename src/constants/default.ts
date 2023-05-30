@@ -23,7 +23,4 @@ export enum DEFAULT_METHODS {
   IDENTIFY = "identify",
 }
 
-export enum DEFAULT_EVENTS {
-  CHAIN_CHANGED = "chainChanged",
-  ACCOUNTS_CHANGED = "accountsChanged",
-}
+export enum DEFAULT_EVENTS {}
