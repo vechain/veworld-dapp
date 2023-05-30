@@ -1,6 +1,5 @@
 import { SignClient as Client } from "@walletconnect/sign-client/dist/types/client"
 import { SessionTypes, PairingTypes } from "@walletconnect/types"
-import LocalStorageService from "../service/LocalStorageService"
 import React, {
   useContext,
   createContext,
