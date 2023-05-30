@@ -1,7 +1,12 @@
 import { useWalletConnect } from "../context/walletConnectContext"
 import ConnexService from "../service/ConnexService"
+import { useWallet } from "../context/walletContext"
+import { WalletSource } from "../model/enums"
 
 export const useTransaction = () => {
+  const {
+    state: { account },
+  } = useWallet()
   const { client, session } = useWalletConnect()
 
   const requestTransaction = async (
@@ -12,8 +17,11 @@ export const useTransaction = () => {
   ) => {
     let result: Connex.Vendor.TxResponse
 
-    if (client && session) {
-      console.log(`Sending delegate_transaction request to ${session.topic}`)
+    if (account?.source === WalletSource.WALLET_CONNECT) {
+      if (!client) throw new Error("Wallet Connect client not initialised")
+      if (!session) throw new Error("Wallet Connect session not initialised")
+
+      // console.log(`Sending delegate_transaction request to ${session.topic}`)
       result = await client.request({
         topic: session.topic,
         chainId: "vechain:100010", //TODO: fix this

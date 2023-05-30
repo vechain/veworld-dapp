@@ -94,7 +94,7 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
         setConnectionError(em)
       }
     },
-    [selectedNetwork, identifyUser]
+    [selectedNetwork, identifyUser, selectedSource]
   )
 
   const onSuccessfullConnection = useCallback(
