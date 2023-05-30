@@ -119,7 +119,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
           web3Modal.openModal({ uri, standaloneChains })
         }
 
-        //TODO: if modal closes before approval we should reset state
+        //TODO: if user closes modal before approving on mobile state is not resetted
 
         session = await approval()
         console.log("Established session:", session)
@@ -184,7 +184,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
       } catch (error) {
         console.error("SignClient.identifyUser failed:", error)
 
-        // Disconnect from session if user rejects identify signature request.
+        // Disconnect from session if user rejects identify signature request
         await client.disconnect({
           topic: session.topic,
           reason: getSdkError("USER_DISCONNECTED"),
