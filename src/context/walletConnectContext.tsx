@@ -20,6 +20,8 @@ import {
   DEFAULT_PROJECT_ID,
   DEFAULT_RELAY_URL,
   SUPPORTED_CHAINS,
+  DEFAULT_METHODS,
+  DEFAULT_EVENTS,
 } from "../constants"
 import ConnexService from "../service/ConnexService"
 import { ActionType, useWallet } from "./walletContext"
@@ -31,6 +33,7 @@ interface IContext {
   client: Client | undefined
   session: SessionTypes.Struct | undefined
   connect: (
+    network: Network,
     onSuccess: (session: SessionTypes.Struct) => Promise<void>,
     onError?: (err: unknown) => void,
     pairing?: { topic: string }
@@ -98,6 +101,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
 
   const connect = useCallback(
     async (
+      network: Network,
       onSuccess: (session: SessionTypes.Struct) => Promise<void>,
       onError?: (err: unknown) => void,
       pairing?: { topic: string }
@@ -107,16 +111,12 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
       }
 
       let session: SessionTypes.Struct | undefined
-      console.log("connect, pairing topic is:", pairing?.topic)
-      const network = LocalStorageService.getNetwork()
       try {
         const requiredNamespaces = {
           vechain: {
-            methods: ["delegate_transaction", "identify"],
-            chains: [
-              network === Network.MAIN ? "vechain:100009" : "vechain:100010",
-            ],
-            events: ["connect", "disconnect", "accountsChanged"],
+            methods: Object.values(DEFAULT_METHODS),
+            chains: [`vechain:${network}`],
+            events: Object.values(DEFAULT_EVENTS),
           },
         }
         console.log(
@@ -149,6 +149,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
 
         await onSuccess(session)
       } catch (e) {
+        //TODO: handle when user closes modal
         web3Modal.closeModal()
         onError?.(e)
 
@@ -183,10 +184,9 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
 
         const result: Connex.Vendor.CertResponse = await client.request({
           topic: session.topic,
-          chainId:
-            network === Network.MAIN ? "vechain:100009" : "vechain:100010",
+          chainId: `vechain:${network}`,
           request: {
-            method: "identify",
+            method: DEFAULT_METHODS.IDENTIFY,
             params: [message],
           },
         })

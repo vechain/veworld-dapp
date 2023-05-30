@@ -128,7 +128,7 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
 
       let cert: Certificate
       if (selectedSource === WalletSource.WALLET_CONNECT) {
-        return await connect(onWalletConnectSuccess)
+        return await connect(selectedNetwork, onWalletConnectSuccess)
       } else {
         cert = await connectToWalletHandler(selectedSource, selectedNetwork)
       }

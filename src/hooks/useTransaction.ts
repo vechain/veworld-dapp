@@ -2,10 +2,11 @@ import { useWalletConnect } from "../context/walletConnectContext"
 import ConnexService from "../service/ConnexService"
 import { useWallet } from "../context/walletContext"
 import { WalletSource } from "../model/enums"
+import { DEFAULT_METHODS } from "../constants"
 
 export const useTransaction = () => {
   const {
-    state: { account },
+    state: { account, network },
   } = useWallet()
   const { client, session } = useWalletConnect()
 
@@ -24,9 +25,9 @@ export const useTransaction = () => {
       // console.log(`Sending delegate_transaction request to ${session.topic}`)
       result = await client.request({
         topic: session.topic,
-        chainId: "vechain:100010", //TODO: fix this
+        chainId: `vechain:${network}`,
         request: {
-          method: "delegate_transaction", // TODO: rename
+          method: DEFAULT_METHODS.REQUEST_TRANSACTION,
           params: [
             {
               signer,
