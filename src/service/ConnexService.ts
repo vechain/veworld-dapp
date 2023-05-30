@@ -6,7 +6,7 @@ let connex: Connex | undefined
 
 const initialise = (walletSource: WalletSource, network: Network) => {
   const enhancedNetwork = NetworkInfo[network]
-  console.log(walletSource, network, enhancedNetwork)
+  // console.log(walletSource, network, enhancedNetwork)
   connex = new Connex({
     node: enhancedNetwork.url,
     network,

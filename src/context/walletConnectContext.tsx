@@ -39,9 +39,7 @@ interface IContext {
   ) => Promise<void>
   disconnect: () => Promise<void>
   isInitializing: boolean
-  chains: string[]
   pairings: PairingTypes.Struct[]
-  setChains: (chains: string[]) => void
   identifyUser: (
     network: Network,
     session: SessionTypes.Struct
@@ -76,27 +74,15 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
   const [session, setSession] = useState<SessionTypes.Struct>()
 
   const [isInitializing, setIsInitializing] = useState(false)
-  const [chains, setChains] = useState<string[]>([])
   const { dispatch } = useWallet()
 
   const reset = () => {
     console.log("Resetting WalletConnect state")
     setSession(undefined)
-    setChains([])
 
     ConnexService.clear()
     dispatch({ type: ActionType.CLEAR })
   }
-
-  const onSessionConnected = useCallback(
-    async (_session: SessionTypes.Struct) => {
-      const allNamespaceChains = Object.keys(_session.namespaces)
-
-      setSession(_session)
-      setChains(allNamespaceChains)
-    },
-    []
-  )
 
   const connect = useCallback(
     async (
@@ -124,7 +110,6 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
           requiredNamespaces,
         })
 
-        //TODO: shouldn't this be if (!uri) throw error?
         if (uri) {
           // Create a flat array of all requested chains across namespaces.
           const standaloneChains = Object.values(requiredNamespaces)
@@ -139,7 +124,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
         session = await approval()
         console.log("Established session:", session)
 
-        await onSessionConnected(session)
+        setSession(session)
         setPairings(client.pairing.getAll({ active: true }))
 
         web3Modal.closeModal()
@@ -152,7 +137,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
         throw e
       }
     },
-    [chains, client, onSessionConnected]
+    [client]
   )
 
   const identifyUser = useCallback(
@@ -232,35 +217,32 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
     }
   }, [client, session])
 
-  const subscribeToEvents = useCallback(
-    async (_client: Client) => {
-      if (typeof _client === "undefined") {
-        throw new Error("WalletConnect is not initialized")
-      }
+  const subscribeToEvents = useCallback(async (_client: Client) => {
+    if (typeof _client === "undefined") {
+      throw new Error("WalletConnect is not initialized")
+    }
 
-      _client.on("session_ping", (args) => {
-        console.log("EVENT", "session_ping", args)
-      })
+    _client.on("session_ping", (args) => {
+      console.log("EVENT", "session_ping", args)
+    })
 
-      _client.on("session_event", (args) => {
-        console.log("EVENT", "session_event", args)
-      })
+    _client.on("session_event", (args) => {
+      console.log("EVENT", "session_event", args)
+    })
 
-      _client.on("session_update", ({ topic, params }) => {
-        console.log("EVENT", "session_update", { topic, params })
-        const { namespaces } = params
-        const _session = _client.session.get(topic)
-        const updatedSession = { ..._session, namespaces }
-        onSessionConnected(updatedSession)
-      })
+    _client.on("session_update", ({ topic, params }) => {
+      console.log("EVENT", "session_update", { topic, params })
+      const { namespaces } = params
+      const _session = _client.session.get(topic)
+      const updatedSession = { ..._session, namespaces }
+      setSession(updatedSession)
+    })
 
-      _client.on("session_delete", () => {
-        console.log("EVENT", "session_delete")
-        reset()
-      })
-    },
-    [onSessionConnected]
-  )
+    _client.on("session_delete", () => {
+      console.log("EVENT", "session_delete")
+      reset()
+    })
+  }, [])
 
   const restoreExistingSession = useCallback(
     async (_client: Client) => {
@@ -275,7 +257,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
         const lastKeyIndex = _client.session.keys.length - 1
         const _session = _client.session.get(_client.session.keys[lastKeyIndex])
         console.log("RESTORED SESSION:", _session)
-        await onSessionConnected(_session)
+        setSession(_session)
 
         //Set network and account
         dispatch({
@@ -293,7 +275,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
         return _session
       }
     },
-    [session, onSessionConnected]
+    [session]
   )
 
   const createClient = useCallback(async () => {
@@ -329,23 +311,19 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
     () => ({
       pairings,
       isInitializing,
-      chains,
       client,
       session,
       connect,
       disconnect,
-      setChains,
       identifyUser,
     }),
     [
       pairings,
       isInitializing,
-      chains,
       client,
       session,
       connect,
       disconnect,
-      setChains,
       identifyUser,
     ]
   )
