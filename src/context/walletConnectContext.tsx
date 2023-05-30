@@ -1,5 +1,5 @@
 import { SignClient as Client } from "@walletconnect/sign-client/dist/types/client"
-import { SessionTypes, PairingTypes } from "@walletconnect/types"
+import { SessionTypes } from "@walletconnect/types"
 import React, {
   useContext,
   createContext,
@@ -34,12 +34,10 @@ interface IContext {
   connect: (
     network: Network,
     onSuccess: (session: SessionTypes.Struct) => Promise<void>,
-    onError?: (err: unknown) => void,
-    pairing?: { topic: string }
+    onError?: (err: unknown) => void
   ) => Promise<void>
   disconnect: () => Promise<void>
   isInitializing: boolean
-  pairings: PairingTypes.Struct[]
   identifyUser: (
     network: Network,
     session: SessionTypes.Struct
@@ -70,7 +68,6 @@ interface IWalletConnectProvider {
 
 export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
   const [client, setClient] = useState<Client>()
-  const [pairings, setPairings] = useState<PairingTypes.Struct[]>([])
   const [session, setSession] = useState<SessionTypes.Struct>()
 
   const [isInitializing, setIsInitializing] = useState(false)
@@ -88,8 +85,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
     async (
       network: Network,
       onSuccess: (session: SessionTypes.Struct) => Promise<void>,
-      onError?: (err: unknown) => void,
-      pairing?: { topic: string }
+      onError?: (err: unknown) => void
     ) => {
       if (typeof client === "undefined") {
         throw new Error("WalletConnect is not initialized")
@@ -106,7 +102,6 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
         }
 
         const { uri, approval } = await client.connect({
-          pairingTopic: pairing?.topic,
           requiredNamespaces,
         })
 
@@ -125,7 +120,6 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
         console.log("Established session:", session)
 
         setSession(session)
-        setPairings(client.pairing.getAll({ active: true }))
 
         web3Modal.closeModal()
 
@@ -309,7 +303,6 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
 
   const value = useMemo(
     () => ({
-      pairings,
       isInitializing,
       client,
       session,
@@ -317,15 +310,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
       disconnect,
       identifyUser,
     }),
-    [
-      pairings,
-      isInitializing,
-      client,
-      session,
-      connect,
-      disconnect,
-      identifyUser,
-    ]
+    [isInitializing, client, session, connect, disconnect, identifyUser]
   )
 
   return (
