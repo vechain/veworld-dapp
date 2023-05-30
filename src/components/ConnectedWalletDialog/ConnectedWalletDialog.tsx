@@ -1,7 +1,7 @@
 import { Button, HStack, Text, VStack, Image } from "@chakra-ui/react"
 import React from "react"
 import { ActionType, useWallet } from "../../context/walletContext"
-import { Network, WalletSourceInfo } from "../../model/enums"
+import { Network, WalletSourceInfo, WalletSource } from "../../model/enums"
 import { IAccount } from "../../model/State"
 import { getPicassoImgSrc } from "../../utils/PicassoUtils"
 import AddressButton from "../Account/Address/AddressButton"
@@ -22,13 +22,12 @@ const AccountDetailModal: React.FC<IConnectWalletModal> = ({
   network,
 }) => {
   const { dispatch } = useWallet()
-  const { client, session, disconnect } = useWalletConnect()
+  const { disconnect } = useWalletConnect()
 
   const disconnectWallet = () => {
     dispatch({ type: ActionType.CLEAR })
 
-    //TODO: add if (walletConnect is source) for better readability
-    if (client && session) {
+    if (account.source === WalletSource.WALLET_CONNECT) {
       disconnect()
     }
 
