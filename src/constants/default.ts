@@ -12,7 +12,7 @@ export const DEFAULT_APP_METADATA = {
   name: "Official VeWorld Demo Dapp",
   description:
     "You can use this dapp to familiarize and know more about creation on VeChain",
-  url: "https://your_app_url.com/",
+  url: "https://vechain-demo-dapp.netlify.app/",
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 }
 
