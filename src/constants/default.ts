@@ -13,7 +13,7 @@ export const DEFAULT_APP_METADATA = {
   description:
     "You can use this dapp to familiarize and know more about creation on VeChain",
   url: "https://vechain-demo-dapp.netlify.app/",
-  icons: ["https://avatars.githubusercontent.com/u/37784886"],
+  icons: ["https://i.ibb.co/zb85hsL/vechain-vet-logo512.png"],
 }
 
 export const SUPPORTED_CHAINS = ["vechain:main", "vechain:test"]
