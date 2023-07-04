@@ -1,5 +1,5 @@
-const { VECHAIN_URL_SOLO } = require("@vechainfoundation/hardhat-vechain")
-require("@vechainfoundation/hardhat-ethers")
+const { VECHAIN_URL_SOLO } = require("@vechain/hardhat-vechain")
+require("@vechain/hardhat-ethers")
 
 module.exports = {
   solidity: {
