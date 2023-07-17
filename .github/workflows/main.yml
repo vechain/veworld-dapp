@@ -45,6 +45,10 @@ jobs:
 
       - name: Build React App
         run: yarn build
+        env:
+          REACT_APP_PUBLIC_PROJECT_ID: 8ffdf00680a52b1fe25940ea8b29853c
+          REACT_APP_RELAY_URL: wss://relay.walletconnect.com
+          WALLET_CONNECT_DEBUGGER: true
 
       - name: Setup Pages
         uses: actions/configure-pages@v2
