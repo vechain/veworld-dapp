@@ -2,7 +2,7 @@ import { Connex } from "@vechain/connex"
 
 export enum TxStage {
   NONE = "None",
-  IN_EXTENSION = "Pending in extension",
+  IN_EXTENSION = "Pending in wallet",
   POLLING_TX = "Polling the chain for the transaction",
   REVERTED = "Transaction reverted",
   COMPLETE = "Transaction complete",

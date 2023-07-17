@@ -3,6 +3,8 @@ import ConnexService from "../service/ConnexService"
 import { useWallet } from "../context/walletContext"
 import { WalletSource } from "../model/enums"
 import { DEFAULT_METHODS } from "../constants"
+import { isMobile } from "../utils/MobileUtils"
+import { getChainId } from "../utils/ChainUtil"
 
 export const useTransaction = () => {
   const {
@@ -12,7 +14,7 @@ export const useTransaction = () => {
 
   const requestTransaction = async (
     signer: string,
-    txMessage: Connex.Vendor.TxMessage,
+    message: Connex.Vendor.TxMessage,
     comment?: string,
     delegateUrl?: string
   ) => {
@@ -21,27 +23,35 @@ export const useTransaction = () => {
     if (account?.source === WalletSource.WALLET_CONNECT) {
       if (!client) throw new Error("Wallet Connect client not initialised")
       if (!session) throw new Error("Wallet Connect session not initialised")
+      if (!network) throw new Error("Network not initialised")
 
-      result = await client.request({
+      const options: Connex.Driver.TxOptions = {
+        signer,
+        comment,
+        delegator: delegateUrl ? { url: delegateUrl } : undefined,
+      }
+
+      const resPromise = client.request({
         topic: session.topic,
-        chainId: `vechain:${network}`,
+        chainId: getChainId(network),
         request: {
           method: DEFAULT_METHODS.REQUEST_TRANSACTION,
           params: [
             {
-              signer,
-              txMessage,
-              comment,
-              delegateUrl,
+              message,
+              options,
             },
           ],
         },
       })
-      // console.log(`Received response from wallet connect ${result}`)
+
+      if (isMobile() && !document.hidden) window.open("wc://")
+
+      result = (await resPromise) as Connex.Vendor.TxResponse
     } else {
       const connex = await ConnexService.getConnex()
       const request = connex.vendor
-        .sign("tx", txMessage)
+        .sign("tx", message)
         .signer(signer)
         .link(window.location.href + "#/tx-callback/{txid}")
 

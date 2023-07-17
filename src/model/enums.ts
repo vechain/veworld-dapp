@@ -1,3 +1,5 @@
+import { genesisBlocks } from "@vechain/connex/esm/config"
+
 export enum WalletSource {
   VEWORLD = "veworld",
   SYNC2 = "sync2",
@@ -5,12 +7,14 @@ export enum WalletSource {
 }
 
 const logosUrl = process.env.PUBLIC_URL + "/images/logo"
+
 interface IWalletSourceInfo {
   name: string
   logo?: string
   url?: string
   isAvailable: boolean
 }
+
 export const WalletSourceInfo: Record<WalletSource, IWalletSourceInfo> = {
   [WalletSource.VEWORLD]: {
     name: "VeWorld",
@@ -39,14 +43,19 @@ export enum Network {
   TEST = "test",
 }
 
-export const NetworkInfo: Record<Network, { name: string; url: string }> = {
+export const NetworkInfo: Record<
+  Network,
+  { name: string; url: string; genesis: Connex.Thor.Block }
+> = {
   [Network.MAIN]: {
     name: "Mainnet",
     url: "https://vethor-node.vechain.com",
+    genesis: genesisBlocks.main,
   },
   [Network.TEST]: {
     name: "Testnet",
     url: "https://vethor-node-test.vechaindev.com",
+    genesis: genesisBlocks.test,
   },
 }
 

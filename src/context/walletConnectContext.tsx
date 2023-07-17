@@ -1,29 +1,32 @@
 import { SignClient as Client } from "@walletconnect/sign-client/dist/types/client"
 import { SessionTypes } from "@walletconnect/types"
 import React, {
-  useContext,
   createContext,
-  useMemo,
-  useEffect,
-  useState,
   useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
 } from "react"
 import { SignClient } from "@walletconnect/sign-client"
-import { Web3Modal } from "@web3modal/standalone"
 import { Network, WalletSource } from "../model/enums"
 import { getSdkError } from "@walletconnect/utils"
 import { Certificate } from "thor-devkit"
 import {
   DEFAULT_APP_METADATA,
+  DEFAULT_EVENTS,
   DEFAULT_LOGGER,
+  DEFAULT_METHODS,
   DEFAULT_PROJECT_ID,
   DEFAULT_RELAY_URL,
   SUPPORTED_CHAINS,
-  DEFAULT_METHODS,
-  DEFAULT_EVENTS,
 } from "../constants"
 import ConnexService from "../service/ConnexService"
 import { ActionType, useWallet } from "./walletContext"
+import { WalletConnectModal } from "@walletconnect/modal"
+import { EngineTypes } from "@walletconnect/types/dist/types/sign-client/engine"
+import { isMobile } from "../utils/MobileUtils"
+import { getChainId } from "../utils/ChainUtil"
 
 /**
  * Types
@@ -53,12 +56,24 @@ export const WalletConnectContext = createContext<IContext>({} as IContext)
  * Web3Modal Config
  */
 
-const web3Modal = new Web3Modal({
-  walletConnectVersion: 2,
+const web3Modal = new WalletConnectModal({
   projectId: DEFAULT_PROJECT_ID,
-  standaloneChains: SUPPORTED_CHAINS,
+  explorerRecommendedWalletIds: "NONE",
+  mobileWallets: [
+    {
+      name: "VeWorld",
+      id: "veworld-mobile",
+      links: {
+        native: "wc://org.vechain.veworld.app/",
+        universal: "https://veworld.net",
+      },
+    },
+  ],
   themeVariables: {
-    "--w3m-z-index": "99999999",
+    "--wcm-z-index": "99999999",
+  },
+  walletImages: {
+    "veworld-mobile": process.env.PUBLIC_URL + "/images/logo/veWorld.png",
   },
 })
 
@@ -93,13 +108,14 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
 
       let session: SessionTypes.Struct | undefined
       try {
-        const requiredNamespaces = {
-          vechain: {
-            methods: Object.values(DEFAULT_METHODS),
-            chains: [`vechain:${network}`],
-            events: Object.values(DEFAULT_EVENTS),
-          },
-        }
+        const requiredNamespaces: EngineTypes.ConnectParams["requiredNamespaces"] =
+          {
+            vechain: {
+              methods: Object.values(DEFAULT_METHODS),
+              chains: SUPPORTED_CHAINS,
+              events: Object.values(DEFAULT_EVENTS),
+            },
+          }
 
         const { uri, approval } = await client.connect({
           requiredNamespaces,
@@ -107,11 +123,11 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
 
         if (uri) {
           // Create a flat array of all requested chains across namespaces.
-          const standaloneChains = Object.values(requiredNamespaces)
+          const chains = Object.values(requiredNamespaces)
             .map((namespace) => namespace.chains)
             .flat() as string[]
 
-          web3Modal.openModal({ uri, standaloneChains })
+          await web3Modal.openModal({ uri, chains })
         }
 
         //TODO: if user closes modal before approving on mobile state is not resetted
@@ -152,14 +168,20 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
           },
         }
 
-        const result: Connex.Vendor.CertResponse = await client.request({
+        const options: Connex.Driver.CertOptions = {}
+
+        const resPromise: Promise<Connex.Vendor.CertResponse> = client.request({
           topic: session.topic,
-          chainId: `vechain:${network}`,
+          chainId: getChainId(network),
           request: {
             method: DEFAULT_METHODS.IDENTIFY,
-            params: [message],
+            params: [{ message, options }],
           },
         })
+
+        if (isMobile() && !document.hidden) window.open("wc://")
+
+        const result = await resPromise
 
         const cert: Certificate = {
           purpose: message.purpose,
