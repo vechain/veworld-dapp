@@ -26,7 +26,7 @@ import { ActionType, useWallet } from "./walletContext"
 import { WalletConnectModal } from "@walletconnect/modal"
 import { EngineTypes } from "@walletconnect/types/dist/types/sign-client/engine"
 import { isMobile } from "../utils/MobileUtils"
-import { getChainId } from "../utils/ChainUtil"
+import { fromChainId, getChainId } from "../utils/ChainUtil"
 
 /**
  * Types
@@ -275,13 +275,15 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
         console.log("RESTORED SESSION:", _session)
         setSession(_session)
 
+        const networkIdentifier = _session.namespaces.vechain.accounts[0].split(
+          ":"
+        )[1] as Network
+
         //Set network and account
         dispatch({
           type: ActionType.SET_ALL,
           payload: {
-            network: _session.namespaces.vechain.accounts[0].split(
-              ":"
-            )[1] as Network,
+            network: fromChainId(networkIdentifier),
             account: {
               address: _session.namespaces.vechain.accounts[0].split(":")[2],
               source: WalletSource.WALLET_CONNECT,

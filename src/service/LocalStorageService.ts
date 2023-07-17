@@ -22,10 +22,12 @@ const setNetwork = (network: Network) => {
   localStorage.setItem(NETWORK_KEY, network)
 }
 
-const getNetwork = (): Network | undefined => {
+const getNetwork = (): Network => {
   const network = localStorage.getItem(NETWORK_KEY)
 
   if (network === Network.MAIN || network === Network.TEST) return network
+
+  return Network.TEST
 }
 
 const setTokens = (token: IToken[]) => {
