@@ -1,14 +1,14 @@
 import {
   Button,
-  Icon,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
+  HStack,
+  Icon,
   Input,
   Spinner,
   VStack,
-  FormHelperText,
-  HStack,
 } from "@chakra-ui/react"
 import { ArrowPathIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
 import React, { useCallback } from "react"
@@ -23,6 +23,7 @@ interface IMintToken {
   token: IToken
   navigateBack: (token?: IToken) => void
 }
+
 export type MintTokenForm = {
   address: string
   amount: number
@@ -87,18 +88,27 @@ const MintToken: React.FC<IMintToken> = ({ token, navigateBack }) => {
       <VStack spacing={4} w="full">
         <FormControl isRequired isInvalid={!!errors.address?.message}>
           <FormLabel>Address</FormLabel>
-          <Input type="text" {...register("address", addressRules)} />
+          <Input
+            defaultValue={"0xf077b491b355E64048cE21E3A6Fc4751eEeA77fa"}
+            type="text"
+            {...register("address", addressRules)}
+          />
           <FormErrorMessage>{errors.address?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isRequired isInvalid={!!errors.amount?.message}>
           <FormLabel>Amount</FormLabel>
-          <Input type="number" {...register("amount", amountRules)} />
+          <Input
+            defaultValue={100}
+            type="number"
+            {...register("amount", amountRules)}
+          />
           <FormErrorMessage>{errors.amount?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isRequired isInvalid={!!errors.clausesNumber?.message}>
           <FormLabel>Number of clauses</FormLabel>
           <Input
             type="number"
+            defaultValue={"10"}
             {...register("clausesNumber", clausesNumberRules)}
           />
           <FormHelperText>
