@@ -174,7 +174,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
           topic: session.topic,
           chainId: getChainId(network),
           request: {
-            method: DEFAULT_METHODS.IDENTIFY,
+            method: DEFAULT_METHODS.SIGN_CERTIFICATE,
             params: [{ message, options }],
           },
         })

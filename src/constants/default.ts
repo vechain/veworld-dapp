@@ -25,8 +25,8 @@ export const SUPPORTED_CHAINS = [
 ]
 
 export enum DEFAULT_METHODS {
-  REQUEST_TRANSACTION = "request_transaction",
-  IDENTIFY = "identify",
+  REQUEST_TRANSACTION = "thor_sendTransaction",
+  SIGN_CERTIFICATE = "thor_signCertificate",
 }
 
 export enum DEFAULT_EVENTS {}
