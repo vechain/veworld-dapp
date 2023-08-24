@@ -133,7 +133,7 @@ const DeployNFT: React.FC<IDeployNFT> = ({ account, navigateBack }) => {
           <FormLabel>Base Token URI</FormLabel>
           <Input
             defaultValue={
-              "ipfs://QmfSTia1TJUiKQ2fyW9NTPzEKNdjMGzbUgrC3QPSTpkum6"
+              "ipfs://QmfSTia1TJUiKQ2fyW9NTPzEKNdjMGzbUgrC3QPSTpkum6/{id}.json"
             }
             type="text"
             {...register("baseTokenURI", baseTokenURIRules)}
