@@ -123,7 +123,7 @@ const DeployNFT: React.FC<IDeployNFT> = ({ account, navigateBack }) => {
         <FormControl isRequired isInvalid={!!errors.symbol?.message}>
           <FormLabel>Symbol</FormLabel>
           <Input
-            defaultValue={"Fake VKG"}
+            defaultValue={"FVKG"}
             type="text"
             {...register("symbol", symbolRules)}
           />
