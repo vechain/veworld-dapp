@@ -5,10 +5,10 @@ import {
   FormHelperText,
   FormLabel,
   HStack,
+  Icon,
   Input,
   Spinner,
   VStack,
-  Icon,
 } from "@chakra-ui/react"
 import { ArrowPathIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
 import React, { useCallback } from "react"
@@ -25,10 +25,12 @@ type DeployNFTForm = {
   baseTokenURI: string
   delegateUrl?: string
 }
+
 interface IDeployNFT {
   account: IAccount
   navigateBack: (nft?: INonFungibleToken) => void
 }
+
 const DeployNFT: React.FC<IDeployNFT> = ({ account, navigateBack }) => {
   const {
     handleSubmit,
@@ -111,17 +113,31 @@ const DeployNFT: React.FC<IDeployNFT> = ({ account, navigateBack }) => {
       <VStack spacing={4} w="full">
         <FormControl isRequired isInvalid={!!errors.name?.message}>
           <FormLabel>Name</FormLabel>
-          <Input type="text" {...register("name", nameRules)} />
+          <Input
+            defaultValue={"Fake VeKings"}
+            type="text"
+            {...register("name", nameRules)}
+          />
           <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isRequired isInvalid={!!errors.symbol?.message}>
           <FormLabel>Symbol</FormLabel>
-          <Input type="text" {...register("symbol", symbolRules)} />
+          <Input
+            defaultValue={"Fake VKG"}
+            type="text"
+            {...register("symbol", symbolRules)}
+          />
           <FormErrorMessage>{errors.symbol?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isRequired isInvalid={!!errors.baseTokenURI?.message}>
           <FormLabel>Base Token URI</FormLabel>
-          <Input type="text" {...register("baseTokenURI", baseTokenURIRules)} />
+          <Input
+            defaultValue={
+              "ipfs://QmfSTia1TJUiKQ2fyW9NTPzEKNdjMGzbUgrC3QPSTpkum6"
+            }
+            type="text"
+            {...register("baseTokenURI", baseTokenURIRules)}
+          />
           <FormErrorMessage>{errors.baseTokenURI?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.delegateUrl?.message}>
