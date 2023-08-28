@@ -64,7 +64,7 @@ const web3Modal = new WalletConnectModal({
       name: "VeWorld",
       id: "veworld-mobile",
       links: {
-        native: "wc://org.vechain.veworld.app/",
+        native: "veworld://org.vechain.veworld.app/",
         universal: "https://veworld.net",
       },
     },
