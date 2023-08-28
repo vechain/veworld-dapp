@@ -4,6 +4,11 @@ import { CoreTypes } from "@walletconnect/types/dist/types/core/core"
 if (!process.env.REACT_APP_PUBLIC_PROJECT_ID)
   throw new Error("`REACT_APP_PUBLIC_PROJECT_ID` env variable is missing.")
 
+console.log(
+  "process.env.REACT_APP_PUBLIC_PROJECT_ID",
+  process.env.REACT_APP_PUBLIC_PROJECT_ID
+)
+
 export const DEFAULT_PROJECT_ID = process.env.REACT_APP_PUBLIC_PROJECT_ID
 // If undefined will use the Wallet Connect default
 export const DEFAULT_RELAY_URL = process.env.REACT_APP_RELAY_URL
