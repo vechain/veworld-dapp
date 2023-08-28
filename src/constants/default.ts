@@ -20,7 +20,7 @@ export const DEFAULT_APP_METADATA: CoreTypes.Metadata = {
   name: "Official VeWorld Demo Dapp",
   description:
     "You can use this dapp to familiarize and know more about creation on VeChain",
-  url: "https://vechain-demo-dapp.netlify.app/",
+  url: "https://veworld-dapp-vecha.in/",
   icons: ["https://i.ibb.co/zb85hsL/vechain-vet-logo512.png"],
 }
 
