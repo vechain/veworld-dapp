@@ -15,7 +15,7 @@ import React, { useCallback } from "react"
 import { RegisterOptions, useForm } from "react-hook-form"
 import { ActionType, useWallet } from "../../../context/walletContext"
 import useDeployToken from "../../../hooks/useDeployToken"
-import { IAccount, IToken } from "../../../model/State"
+import { IToken } from "../../../model/State"
 import { TxStage } from "../../../model/Transaction"
 import TransactionStatus from "../../TransactionStatus/TransactionStatus"
 
@@ -27,11 +27,14 @@ type DeployTokenForm = {
 }
 
 interface IDeployToken {
-  account: IAccount
+  accountAddress: string
   navigateBack: (token?: IToken) => void
 }
 
-const DeployToken: React.FC<IDeployToken> = ({ account, navigateBack }) => {
+const DeployToken: React.FC<IDeployToken> = ({
+  accountAddress,
+  navigateBack,
+}) => {
   const {
     handleSubmit,
     register,
@@ -53,7 +56,7 @@ const DeployToken: React.FC<IDeployToken> = ({ account, navigateBack }) => {
 
   const onSubmit = async (data: DeployTokenForm) => {
     const deployedData = await deployToken(
-      account.address,
+      accountAddress,
       data.name,
       data.symbol,
       data.decimals,

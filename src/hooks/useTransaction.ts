@@ -1,16 +1,7 @@
-import { useWalletConnect } from "../context/walletConnectContext"
-import ConnexService from "../service/ConnexService"
-import { useWallet } from "../context/walletContext"
-import { WalletSource } from "../model/enums"
-import { DEFAULT_METHODS } from "../constants"
-import { isMobile } from "../utils/MobileUtils"
-import { getChainId } from "../utils/ChainUtil"
+import { useConnex } from "../context/ConnexContext"
 
 export const useTransaction = () => {
-  const {
-    state: { account, network },
-  } = useWallet()
-  const { client, session } = useWalletConnect()
+  const { thor, vendor } = useConnex()
 
   const requestTransaction = async (
     signer: string,
@@ -18,52 +9,67 @@ export const useTransaction = () => {
     comment?: string,
     delegateUrl?: string
   ) => {
-    let result: Connex.Vendor.TxResponse
+    const request = vendor()
+      .sign("tx", message)
+      .signer(signer)
+      .link(window.location.href + "#/tx-callback/{txid}")
 
-    if (account?.source === WalletSource.WALLET_CONNECT) {
-      if (!client) throw new Error("Wallet Connect client not initialised")
-      if (!session) throw new Error("Wallet Connect session not initialised")
-      if (!network) throw new Error("Network not initialised")
+    if (comment) request.comment(comment)
+    if (delegateUrl) request.delegate(delegateUrl, signer)
+    return await request.request()
+  }
 
-      const options: Connex.Driver.TxOptions = {
-        signer,
-        comment,
-        delegator: delegateUrl ? { url: delegateUrl } : undefined,
+  const pollForReceipt = async (
+    id: string
+  ): Promise<Connex.Thor.Transaction.Receipt> => {
+    const transaction = thor.transaction(id)
+    let receipt
+
+    //Query the transaction until it has a receipt
+    //Timeout after 3 blocks
+    for (let i = 0; i < 3; i++) {
+      receipt = await transaction.getReceipt()
+      if (receipt) {
+        break
       }
-
-      const resPromise = client.request({
-        topic: session.topic,
-        chainId: getChainId(network),
-        request: {
-          method: DEFAULT_METHODS.REQUEST_TRANSACTION,
-          params: [
-            {
-              message,
-              options,
-            },
-          ],
-        },
-      })
-
-      if (isMobile() && !document.hidden) window.open("wc://")
-
-      result = (await resPromise) as Connex.Vendor.TxResponse
-    } else {
-      const connex = await ConnexService.getConnex()
-      const request = connex.vendor
-        .sign("tx", message)
-        .signer(signer)
-        .link(window.location.href + "#/tx-callback/{txid}")
-
-      if (comment) request.comment(comment)
-      if (delegateUrl) request.delegate(delegateUrl, signer)
-      result = await request.request()
-      // console.log(`Received response from extension : ${result}`)
+      await thor.ticker().next()
     }
-    return result
+
+    if (!receipt) {
+      throw new Error("Transaction receipt not found")
+    }
+
+    const transactionData = await transaction.get()
+
+    if (!transactionData) throw Error("Failed to get TX data")
+
+    return receipt
+  }
+
+  const explainRevertReason = async (id: string): Promise<string> => {
+    const tx = thor.transaction(id)
+    const receipt = await tx.getReceipt()
+    const transactionData = await tx.get()
+
+    if (receipt && transactionData) {
+      const explainedTransaction = await thor
+        .explain(transactionData?.clauses)
+        .caller(transactionData?.origin)
+        .execute()
+
+      if (receipt.reverted) {
+        return explainedTransaction
+          .map(({ revertReason }) => revertReason)
+          .join(" ,")
+      }
+    }
+
+    return "No revert reason found"
   }
 
   return {
     requestTransaction,
+    pollForReceipt,
+    explainRevertReason,
   }
 }

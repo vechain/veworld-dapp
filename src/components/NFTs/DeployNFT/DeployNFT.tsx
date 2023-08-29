@@ -15,7 +15,7 @@ import React, { useCallback } from "react"
 import { RegisterOptions, useForm } from "react-hook-form"
 import { ActionType, useWallet } from "../../../context/walletContext"
 import useDeployNonFungibleToken from "../../../hooks/useDeployNonFungibleToken"
-import { IAccount, INonFungibleToken } from "../../../model/State"
+import { INonFungibleToken } from "../../../model/State"
 import { TxStage } from "../../../model/Transaction"
 import TransactionStatus from "../../TransactionStatus/TransactionStatus"
 
@@ -27,11 +27,11 @@ type DeployNFTForm = {
 }
 
 interface IDeployNFT {
-  account: IAccount
+  accountAddress: string
   navigateBack: (nft?: INonFungibleToken) => void
 }
 
-const DeployNFT: React.FC<IDeployNFT> = ({ account, navigateBack }) => {
+const DeployNFT: React.FC<IDeployNFT> = ({ accountAddress, navigateBack }) => {
   const {
     handleSubmit,
     register,
@@ -54,7 +54,7 @@ const DeployNFT: React.FC<IDeployNFT> = ({ account, navigateBack }) => {
 
   const onSubmit = async (data: DeployNFTForm) => {
     const deployedData = await deployNftContract(
-      account.address,
+      accountAddress,
       data.name,
       data.symbol,
       data.baseTokenURI,

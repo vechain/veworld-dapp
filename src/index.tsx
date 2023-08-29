@@ -14,6 +14,7 @@ import StyledContainer from "./components/Shared/StyledContainer/StyledContainer
 
 import "./styles/index.css"
 import { WalletConnectProvider } from "./context/walletConnectContext"
+import { ConnexProvider } from "./context/ConnexContext"
 
 const Index = () => {
   return (
@@ -22,10 +23,12 @@ const Index = () => {
       <ChakraProvider theme={theme}>
         <WalletProvider>
           <WalletConnectProvider>
-            <NavBar />
-            <StyledContainer>
-              <Router />
-            </StyledContainer>
+            <ConnexProvider>
+              <NavBar />
+              <StyledContainer>
+                <Router />
+              </StyledContainer>
+            </ConnexProvider>
           </WalletConnectProvider>
         </WalletProvider>
       </ChakraProvider>

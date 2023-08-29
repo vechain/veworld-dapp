@@ -4,10 +4,9 @@ import { MintTokenForm } from "../components/Tokens/MintToken/MintToken"
 import { useWallet } from "../context/walletContext"
 import { IToken } from "../model/State"
 import { TxStage } from "../model/Transaction"
-import TransactionsService from "../service/TransactionsService"
-import VIP180Service from "../service/VIP180Service"
 import { getErrorMessage } from "../utils/ExtensionUtils"
 import { useTransaction } from "./useTransaction"
+import { useVip180 } from "./useVip180"
 
 const useMintToken = () => {
   const {
@@ -18,6 +17,8 @@ const useMintToken = () => {
   const [txStatus, setTxStatus] = useState(TxStage.NONE)
   const [error, setError] = useState<string>()
   const toast = useToast()
+  const vip180 = useVip180()
+  const { pollForReceipt, explainRevertReason } = useTransaction()
 
   const mintToken = async (
     token: IToken,
@@ -28,9 +29,9 @@ const useMintToken = () => {
 
     try {
       setTxStatus(TxStage.NONE)
-      if (!account) throw new Error("You have not selected an account")
+      if (!account.address) throw new Error("You have not selected an account")
 
-      const clauses = await VIP180Service.buildMintClause(
+      const clauses = await vip180.buildMintClause(
         data.address,
         data.amount,
         data.clausesNumber,
@@ -51,10 +52,10 @@ const useMintToken = () => {
       setTxId(txid)
       setTxStatus(TxStage.POLLING_TX)
 
-      const receipt = await TransactionsService.pollForReceipt(txid)
+      const receipt = await pollForReceipt(txid)
 
       if (receipt.reverted) {
-        const revertReason = await TransactionsService.explainRevertReason(txid)
+        const revertReason = await explainRevertReason(txid)
         setTxStatus(TxStage.REVERTED)
         return toast({
           title: revertReason,

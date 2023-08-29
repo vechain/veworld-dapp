@@ -14,21 +14,14 @@ import {
 import { LinkIcon, WalletIcon } from "@heroicons/react/24/solid"
 import React, { useCallback, useState } from "react"
 import { ActionType, useWallet } from "../../context/walletContext"
-import {
-  DEFAULT_NETWORK,
-  DEFAULT_SOURCE,
-  Network,
-  WalletSource,
-} from "../../model/enums"
-import { connectToWalletHandler } from "../../service/ConnexService"
+import { DEFAULT_NETWORK, Network, WalletSource } from "../../model/enums"
 import { getErrorMessage } from "../../utils/ExtensionUtils"
 import { humanAddress } from "../../utils/FormattingUtils"
 import AccountSourceRadio from "../Account/AccountSourceRadio/AccountSourceRadio"
 import NetworkSelect from "../Network/NetworkSelect/NetworkSelect"
 import { Dialog } from "../Shared"
-import { useWalletConnect } from "../../context/walletConnectContext"
 import { Certificate } from "thor-devkit"
-import { SessionTypes } from "@walletconnect/types"
+import { useConnex } from "../../context/ConnexContext"
 
 interface IConnectedWalletDialog {
   isOpen: boolean
@@ -61,9 +54,12 @@ interface IConnectedWalletBody {
 }
 
 const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
-  const { dispatch } = useWallet()
+  const {
+    dispatch,
+    state: { account },
+  } = useWallet()
   const toast = useToast()
-  const { connect, identifyUser } = useWalletConnect()
+  const { vendor } = useConnex()
 
   const [connectionLoading, setConnectionLoading] = useState(false)
   const [connectionError, setConnectionError] = useState("")
@@ -74,25 +70,47 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
     []
   )
 
-  const [selectedSource, setSelectedSource] =
-    useState<WalletSource>(DEFAULT_SOURCE)
-
   const onSourceChange = useCallback(
-    (network: WalletSource) => setSelectedSource(network),
-    []
+    (source: WalletSource) =>
+      dispatch({ type: ActionType.SET_ACCOUNT, payload: { source } }),
+    [dispatch]
   )
 
-  const connectHandler = useCallback(async () => {
+  const connectToWalletHandler = async (): Promise<Certificate> => {
+    const message: Connex.Vendor.CertMessage = {
+      purpose: "identification",
+      payload: {
+        type: "text",
+        content: "Sign a certificate to prove your identity",
+      },
+    }
+
+    const certResponse = await vendor().sign("cert", message).request()
+
+    const cert: Certificate = {
+      purpose: message.purpose,
+      payload: message.payload,
+      domain: certResponse.annex.domain,
+      timestamp: certResponse.annex.timestamp,
+      signer: certResponse.annex.signer,
+      signature: certResponse.signature,
+    }
+
+    if (!cert) throw new Error("No cert returned")
+
+    console.log("Signed cert", cert)
+    Certificate.verify(cert)
+    console.log("Cert verified")
+
+    return cert
+  }
+
+  const connectHandler = async () => {
     try {
       setConnectionError("")
       setConnectionLoading(true)
 
-      let cert: Certificate
-      if (selectedSource === WalletSource.WALLET_CONNECT) {
-        return await connect(selectedNetwork, onWalletConnectSuccess)
-      } else {
-        cert = await connectToWalletHandler(selectedSource, selectedNetwork)
-      }
+      const cert = await connectToWalletHandler()
 
       onSuccessfullConnection(cert)
     } catch (e: unknown) {
@@ -102,46 +120,28 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
     } finally {
       setConnectionLoading(false)
     }
-  }, [selectedSource, selectedNetwork, onClose])
+  }
 
-  const onWalletConnectSuccess = useCallback(
-    async (session: SessionTypes.Struct) => {
-      let cert: Certificate
-      try {
-        cert = await identifyUser(selectedNetwork, session)
-        onSuccessfullConnection(cert)
-      } catch (e: unknown) {
-        const em = getErrorMessage(e)
-        console.log(em)
-        setConnectionError(em)
-      }
-    },
-    [selectedNetwork, identifyUser, selectedSource]
-  )
-
-  const onSuccessfullConnection = useCallback(
-    (cert: Certificate) => {
-      dispatch({
-        type: ActionType.SET_ALL,
-        payload: {
-          network: selectedNetwork,
-          account: { address: cert.signer, source: selectedSource },
-        },
-      })
-      onClose()
-      toast({
-        title: "Wallet connected.",
-        description: `You've succesfully connected with wallet ${humanAddress(
-          cert.signer
-        )}`,
-        status: "success",
-        position: "bottom-left",
-        duration: 5000,
-        isClosable: true,
-      })
-    },
-    [selectedNetwork, selectedSource]
-  )
+  const onSuccessfullConnection = (cert: Certificate) => {
+    dispatch({
+      type: ActionType.SET_ALL,
+      payload: {
+        network: selectedNetwork,
+        account: { address: cert.signer, source: account.source },
+      },
+    })
+    onClose()
+    toast({
+      title: "Wallet connected.",
+      description: `You've succesfully connected with wallet ${humanAddress(
+        cert.signer
+      )}`,
+      status: "success",
+      position: "bottom-left",
+      duration: 5000,
+      isClosable: true,
+    })
+  }
 
   return (
     <>
@@ -156,7 +156,7 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
         <Box>
           <Text mb="8px">Wallet</Text>
           <AccountSourceRadio
-            selected={selectedSource}
+            selected={account.source}
             onChange={onSourceChange}
           />
         </Box>

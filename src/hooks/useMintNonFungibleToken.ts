@@ -3,10 +3,9 @@ import { useState } from "react"
 import { useWallet } from "../context/walletContext"
 import { INonFungibleToken } from "../model/State"
 import { TxStage } from "../model/Transaction"
-import TransactionsService from "../service/TransactionsService"
-import VIP181Service from "../service/VIP181Service"
 import { getErrorMessage } from "../utils/ExtensionUtils"
 import { useTransaction } from "./useTransaction"
+import { useVip181 } from "./useVip181"
 
 const useMintNonFungibleToken = () => {
   const {
@@ -17,6 +16,8 @@ const useMintNonFungibleToken = () => {
   const [txStatus, setTxStatus] = useState(TxStage.NONE)
   const [error, setError] = useState<string>()
   const toast = useToast()
+  const vip181 = useVip181()
+  const { pollForReceipt, explainRevertReason } = useTransaction()
 
   const mintNonFungibleToken = async (
     nft: INonFungibleToken,
@@ -28,9 +29,9 @@ const useMintNonFungibleToken = () => {
 
     try {
       setTxStatus(TxStage.NONE)
-      if (!account) throw new Error("You have not selected an account")
+      if (!account.address) throw new Error("You have not selected an account")
 
-      const clauses = await VIP181Service.buildMintNftClause(
+      const clauses = await vip181.buildMintNftClause(
         toAddress,
         nft.address,
         clauseAmount
@@ -49,10 +50,10 @@ const useMintNonFungibleToken = () => {
       setTxId(txid)
       setTxStatus(TxStage.POLLING_TX)
 
-      const receipt = await TransactionsService.pollForReceipt(txid)
+      const receipt = await pollForReceipt(txid)
 
       if (receipt.reverted) {
-        const revertReason = await TransactionsService.explainRevertReason(txid)
+        const revertReason = await explainRevertReason(txid)
         setTxStatus(TxStage.REVERTED)
         return toast({
           title: revertReason,

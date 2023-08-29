@@ -20,6 +20,7 @@ interface ITokens {
   selectedToken?: IToken
   openMintView: (token: IToken) => void
 }
+
 const Tokens: React.FC<ITokens> = ({ selectedToken, openMintView }) => {
   const {
     state: { tokens },
@@ -64,6 +65,7 @@ interface ITokenDetails {
   token: IToken
   onMintClick: () => void
 }
+
 const TokenDetails: React.FC<ITokenDetails> = ({ token, onMintClick }) => {
   const {
     state: { account },
@@ -71,8 +73,8 @@ const TokenDetails: React.FC<ITokenDetails> = ({ token, onMintClick }) => {
   const { balance, getBalance } = useTokenBalance()
 
   useEffect(() => {
-    if (account && token) getBalance(token, account.address)
-  }, [account, token])
+    if (account.address && token) getBalance(token, account.address)
+  }, [getBalance, account, token])
 
   return (
     <VStack spacing={4}>

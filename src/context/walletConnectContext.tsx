@@ -1,17 +1,15 @@
-import { SignClient as Client } from "@walletconnect/sign-client/dist/types/client"
 import { SessionTypes } from "@walletconnect/types"
 import React, {
   createContext,
   useCallback,
   useContext,
   useEffect,
-  useMemo,
+  useRef,
   useState,
 } from "react"
-import { SignClient } from "@walletconnect/sign-client"
+import SignClient from "@walletconnect/sign-client"
 import { Network, WalletSource } from "../model/enums"
 import { getSdkError } from "@walletconnect/utils"
-import { Certificate } from "thor-devkit"
 import {
   DEFAULT_APP_METADATA,
   DEFAULT_EVENTS,
@@ -21,30 +19,19 @@ import {
   DEFAULT_RELAY_URL,
   SUPPORTED_CHAINS,
 } from "../constants"
-import ConnexService from "../service/ConnexService"
 import { ActionType, useWallet } from "./walletContext"
 import { WalletConnectModal } from "@walletconnect/modal"
 import { EngineTypes } from "@walletconnect/types/dist/types/sign-client/engine"
-import { isMobile } from "../utils/MobileUtils"
-import { fromChainId, getChainId } from "../utils/ChainUtil"
+import { fromChainId } from "../utils/ChainUtil"
+import { WalletConnectDriver } from "./walletConnectVendor"
 
 /**
  * Types
  */
 interface IContext {
-  client: Client | undefined
-  session: SessionTypes.Struct | undefined
-  connect: (
-    network: Network,
-    onSuccess: (session: SessionTypes.Struct) => Promise<void>,
-    onError?: (err: unknown) => void
-  ) => Promise<void>
   disconnect: () => Promise<void>
   isInitializing: boolean
-  identifyUser: (
-    network: Network,
-    session: SessionTypes.Struct
-  ) => Promise<Certificate>
+  newWcDriver: (genesisId: string) => WalletConnectDriver | undefined
 }
 
 /**
@@ -82,31 +69,21 @@ interface IWalletConnectProvider {
 }
 
 export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
-  const [client, setClient] = useState<Client>()
-  const [session, setSession] = useState<SessionTypes.Struct>()
+  const client = useRef<SignClient>()
+  const session = useRef<SessionTypes.Struct>()
 
   const [isInitializing, setIsInitializing] = useState(false)
   const { dispatch } = useWallet()
 
-  const reset = () => {
+  const reset = useCallback(() => {
     console.log("Resetting WalletConnect state")
-    setSession(undefined)
+    session.current = undefined
 
-    ConnexService.clear()
     dispatch({ type: ActionType.CLEAR })
-  }
+  }, [dispatch])
 
   const connect = useCallback(
-    async (
-      network: Network,
-      onSuccess: (session: SessionTypes.Struct) => Promise<void>,
-      onError?: (err: unknown) => void
-    ) => {
-      if (typeof client === "undefined") {
-        throw new Error("WalletConnect is not initialized")
-      }
-
-      let session: SessionTypes.Struct | undefined
+    async (signClient: SignClient): Promise<SessionTypes.Struct> => {
       try {
         const requiredNamespaces: EngineTypes.ConnectParams["requiredNamespaces"] =
           {
@@ -117,7 +94,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
             },
           }
 
-        const { uri, approval } = await client.connect({
+        const { uri, approval } = await signClient.connect({
           requiredNamespaces,
         })
 
@@ -130,99 +107,34 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
           await web3Modal.openModal({ uri, chains })
         }
 
-        //TODO: if user closes modal before approving on mobile state is not resetted
-
-        session = await approval()
-        console.log("Established session:", session)
-
-        setSession(session)
+        //TODO: if user closes modal before approving on mobile state is not reset
+        session.current = await approval()
 
         web3Modal.closeModal()
 
-        await onSuccess(session)
+        return session.current
       } catch (e) {
         web3Modal.closeModal()
-        onError?.(e)
-
+        console.warn("WalletConnect connect failed:", e)
         throw e
       }
     },
-    [client]
+    []
   )
 
-  const identifyUser = useCallback(
-    async (network: Network, session: SessionTypes.Struct) => {
-      if (typeof client === "undefined") {
-        throw new Error("WalletConnect is not initialized")
-      }
-      if (typeof session === "undefined") {
-        throw new Error("Session is not connected")
-      }
-
-      try {
-        const message: Connex.Vendor.CertMessage = {
-          purpose: "identification",
-          payload: {
-            type: "text",
-            content: "Sign a certificate to prove your identity",
-          },
-        }
-
-        const options: Connex.Driver.CertOptions = {}
-
-        const resPromise: Promise<Connex.Vendor.CertResponse> = client.request({
-          topic: session.topic,
-          chainId: getChainId(network),
-          request: {
-            method: DEFAULT_METHODS.SIGN_CERTIFICATE,
-            params: [{ message, options }],
-          },
-        })
-
-        if (isMobile() && !document.hidden) window.open("wc://")
-
-        const result = await resPromise
-
-        const cert: Certificate = {
-          purpose: message.purpose,
-          payload: message.payload,
-          domain: result.annex.domain,
-          timestamp: result.annex.timestamp,
-          signer: result.annex.signer,
-          signature: result.signature,
-        }
-
-        console.log("Signed cert", cert)
-        Certificate.verify(cert)
-        console.log("Cert verified")
-
-        return cert
-      } catch (error) {
-        console.error("SignClient.identifyUser failed:", error)
-
-        // Disconnect from session if user rejects identify signature request
-        await client.disconnect({
-          topic: session.topic,
-          reason: getSdkError("USER_DISCONNECTED"),
-        })
-
-        throw error
-      }
+  const newWcDriver = useCallback(
+    (genesisId: string) => {
+      return new WalletConnectDriver(genesisId, client, session, connect)
     },
-    [client, session]
+    [connect]
   )
 
   const disconnect = useCallback(async () => {
-    if (typeof client === "undefined") {
-      throw new Error("WalletConnect client is not initialized")
-    }
-    if (typeof session === "undefined") {
-      throw new Error("Session is not connected")
-    }
+    if (!client.current || !session.current) return
 
     try {
-      await client.disconnect({
-        topic: session.topic,
+      await client.current.disconnect({
+        topic: session.current.topic,
         reason: getSdkError("USER_DISCONNECTED"),
       })
     } catch (error) {
@@ -231,49 +143,45 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
       // Reset app state after disconnect.
       reset()
     }
-  }, [client, session])
+  }, [reset])
 
-  const subscribeToEvents = useCallback(async (_client: Client) => {
-    if (typeof _client === "undefined") {
-      throw new Error("WalletConnect is not initialized")
-    }
+  const subscribeToEvents = useCallback(
+    async (_client: SignClient) => {
+      _client.on("session_ping", (args) => {
+        console.log("EVENT", "session_ping", args)
+      })
 
-    _client.on("session_ping", (args) => {
-      console.log("EVENT", "session_ping", args)
-    })
+      _client.on("session_event", (args) => {
+        console.log("EVENT", "session_event", args)
+      })
 
-    _client.on("session_event", (args) => {
-      console.log("EVENT", "session_event", args)
-    })
+      _client.on("session_update", ({ topic, params }) => {
+        console.log("EVENT", "session_update", { topic, params })
+        if (!_client) return
+        const { namespaces } = params
+        const _session = _client.session.get(topic)
+        const updatedSession = { ..._session, namespaces }
+        session.current = updatedSession
+      })
 
-    _client.on("session_update", ({ topic, params }) => {
-      console.log("EVENT", "session_update", { topic, params })
-      const { namespaces } = params
-      const _session = _client.session.get(topic)
-      const updatedSession = { ..._session, namespaces }
-      setSession(updatedSession)
-    })
-
-    _client.on("session_delete", () => {
-      console.log("EVENT", "session_delete")
-      reset()
-    })
-  }, [])
+      _client.on("session_delete", () => {
+        console.log("EVENT", "session_delete")
+        reset()
+      })
+    },
+    [reset]
+  )
 
   const restoreExistingSession = useCallback(
-    async (_client: Client) => {
-      if (typeof _client === "undefined") {
-        throw new Error("WalletConnect is not initialized")
-      }
-
-      if (typeof session !== "undefined") return
+    async (_client: SignClient) => {
+      if (typeof session.current !== "undefined") return
 
       // populates (the last) existing session to state
       if (_client.session.length) {
         const lastKeyIndex = _client.session.keys.length - 1
         const _session = _client.session.get(_client.session.keys[lastKeyIndex])
         console.log("RESTORED SESSION:", _session)
-        setSession(_session)
+        session.current = _session
 
         const networkIdentifier = _session.namespaces.vechain.accounts[0].split(
           ":"
@@ -293,12 +201,14 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
         return _session
       }
     },
-    [session]
+    [dispatch]
   )
 
-  const createClient = useCallback(async () => {
+  const setupClient = useCallback(async () => {
     try {
       setIsInitializing(true)
+
+      if (client.current) return
 
       const _client = await SignClient.init({
         logger: DEFAULT_LOGGER,
@@ -307,8 +217,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
         metadata: DEFAULT_APP_METADATA,
       })
 
-      setClient(_client)
-
+      client.current = _client
       await restoreExistingSession(_client)
       await subscribeToEvents(_client)
     } catch (err) {
@@ -320,22 +229,16 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
   }, [restoreExistingSession, subscribeToEvents])
 
   useEffect(() => {
-    if (!client) {
-      createClient()
-    }
-  }, [createClient, client])
+    if (!client.current) setupClient()
+  }, [setupClient])
 
-  const value = useMemo(
-    () => ({
-      isInitializing,
-      client,
-      session,
-      connect,
-      disconnect,
-      identifyUser,
-    }),
-    [isInitializing, client, session, connect, disconnect, identifyUser]
-  )
+  const value: IContext = {
+    isInitializing,
+    disconnect,
+    newWcDriver,
+  }
+
+  if (!client) return <></>
 
   return (
     <WalletConnectContext.Provider value={{ ...value }}>

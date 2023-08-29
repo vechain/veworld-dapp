@@ -1,15 +1,8 @@
-import React, {
-  useReducer,
-  useContext,
-  createContext,
-  useMemo,
-  useEffect,
-} from "react"
+import React, { createContext, useContext, useMemo, useReducer } from "react"
 import LocalStorageService from "../service/LocalStorageService"
-import ConnexService from "../service/ConnexService"
 import { IAccount, INonFungibleToken, IToken } from "../model/State"
 
-import { Network } from "../model/enums"
+import { Network, WalletSource } from "../model/enums"
 
 export enum ActionType {
   SET_ALL = "SET_ALL",
@@ -34,17 +27,21 @@ type Action =
 type Dispatch = (action: Action) => void
 
 export type State = {
-  account?: IAccount
-  network?: Network
+  account: IAccount
+  network: Network
   tokens: IToken[]
   nfts: INonFungibleToken[]
 }
 
 type ContextStateProps = { state: State; dispatch: Dispatch }
 
+const defaultAccount: IAccount = {
+  source: window.vechain ? WalletSource.VEWORLD : WalletSource.SYNC2,
+}
+
 const walletReducerDefaultValue = {
-  account: LocalStorageService.getAccount(),
-  network: LocalStorageService.getNetwork(),
+  account: LocalStorageService.getAccount() || defaultAccount,
+  network: LocalStorageService.getNetwork() || Network.TEST,
   tokens: LocalStorageService.getTokens(),
   nfts: LocalStorageService.getNfts(),
 }
@@ -73,8 +70,12 @@ const walletReducer = (state: State, action: Action): State => {
       return { ...state, network: action.payload }
     case ActionType.CLEAR:
       LocalStorageService.clear()
-      ConnexService.clear()
-      return { network: undefined, account: undefined, tokens: [], nfts: [] }
+      return {
+        network: Network.TEST,
+        account: defaultAccount,
+        tokens: [],
+        nfts: [],
+      }
     default: {
       throw new Error(`Unhandled action type: ${action}`)
     }
@@ -86,9 +87,9 @@ const WalletContext = createContext<ContextStateProps | undefined>(undefined)
 interface IWalletProvider {
   children: React.ReactNode
 }
+
 const WalletProvider = ({ children }: IWalletProvider) => {
   const [state, dispatch] = useReducer(walletReducer, walletReducerDefaultValue)
-  const { account, network } = state
 
   const value = useMemo(
     () => ({
@@ -97,18 +98,6 @@ const WalletProvider = ({ children }: IWalletProvider) => {
     }),
     [state, dispatch]
   )
-
-  useEffect(() => {
-    const initialiseConnex = async () => {
-      if (account?.source && network) {
-        const connex = ConnexService.initialise(account.source, network)
-        console.log("connex initialised", connex)
-        const acc = await ConnexService.getAccount(account.address)
-        console.log(acc)
-      }
-    }
-    initialiseConnex()
-  }, [state])
 
   return (
     <WalletContext.Provider value={value}>{children}</WalletContext.Provider>

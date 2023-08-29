@@ -9,7 +9,7 @@ console.log(
   process.env.REACT_APP_PUBLIC_PROJECT_ID
 )
 
-export const DEFAULT_PROJECT_ID = process.env.REACT_APP_PUBLIC_PROJECT_ID
+export const DEFAULT_PROJECT_ID = "1c1c20862a46fb1cd4322d403385fea2"
 // If undefined will use the Wallet Connect default
 export const DEFAULT_RELAY_URL = process.env.REACT_APP_RELAY_URL
 

@@ -1,7 +1,7 @@
 import { WalletSource } from "./enums"
 
 export interface IAccount {
-  address: string
+  address?: string
   source: WalletSource
 }
 

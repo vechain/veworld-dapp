@@ -1,12 +1,18 @@
 import { Network, NetworkInfo } from "../model/enums"
+import { genesisBlocks } from "@vechain/connex/esm/config"
+
+export const chainIdFromGenesis = (genesisId: string) =>
+  `vechain:${genesisId.slice(-32)}`
 
 export const getChainId = (network: Network) =>
-  `vechain:${NetworkInfo[network].genesis.id.slice(-32)}`
+  `vechain:${chainIdFromGenesis(NetworkInfo[network].genesis.id)}`
 
 export const fromChainId = (chainId: string): Network => {
-  Object.entries(NetworkInfo).find(([key, value]) => {
-    if (value.genesis.id.slice(-32) === chainId) return key
-  })
+  console.log(Object.entries(NetworkInfo))
 
-  throw new Error("Invalid chainId")
+  const net = Object.values(NetworkInfo).find(
+    (net) => net.genesis.id.slice(-32) === chainId
+  )
+
+  return net?.genesis.id === genesisBlocks.main.id ? Network.MAIN : Network.TEST
 }
