@@ -18,7 +18,7 @@ export class WalletConnectDriver extends DriverVendorOnly {
     private readonly session: SessionRef,
     private readonly connect: ConnectFn
   ) {
-    super(genesisId, true)
+    super(genesisId, false)
     this.chainId = chainIdFromGenesis(genesisId)
   }
 
