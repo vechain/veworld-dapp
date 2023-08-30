@@ -4,7 +4,8 @@ name: Deploy static content to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: [ "main" ]
+    branches: [ "feature/wallet-connect" ]
+
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -44,6 +45,10 @@ jobs:
 
       - name: Build React App
         run: yarn build
+        env:
+          REACT_APP_PUBLIC_PROJECT_ID: 8dfc5cac972ee656e6edeb8309ab30ec
+          REACT_APP_RELAY_URL: wss://relay.walletconnect.com
+          WALLET_CONNECT_DEBUGGER: true
 
       - name: Setup Pages
         uses: actions/configure-pages@v2

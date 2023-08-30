@@ -5,17 +5,17 @@ import {
   FormHelperText,
   FormLabel,
   HStack,
+  Icon,
   Input,
   Spinner,
   VStack,
-  Icon,
 } from "@chakra-ui/react"
 import { ArrowPathIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
 import React, { useCallback } from "react"
 import { RegisterOptions, useForm } from "react-hook-form"
-import { ActionType, useWallet } from "../../../context/walletContext"
+import { ActionType, useWallet } from "../../../context/WalletContext"
 import useDeployToken from "../../../hooks/useDeployToken"
-import { IAccount, IToken } from "../../../model/State"
+import { IToken } from "../../../model/State"
 import { TxStage } from "../../../model/Transaction"
 import TransactionStatus from "../../TransactionStatus/TransactionStatus"
 
@@ -25,11 +25,16 @@ type DeployTokenForm = {
   decimals: number
   delegateUrl?: string
 }
+
 interface IDeployToken {
-  account: IAccount
+  accountAddress: string
   navigateBack: (token?: IToken) => void
 }
-const DeployToken: React.FC<IDeployToken> = ({ account, navigateBack }) => {
+
+const DeployToken: React.FC<IDeployToken> = ({
+  accountAddress,
+  navigateBack,
+}) => {
   const {
     handleSubmit,
     register,
@@ -51,7 +56,7 @@ const DeployToken: React.FC<IDeployToken> = ({ account, navigateBack }) => {
 
   const onSubmit = async (data: DeployTokenForm) => {
     const deployedData = await deployToken(
-      account.address,
+      accountAddress,
       data.name,
       data.symbol,
       data.decimals,
@@ -111,17 +116,29 @@ const DeployToken: React.FC<IDeployToken> = ({ account, navigateBack }) => {
       <VStack spacing={4} w="full">
         <FormControl isRequired isInvalid={!!errors.name?.message}>
           <FormLabel>Name</FormLabel>
-          <Input type="text" {...register("name", nameRules)} />
+          <Input
+            defaultValue={"MyToken"}
+            type="text"
+            {...register("name", nameRules)}
+          />
           <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isRequired isInvalid={!!errors.symbol?.message}>
           <FormLabel>Symbol</FormLabel>
-          <Input type="text" {...register("symbol", symbolRules)} />
+          <Input
+            defaultValue={"MTKN"}
+            type="text"
+            {...register("symbol", symbolRules)}
+          />
           <FormErrorMessage>{errors.symbol?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isRequired isInvalid={!!errors.decimals?.message}>
           <FormLabel>Decimals</FormLabel>
-          <Input type="number" {...register("decimals", decimalsRules)} />
+          <Input
+            defaultValue={0}
+            type="number"
+            {...register("decimals", decimalsRules)}
+          />
           <FormErrorMessage>{errors.decimals?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.delegateUrl?.message}>

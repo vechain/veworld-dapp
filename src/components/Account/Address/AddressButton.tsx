@@ -2,9 +2,9 @@ import {
   Button,
   HStack,
   HTMLChakraProps,
+  Icon,
   Text,
   useClipboard,
-  Icon,
 } from "@chakra-ui/react"
 import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/react/24/solid"
 import React, { useEffect } from "react"
@@ -16,6 +16,7 @@ interface IAddressButton extends HTMLChakraProps<"button"> {
   showAddressIcon?: boolean
   showCopyIcon?: boolean
 }
+
 const AddressButton: React.FC<IAddressButton> = ({
   address,
   showAddressIcon = true,
@@ -29,14 +30,14 @@ const AddressButton: React.FC<IAddressButton> = ({
   const onClickHandler = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    console.log(onClick)
+    // console.log(onClick)
     if (onClick) onClick(e)
     if (showCopyIcon) onCopy()
   }
 
   useEffect(() => {
     setValue(address)
-  }, [address])
+  }, [setValue, address])
 
   return (
     <Button

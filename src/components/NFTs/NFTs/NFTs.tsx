@@ -8,7 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import React, { useCallback, useEffect, useState } from "react"
-import { useWallet } from "../../../context/walletContext"
+import { useWallet } from "../../../context/WalletContext"
 import useNFTBalance from "../../../hooks/useNFTBalance"
 import { INonFungibleToken } from "../../../model/State"
 import AddressButton from "../../Account/Address/AddressButton"
@@ -19,6 +19,7 @@ interface ITokens {
   selectedNft?: INonFungibleToken
   openMintView: (token: INonFungibleToken) => void
 }
+
 const NFTs: React.FC<ITokens> = ({ selectedNft, openMintView }) => {
   const {
     state: { nfts },
@@ -62,6 +63,7 @@ interface INftsDetails {
   nft: INonFungibleToken
   onMintClick: () => void
 }
+
 const NFTDetails: React.FC<INftsDetails> = ({ nft, onMintClick }) => {
   const {
     state: { account },
@@ -69,8 +71,8 @@ const NFTDetails: React.FC<INftsDetails> = ({ nft, onMintClick }) => {
   const { balance, getNFTBalance } = useNFTBalance()
 
   useEffect(() => {
-    if (account) getNFTBalance(nft, account.address)
-  }, [account, nft])
+    if (account.address) getNFTBalance(nft, account.address)
+  }, [getNFTBalance, account, nft])
 
   return (
     <VStack spacing={4}>

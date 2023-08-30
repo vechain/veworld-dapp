@@ -30,4 +30,5 @@ artifacts
 .idea
 cache
 
-
+.env
+.vscode/

@@ -5,17 +5,17 @@ import {
   FormHelperText,
   FormLabel,
   HStack,
+  Icon,
   Input,
   Spinner,
   VStack,
-  Icon,
 } from "@chakra-ui/react"
 import { ArrowPathIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
 import React, { useCallback } from "react"
 import { RegisterOptions, useForm } from "react-hook-form"
-import { ActionType, useWallet } from "../../../context/walletContext"
+import { ActionType, useWallet } from "../../../context/WalletContext"
 import useDeployNonFungibleToken from "../../../hooks/useDeployNonFungibleToken"
-import { IAccount, INonFungibleToken } from "../../../model/State"
+import { INonFungibleToken } from "../../../model/State"
 import { TxStage } from "../../../model/Transaction"
 import TransactionStatus from "../../TransactionStatus/TransactionStatus"
 
@@ -25,11 +25,13 @@ type DeployNFTForm = {
   baseTokenURI: string
   delegateUrl?: string
 }
+
 interface IDeployNFT {
-  account: IAccount
+  accountAddress: string
   navigateBack: (nft?: INonFungibleToken) => void
 }
-const DeployNFT: React.FC<IDeployNFT> = ({ account, navigateBack }) => {
+
+const DeployNFT: React.FC<IDeployNFT> = ({ accountAddress, navigateBack }) => {
   const {
     handleSubmit,
     register,
@@ -52,7 +54,7 @@ const DeployNFT: React.FC<IDeployNFT> = ({ account, navigateBack }) => {
 
   const onSubmit = async (data: DeployNFTForm) => {
     const deployedData = await deployNftContract(
-      account.address,
+      accountAddress,
       data.name,
       data.symbol,
       data.baseTokenURI,
@@ -111,17 +113,31 @@ const DeployNFT: React.FC<IDeployNFT> = ({ account, navigateBack }) => {
       <VStack spacing={4} w="full">
         <FormControl isRequired isInvalid={!!errors.name?.message}>
           <FormLabel>Name</FormLabel>
-          <Input type="text" {...register("name", nameRules)} />
+          <Input
+            defaultValue={"Fake VeKings"}
+            type="text"
+            {...register("name", nameRules)}
+          />
           <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isRequired isInvalid={!!errors.symbol?.message}>
           <FormLabel>Symbol</FormLabel>
-          <Input type="text" {...register("symbol", symbolRules)} />
+          <Input
+            defaultValue={"FVKG"}
+            type="text"
+            {...register("symbol", symbolRules)}
+          />
           <FormErrorMessage>{errors.symbol?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isRequired isInvalid={!!errors.baseTokenURI?.message}>
           <FormLabel>Base Token URI</FormLabel>
-          <Input type="text" {...register("baseTokenURI", baseTokenURIRules)} />
+          <Input
+            defaultValue={
+              "ipfs://QmfSTia1TJUiKQ2fyW9NTPzEKNdjMGzbUgrC3QPSTpkum6/"
+            }
+            type="text"
+            {...register("baseTokenURI", baseTokenURIRules)}
+          />
           <FormErrorMessage>{errors.baseTokenURI?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.delegateUrl?.message}>

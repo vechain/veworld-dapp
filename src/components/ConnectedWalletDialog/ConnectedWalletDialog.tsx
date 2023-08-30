@@ -1,6 +1,6 @@
-import { Button, HStack, Text, VStack, Image } from "@chakra-ui/react"
+import { Button, HStack, Image, Text, VStack } from "@chakra-ui/react"
 import React from "react"
-import { ActionType, useWallet } from "../../context/walletContext"
+import { ActionType, useWallet } from "../../context/WalletContext"
 import { Network, WalletSourceInfo } from "../../model/enums"
 import { IAccount } from "../../model/State"
 import { getPicassoImgSrc } from "../../utils/PicassoUtils"
@@ -14,6 +14,7 @@ interface IConnectWalletModal {
   account: IAccount
   network: Network
 }
+
 const AccountDetailModal: React.FC<IConnectWalletModal> = ({
   isOpen,
   onClose,
@@ -27,6 +28,8 @@ const AccountDetailModal: React.FC<IConnectWalletModal> = ({
     onClose()
   }
 
+  if (!account.address) return <></>
+
   const header = (
     <HStack
       spacing={2}
@@ -39,7 +42,6 @@ const AccountDetailModal: React.FC<IConnectWalletModal> = ({
     </HStack>
   )
 
-  if (!account) return <></>
   return (
     <Dialog
       isOpen={isOpen}
@@ -49,7 +51,8 @@ const AccountDetailModal: React.FC<IConnectWalletModal> = ({
       closeButtonStyle={{ color: "white" }}
       body={
         <AccountDetailBody
-          account={account}
+          accountSource={account.source}
+          accountAddress={account.address}
           network={network}
           disconnectWallet={disconnectWallet}
         />
@@ -59,16 +62,19 @@ const AccountDetailModal: React.FC<IConnectWalletModal> = ({
 }
 
 interface IAccountDetailBody {
-  account: IAccount
+  accountAddress: string
+  accountSource: IAccount["source"]
   network: Network
   disconnectWallet: () => void
 }
+
 export const AccountDetailBody: React.FC<IAccountDetailBody> = ({
-  account,
+  accountAddress,
+  accountSource,
   network,
   disconnectWallet,
 }) => {
-  const sourceInfo = WalletSourceInfo[account.source]
+  const sourceInfo = WalletSourceInfo[accountSource]
   return (
     <>
       <VStack spacing={4} w="100%">
@@ -76,7 +82,7 @@ export const AccountDetailBody: React.FC<IAccountDetailBody> = ({
           <Text as="b" fontSize="md">
             Account
           </Text>
-          <AddressButton address={account.address} />
+          <AddressButton address={accountAddress} />
         </HStack>
         <HStack justifyContent={"space-between"} w="full">
           <Text as="b" fontSize="md">

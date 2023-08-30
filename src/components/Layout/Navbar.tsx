@@ -3,22 +3,22 @@ import {
   Drawer,
   DrawerBody,
   DrawerContent,
-  Icon,
   DrawerOverlay,
   Flex,
   HStack,
+  Icon,
   IconButton,
+  Text,
   useColorModeValue,
   useDisclosure,
   useMediaQuery,
   VStack,
-  Text,
 } from "@chakra-ui/react"
 import React, { useCallback } from "react"
 import { VechainLogo } from "../Logo/Logo"
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher"
 import ConnectWalletButton from "../ConnectWalletButton/ConnectWalletButton"
-import { ActionType, useWallet } from "../../context/walletContext"
+import { ActionType, useWallet } from "../../context/WalletContext"
 import NetworkBadge from "../Network/NetworkBadge/NetworkBadge"
 import { Bars3Icon } from "@heroicons/react/24/solid"
 import { AccountDetailBody } from "../ConnectedWalletDialog/ConnectedWalletDialog"
@@ -84,6 +84,7 @@ interface IMobileNavBarDrawer {
   isOpen: boolean
   onClose: () => void
 }
+
 const MobileNavBarDrawer: React.FC<IMobileNavBarDrawer> = ({
   isOpen,
   onClose,
@@ -95,7 +96,7 @@ const MobileNavBarDrawer: React.FC<IMobileNavBarDrawer> = ({
 
   const disconnectWallet = useCallback(
     () => dispatch({ type: ActionType.CLEAR }),
-    []
+    [dispatch]
   )
 
   return (
@@ -106,9 +107,10 @@ const MobileNavBarDrawer: React.FC<IMobileNavBarDrawer> = ({
           <VStack justifyContent={"space-between"} w="full" h="full">
             <VStack spacing={4} w="full" alignItems={"flex-start"}>
               <Text>Connected Wallet</Text>
-              {account && network ? (
+              {account.address && network ? (
                 <AccountDetailBody
-                  account={account}
+                  accountSource={account.source}
+                  accountAddress={account.address}
                   network={network}
                   disconnectWallet={disconnectWallet}
                 />

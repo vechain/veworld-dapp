@@ -86,12 +86,17 @@ const MintNFT: React.FC<IMintNFTForm> = ({ nft, navigateBack }) => {
       <VStack spacing={4} w="full">
         <FormControl isRequired isInvalid={!!errors.address?.message}>
           <FormLabel>Address</FormLabel>
-          <Input type="text" {...register("address", addressRules)} />
+          <Input
+            defaultValue={"0xf077b491b355e64048ce21e3a6fc4751eeea77fa"}
+            type="text"
+            {...register("address", addressRules)}
+          />
           <FormErrorMessage>{errors.address?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isRequired isInvalid={!!errors.clausesNumber?.message}>
           <FormLabel>Number of clauses</FormLabel>
           <Input
+            defaultValue={"100"}
             type="number"
             {...register("clausesNumber", clausesNumberRules)}
           />

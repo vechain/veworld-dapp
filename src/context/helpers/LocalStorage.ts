@@ -1,5 +1,5 @@
-import { IAccount, INonFungibleToken, IToken } from "../model/State"
-import { Network } from "../model/enums"
+import { IAccount, INonFungibleToken, IToken } from "../../model/State"
+import { Network } from "../../model/enums"
 
 export const ACCOUNT_KEY = "PREVIOUS_ACCOUNT_KEY"
 export const TOKENS_KEY = "TOKENS_KEY"
@@ -22,10 +22,12 @@ const setNetwork = (network: Network) => {
   localStorage.setItem(NETWORK_KEY, network)
 }
 
-const getNetwork = (): Network | undefined => {
+const getNetwork = (): Network => {
   const network = localStorage.getItem(NETWORK_KEY)
 
   if (network === Network.MAIN || network === Network.TEST) return network
+
+  return Network.TEST
 }
 
 const setTokens = (token: IToken[]) => {

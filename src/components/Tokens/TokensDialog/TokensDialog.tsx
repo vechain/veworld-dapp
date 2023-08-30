@@ -1,6 +1,6 @@
 import { Button, HStack, Text } from "@chakra-ui/react"
 import React, { useCallback, useState } from "react"
-import { useWallet } from "../../../context/walletContext"
+import { useWallet } from "../../../context/WalletContext"
 import { IAccount, IToken } from "../../../model/State"
 import MintToken from "../MintToken/MintToken"
 import { Dialog } from "../../Shared"
@@ -33,7 +33,7 @@ const TokensDialog: React.FC<IDeployTokenDialog> = ({ isOpen, onClose }) => {
     state: { account },
   } = useWallet()
 
-  if (!account) return <></>
+  if (!account.address) return <></>
 
   return (
     <Dialog
@@ -48,7 +48,7 @@ const TokensDialog: React.FC<IDeployTokenDialog> = ({ isOpen, onClose }) => {
       }
       body={
         <TokensDialogBody
-          account={account}
+          accountAddress={account.address}
           currentView={currentView}
           setCurrentView={setCurrentView}
         />
@@ -61,6 +61,7 @@ interface ITokensDialogHeader {
   currentView: ICurrentView
   setCurrentView: (data: ICurrentView) => void
 }
+
 const TokensDialogHeader: React.FC<ITokensDialogHeader> = ({
   currentView,
   setCurrentView,
@@ -98,24 +99,24 @@ const TokensDialogHeader: React.FC<ITokensDialogHeader> = ({
 }
 
 interface ITokensDialogBody extends ITokensDialogHeader {
-  account: IAccount
+  accountAddress: string
 }
 
 const TokensDialogBody: React.FC<ITokensDialogBody> = ({
-  account,
+  accountAddress,
   currentView,
   setCurrentView,
 }) => {
   const openMintView = useCallback(
     (token: IToken) =>
       setCurrentView({ view: TokensDialogView.MINT_TOKEN, data: token }),
-    []
+    [setCurrentView]
   )
 
   const openTokensView = useCallback(
     (token?: IToken) =>
       setCurrentView({ view: TokensDialogView.TOKENS, data: token }),
-    []
+    [setCurrentView]
   )
 
   if (currentView.view === TokensDialogView.TOKENS)
@@ -124,7 +125,12 @@ const TokensDialogBody: React.FC<ITokensDialogBody> = ({
     )
 
   if (currentView.view === TokensDialogView.DEPLOY_TOKEN)
-    return <DeployToken account={account} navigateBack={openTokensView} />
+    return (
+      <DeployToken
+        accountAddress={accountAddress}
+        navigateBack={openTokensView}
+      />
+    )
 
   if (currentView.view === TokensDialogView.MINT_TOKEN)
     return <MintToken token={currentView.data} navigateBack={openTokensView} />

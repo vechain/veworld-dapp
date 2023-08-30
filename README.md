@@ -8,6 +8,10 @@ This DApp was built with create-react-app
 
 In the project directory, you can run:
 
+### `cp .env.example .env`
+
+Add the environment variables in your .env file.
+
 ### `yarn start`
 
 Runs the app in the development mode.\

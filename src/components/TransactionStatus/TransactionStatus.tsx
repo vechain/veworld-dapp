@@ -43,7 +43,7 @@ const TransactionStatus: React.FC<TransactionStatusProps> = ({
         <Alert status={"warning"}>
           <AlertIcon />
           <Box>
-            <AlertTitle>Waiting for confirmation in extension!</AlertTitle>
+            <AlertTitle>Waiting for confirmation in your wallet!</AlertTitle>
             <AlertDescription>{getDescription()}</AlertDescription>
           </Box>
         </Alert>

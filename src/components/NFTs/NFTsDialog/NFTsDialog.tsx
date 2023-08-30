@@ -1,6 +1,6 @@
 import { Button, HStack, Text } from "@chakra-ui/react"
 import React, { useCallback, useState } from "react"
-import { useWallet } from "../../../context/walletContext"
+import { useWallet } from "../../../context/WalletContext"
 import { IAccount, INonFungibleToken } from "../../../model/State"
 import { Dialog } from "../../Shared"
 import DeployNFT from "../DeployNFT/DeployNFT"
@@ -33,7 +33,7 @@ const NFTsDialog: React.FC<IDeployTokenDialog> = ({ isOpen, onClose }) => {
     state: { account },
   } = useWallet()
 
-  if (!account) return <></>
+  if (!account.address) return <></>
 
   return (
     <Dialog
@@ -48,7 +48,7 @@ const NFTsDialog: React.FC<IDeployTokenDialog> = ({ isOpen, onClose }) => {
       }
       body={
         <TokensDialogBody
-          account={account}
+          accountAddress={account.address}
           currentView={currentView}
           setCurrentView={setCurrentView}
         />
@@ -61,6 +61,7 @@ interface INFTsDialogHeader {
   currentView: ICurrentView
   setCurrentView: (data: ICurrentView) => void
 }
+
 const NFTsDialogHeader: React.FC<INFTsDialogHeader> = ({
   currentView,
   setCurrentView,
@@ -97,31 +98,33 @@ const NFTsDialogHeader: React.FC<INFTsDialogHeader> = ({
 }
 
 interface INftsDialogBody extends INFTsDialogHeader {
-  account: IAccount
+  accountAddress: string
 }
 
 const TokensDialogBody: React.FC<INftsDialogBody> = ({
-  account,
+  accountAddress,
   currentView,
   setCurrentView,
 }) => {
   const openMintView = useCallback(
     (nft: INonFungibleToken) =>
       setCurrentView({ view: NFTsDialogView.MINT_NFT, data: nft }),
-    []
+    [setCurrentView]
   )
 
   const openNftsView = useCallback(
     (nft?: INonFungibleToken) =>
       setCurrentView({ view: NFTsDialogView.NFTS, data: nft }),
-    []
+    [setCurrentView]
   )
 
   if (currentView.view === NFTsDialogView.NFTS)
     return <NFTs selectedNft={currentView.data} openMintView={openMintView} />
 
   if (currentView.view === NFTsDialogView.DEPLOY_NFT)
-    return <DeployNFT account={account} navigateBack={openNftsView} />
+    return (
+      <DeployNFT accountAddress={accountAddress} navigateBack={openNftsView} />
+    )
 
   if (currentView.view === NFTsDialogView.MINT_NFT)
     return <MintNFT nft={currentView.data} navigateBack={openNftsView} />
