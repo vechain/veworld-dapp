@@ -22,19 +22,21 @@ export class WalletConnectDriver extends DriverVendorOnly {
     this.chainId = chainIdFromGenesis(genesisId)
   }
 
+  get client(): SignClient {
+    const client = this.signClient.current
+
+    if (!client) throw new Error("Sign client is not established")
+
+    return client
+  }
+
   override async signTx(
     message: Connex.Vendor.TxMessage,
     options: Connex.Driver.TxOptions
   ): Promise<Connex.Vendor.TxResponse> {
     const sessionTopic = await this.getSessionTopic()
 
-    const client = this.signClient.current
-
-    if (!client) {
-      throw new Error("Sign client is not established")
-    }
-
-    return client.request({
+    return this.client.request({
       topic: sessionTopic,
       chainId: this.chainId,
       request: {
@@ -50,13 +52,7 @@ export class WalletConnectDriver extends DriverVendorOnly {
   ): Promise<Connex.Vendor.CertResponse> {
     const sessionTopic = await this.getSessionTopic()
 
-    const client = this.signClient.current
-
-    if (!client) {
-      throw new Error("Sign client is not established")
-    }
-
-    return client.request({
+    return this.client.request({
       topic: sessionTopic,
       chainId: this.chainId,
       request: {
@@ -69,10 +65,7 @@ export class WalletConnectDriver extends DriverVendorOnly {
   private async getSessionTopic(): Promise<string> {
     if (this.session.current) return this.session.current.topic
 
-    if (!this.signClient.current)
-      throw new Error("Sign client is not established")
-
-    const session = await this.connect(this.signClient.current)
+    const session = await this.connect(this.client)
 
     return session.topic
   }

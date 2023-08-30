@@ -22,7 +22,7 @@ import { ActionType, useWallet } from "./WalletContext"
 import { WalletConnectModal } from "@walletconnect/modal"
 import { EngineTypes } from "@walletconnect/types/dist/types/sign-client/engine"
 import { fromChainId } from "../utils/ChainUtil"
-import { WalletConnectDriver } from "./helpers/WalletConnectVendor"
+import { WalletConnectDriver } from "./helpers/WalletConnectDriver"
 
 /**
  * Types
