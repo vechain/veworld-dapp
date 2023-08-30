@@ -54,6 +54,8 @@ const {thor, vendor} = useConnex()
 
 ## Wallet Connect
 
+- VeWorld Mobile will not accept any invalid DApp requests. You should register your DApp on Wallet Connect and get your DApp verified: https://docs.walletconnect.com/2.0/cloud/verify
+
 - Please refer to the [wallet connect docs](https://docs.walletconnect.com/2.0/web3modal/about) for more information on how to use wallet connect.
 
 - Please refer to [this file](./src/context/WalletConnectContext.tsx) for an example of how to use the Wallet Connect in your vechain dApp.
@@ -72,7 +74,9 @@ const web3Modal = new WalletConnectModal({
       name: "VeWorld",
       id: "veworld-mobile",
       links: {
+        // This is the deeplink for VeWorld
         native: "veworld://org.vechain.veworld.app/",
+        // This will link to the VeWorld website in case the user does not have VeWorld installed
         universal: "https://veworld.net",
       },
     },
