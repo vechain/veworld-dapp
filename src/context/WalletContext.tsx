@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useMemo, useReducer } from "react"
-import LocalStorageService from "../service/LocalStorageService"
+import LocalStorage from "./helpers/LocalStorage"
 import { IAccount, INonFungibleToken, IToken } from "../model/State"
 
 import { Network, WalletSource } from "../model/enums"
@@ -36,40 +36,40 @@ export type State = {
 type ContextStateProps = { state: State; dispatch: Dispatch }
 
 const defaultAccount: IAccount = {
-  source: window.vechain ? WalletSource.VEWORLD : WalletSource.SYNC2,
+  source: window.vechain ? WalletSource.VEWORLD_EXTENSION : WalletSource.SYNC2,
 }
 
 const walletReducerDefaultValue = {
-  account: LocalStorageService.getAccount() || defaultAccount,
-  network: LocalStorageService.getNetwork() || Network.TEST,
-  tokens: LocalStorageService.getTokens(),
-  nfts: LocalStorageService.getNfts(),
+  account: LocalStorage.getAccount() || defaultAccount,
+  network: LocalStorage.getNetwork() || Network.TEST,
+  tokens: LocalStorage.getTokens(),
+  nfts: LocalStorage.getNfts(),
 }
 
 const walletReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case ActionType.SET_ALL:
-      LocalStorageService.setAccount(action.payload.account)
-      LocalStorageService.setNetwork(action.payload.network)
+      LocalStorage.setAccount(action.payload.account)
+      LocalStorage.setNetwork(action.payload.network)
       return { ...state, ...action.payload }
     case ActionType.SET_ACCOUNT:
-      LocalStorageService.setAccount(action.payload)
+      LocalStorage.setAccount(action.payload)
       return { ...state, account: action.payload }
     case ActionType.ADD_TOKEN: {
       const updatedTokens = [...state.tokens, action.payload]
-      LocalStorageService.setTokens(updatedTokens)
+      LocalStorage.setTokens(updatedTokens)
       return { ...state, tokens: updatedTokens }
     }
     case ActionType.ADD_NFT: {
       const updatedNfts = [...state.nfts, action.payload]
-      LocalStorageService.setNfts(updatedNfts)
+      LocalStorage.setNfts(updatedNfts)
       return { ...state, nfts: updatedNfts }
     }
     case ActionType.SET_NETWORK:
-      LocalStorageService.setNetwork(action.payload)
+      LocalStorage.setNetwork(action.payload)
       return { ...state, network: action.payload }
     case ActionType.CLEAR:
-      LocalStorageService.clear()
+      LocalStorage.clear()
       return {
         network: Network.TEST,
         account: defaultAccount,

@@ -1,7 +1,7 @@
 import { Button, HTMLChakraProps, Icon, useDisclosure } from "@chakra-ui/react"
 import { WalletIcon } from "@heroicons/react/24/solid"
 import React from "react"
-import { useWallet } from "../../context/walletContext"
+import { useWallet } from "../../context/WalletContext"
 import AddressButton from "../Account/Address/AddressButton"
 import AccountDetailModal from "../ConnectedWalletDialog/ConnectedWalletDialog"
 import ConnectWalletModal from "../ConnectWalletModal/ConnectWalletModal"

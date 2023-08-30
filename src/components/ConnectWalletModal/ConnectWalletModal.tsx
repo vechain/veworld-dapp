@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react"
 import { LinkIcon, WalletIcon } from "@heroicons/react/24/solid"
 import React, { useCallback, useState } from "react"
-import { ActionType, useWallet } from "../../context/walletContext"
+import { ActionType, useWallet } from "../../context/WalletContext"
 import { DEFAULT_NETWORK, Network, WalletSource } from "../../model/enums"
 import { getErrorMessage } from "../../utils/ExtensionUtils"
 import { humanAddress } from "../../utils/FormattingUtils"

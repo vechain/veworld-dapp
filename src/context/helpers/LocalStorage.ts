@@ -1,5 +1,5 @@
-import { IAccount, INonFungibleToken, IToken } from "../model/State"
-import { Network } from "../model/enums"
+import { IAccount, INonFungibleToken, IToken } from "../../model/State"
+import { Network } from "../../model/enums"
 
 export const ACCOUNT_KEY = "PREVIOUS_ACCOUNT_KEY"
 export const TOKENS_KEY = "TOKENS_KEY"

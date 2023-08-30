@@ -1,6 +1,6 @@
 import { useToast } from "@chakra-ui/react"
 import { useState } from "react"
-import { useWallet } from "../context/walletContext"
+import { useWallet } from "../context/WalletContext"
 import { INonFungibleToken } from "../model/State"
 import { TxStage } from "../model/Transaction"
 import { getErrorMessage } from "../utils/ExtensionUtils"

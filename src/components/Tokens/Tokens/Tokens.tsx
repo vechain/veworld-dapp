@@ -8,7 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import React, { useCallback, useEffect, useState } from "react"
-import { useWallet } from "../../../context/walletContext"
+import { useWallet } from "../../../context/WalletContext"
 import useTokenBalance from "../../../hooks/useTokenBalance"
 import { IToken } from "../../../model/State"
 import { scaleNumberDown } from "../../../utils/FormattingUtils"

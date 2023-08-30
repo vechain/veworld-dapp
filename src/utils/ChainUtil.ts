@@ -8,8 +8,6 @@ export const getChainId = (network: Network) =>
   `vechain:${chainIdFromGenesis(NetworkInfo[network].genesis.id)}`
 
 export const fromChainId = (chainId: string): Network => {
-  console.log(Object.entries(NetworkInfo))
-
   const net = Object.values(NetworkInfo).find(
     (net) => net.genesis.id.slice(-32) === chainId
   )

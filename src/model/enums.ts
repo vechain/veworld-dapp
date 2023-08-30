@@ -1,7 +1,7 @@
 import { genesisBlocks } from "@vechain/connex/esm/config"
 
 export enum WalletSource {
-  VEWORLD = "veworld",
+  VEWORLD_EXTENSION = "veworld",
   SYNC2 = "sync2",
   WALLET_CONNECT = "walletConnect",
 }
@@ -16,8 +16,8 @@ interface IWalletSourceInfo {
 }
 
 export const WalletSourceInfo: Record<WalletSource, IWalletSourceInfo> = {
-  [WalletSource.VEWORLD]: {
-    name: "VeWorld",
+  [WalletSource.VEWORLD_EXTENSION]: {
+    name: "VeWorld Web",
     logo: `${logosUrl}/veworld_black.png`,
     isAvailable: !!window.vechain,
   },
@@ -28,14 +28,14 @@ export const WalletSourceInfo: Record<WalletSource, IWalletSourceInfo> = {
     isAvailable: true,
   },
   [WalletSource.WALLET_CONNECT]: {
-    name: "Wallet Connect",
+    name: "VeWorld Mobile",
     logo: `${logosUrl}/wallet-connect-logo.png`,
     isAvailable: true,
   },
 }
 
 export const DEFAULT_SOURCE = window.vechain
-  ? WalletSource.VEWORLD
+  ? WalletSource.VEWORLD_EXTENSION
   : WalletSource.SYNC2
 
 export enum Network {

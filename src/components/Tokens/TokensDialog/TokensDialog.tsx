@@ -1,6 +1,6 @@
 import { Button, HStack, Text } from "@chakra-ui/react"
 import React, { useCallback, useState } from "react"
-import { useWallet } from "../../../context/walletContext"
+import { useWallet } from "../../../context/WalletContext"
 import { IAccount, IToken } from "../../../model/State"
 import MintToken from "../MintToken/MintToken"
 import { Dialog } from "../../Shared"

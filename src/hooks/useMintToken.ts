@@ -1,7 +1,7 @@
 import { useToast } from "@chakra-ui/react"
 import { useState } from "react"
 import { MintTokenForm } from "../components/Tokens/MintToken/MintToken"
-import { useWallet } from "../context/walletContext"
+import { useWallet } from "../context/WalletContext"
 import { IToken } from "../model/State"
 import { TxStage } from "../model/Transaction"
 import { getErrorMessage } from "../utils/ExtensionUtils"

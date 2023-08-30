@@ -1,13 +1,12 @@
 import { Button, HStack, Image, Text, VStack } from "@chakra-ui/react"
 import React from "react"
-import { ActionType, useWallet } from "../../context/walletContext"
-import { Network, WalletSource, WalletSourceInfo } from "../../model/enums"
+import { ActionType, useWallet } from "../../context/WalletContext"
+import { Network, WalletSourceInfo } from "../../model/enums"
 import { IAccount } from "../../model/State"
 import { getPicassoImgSrc } from "../../utils/PicassoUtils"
 import AddressButton from "../Account/Address/AddressButton"
 import NetworkBadge from "../Network/NetworkBadge/NetworkBadge"
 import { Dialog } from "../Shared"
-import { useWalletConnect } from "../../context/walletConnectContext"
 
 interface IConnectWalletModal {
   isOpen: boolean
@@ -23,15 +22,9 @@ const AccountDetailModal: React.FC<IConnectWalletModal> = ({
   network,
 }) => {
   const { dispatch } = useWallet()
-  const { disconnect } = useWalletConnect()
 
   const disconnectWallet = () => {
     dispatch({ type: ActionType.CLEAR })
-
-    if (account.source === WalletSource.WALLET_CONNECT) {
-      disconnect()
-    }
-
     onClose()
   }
 

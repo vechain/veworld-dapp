@@ -8,7 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import React, { useCallback, useEffect, useState } from "react"
-import { useWallet } from "../../../context/walletContext"
+import { useWallet } from "../../../context/WalletContext"
 import useNFTBalance from "../../../hooks/useNFTBalance"
 import { INonFungibleToken } from "../../../model/State"
 import AddressButton from "../../Account/Address/AddressButton"

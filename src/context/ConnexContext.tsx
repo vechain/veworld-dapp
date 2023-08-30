@@ -10,14 +10,14 @@ import React, {
   useMemo,
   useRef,
 } from "react"
-import { useWallet } from "./walletContext"
+import { useWallet } from "./WalletContext"
 import { newThor } from "@vechain/connex-framework/dist/thor"
 import { Driver, SimpleNet } from "@vechain/connex-driver"
 import { genesisBlocks } from "@vechain/connex/esm/config"
 import { Connex } from "@vechain/connex"
 import { DriverVendorOnly } from "@vechain/connex/esm/driver"
 import { newVendor } from "@vechain/connex-framework"
-import { useWalletConnect } from "./walletConnectContext"
+import { useWalletConnect } from "./WalletConnectContext"
 
 interface IContext {
   thor: Connex.Thor
@@ -68,7 +68,7 @@ export const ConnexProvider: React.FC<IConnexProvider> = ({ children }) => {
       case WalletSource.SYNC2: {
         return newVendor(new DriverVendorOnly(genesis.id, false))
       }
-      case WalletSource.VEWORLD: {
+      case WalletSource.VEWORLD_EXTENSION: {
         if (!window.vechain) throw new Error("VeWorld extension not found")
 
         return newVendor(new DriverVendorOnly(genesis.id, true))

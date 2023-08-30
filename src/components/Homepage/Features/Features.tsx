@@ -11,7 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import React from "react"
-import { useWallet } from "../../../context/walletContext"
+import { useWallet } from "../../../context/WalletContext"
 import { CurrencyDollarIcon, WalletIcon } from "@heroicons/react/24/solid"
 import StyledCard from "../../Shared/StyledCard/StyledCard"
 import { IAccount } from "../../../model/State"

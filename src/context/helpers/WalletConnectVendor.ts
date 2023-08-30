@@ -1,8 +1,8 @@
 import { SignClient } from "@walletconnect/sign-client/dist/types/client"
-import { DEFAULT_METHODS } from "../constants"
+import { DEFAULT_METHODS } from "../../constants"
 import { SessionTypes } from "@walletconnect/types"
 import { DriverVendorOnly } from "@vechain/connex/esm/driver"
-import { chainIdFromGenesis } from "../utils/ChainUtil"
+import { chainIdFromGenesis } from "../../utils/ChainUtil"
 import { useRef } from "react"
 
 type ClientRef = ReturnType<typeof useRef<SignClient>>
@@ -22,7 +22,7 @@ export class WalletConnectDriver extends DriverVendorOnly {
     this.chainId = chainIdFromGenesis(genesisId)
   }
 
-  async signTx(
+  override async signTx(
     message: Connex.Vendor.TxMessage,
     options: Connex.Driver.TxOptions
   ): Promise<Connex.Vendor.TxResponse> {
@@ -44,7 +44,7 @@ export class WalletConnectDriver extends DriverVendorOnly {
     })
   }
 
-  async signCert(
+  override async signCert(
     message: Connex.Vendor.CertMessage,
     options: Connex.Driver.CertOptions
   ): Promise<Connex.Vendor.CertResponse> {

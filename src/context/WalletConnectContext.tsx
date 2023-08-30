@@ -5,7 +5,6 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  useState,
 } from "react"
 import SignClient from "@walletconnect/sign-client"
 import { Network, WalletSource } from "../model/enums"
@@ -19,18 +18,16 @@ import {
   DEFAULT_RELAY_URL,
   SUPPORTED_CHAINS,
 } from "../constants"
-import { ActionType, useWallet } from "./walletContext"
+import { ActionType, useWallet } from "./WalletContext"
 import { WalletConnectModal } from "@walletconnect/modal"
 import { EngineTypes } from "@walletconnect/types/dist/types/sign-client/engine"
 import { fromChainId } from "../utils/ChainUtil"
-import { WalletConnectDriver } from "./walletConnectVendor"
+import { WalletConnectDriver } from "./helpers/WalletConnectVendor"
 
 /**
  * Types
  */
 interface IContext {
-  disconnect: () => Promise<void>
-  isInitializing: boolean
   newWcDriver: (genesisId: string) => WalletConnectDriver | undefined
 }
 
@@ -72,8 +69,12 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
   const client = useRef<SignClient>()
   const session = useRef<SessionTypes.Struct>()
 
-  const [isInitializing, setIsInitializing] = useState(false)
-  const { dispatch } = useWallet()
+  const {
+    dispatch,
+    state: {
+      account: { source },
+    },
+  } = useWallet()
 
   const reset = useCallback(() => {
     console.log("Resetting WalletConnect state")
@@ -108,15 +109,18 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
         }
 
         //TODO: if user closes modal before approving on mobile state is not reset
-        session.current = await approval()
+        web3Modal.subscribeModal(async (ev: { open: boolean }) => {
+          console.log(ev.open ? "Modal opened" : "Modal closed")
+        })
 
-        web3Modal.closeModal()
+        session.current = await approval()
 
         return session.current
       } catch (e) {
-        web3Modal.closeModal()
         console.warn("WalletConnect connect failed:", e)
         throw e
+      } finally {
+        web3Modal.closeModal()
       }
     },
     []
@@ -139,11 +143,8 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
       })
     } catch (error) {
       console.error("SignClient.disconnect failed:", error)
-    } finally {
-      // Reset app state after disconnect.
-      reset()
     }
-  }, [reset])
+  }, [])
 
   const subscribeToEvents = useCallback(
     async (_client: SignClient) => {
@@ -206,8 +207,6 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
 
   const setupClient = useCallback(async () => {
     try {
-      setIsInitializing(true)
-
       if (client.current) return
 
       const _client = await SignClient.init({
@@ -223,8 +222,6 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
     } catch (err) {
       console.error("Failed to initialize WalletConnect client:", err)
       throw err
-    } finally {
-      setIsInitializing(false)
     }
   }, [restoreExistingSession, subscribeToEvents])
 
@@ -232,13 +229,13 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
     if (!client.current) setupClient()
   }, [setupClient])
 
+  useEffect(() => {
+    if (source !== WalletSource.WALLET_CONNECT) disconnect()
+  }, [source, disconnect])
+
   const value: IContext = {
-    isInitializing,
-    disconnect,
     newWcDriver,
   }
-
-  if (!client) return <></>
 
   return (
     <WalletConnectContext.Provider value={{ ...value }}>
