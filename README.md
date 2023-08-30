@@ -41,7 +41,7 @@ This DApp uses a `ConnexProvider` to handle the initialization of Connex. The `C
 
 Please refer to [this file](./src/context/ConnexContext.tsx) for our implementation of the `ConnexProvider`.
 
-- *Note*: The `ConnexProvider` is wrapped inside a `WalletConnectProvider`. The wallet connect provider handles all the wallet connect logic, and exports a function to create a connex vendor.
+- **Note**: The `ConnexProvider` is wrapped inside a `WalletConnectProvider`. The wallet connect provider handles all the wallet connect logic, and exports a function to create a connex vendor.
 
 To use connex, you can do the following:
 ```typescript
@@ -55,6 +55,7 @@ const {thor, vendor} = useConnex()
 ## Wallet Connect
 
 - VeWorld Mobile will not accept any invalid DApp requests. You should register your DApp on Wallet Connect and get your DApp verified: https://docs.walletconnect.com/2.0/cloud/verify
+  - **Note**: You do not need to add your DApp to the explorer. You only need to verify your DApp by configuring your certificates.
 
 - Please refer to the [wallet connect docs](https://docs.walletconnect.com/2.0/web3modal/about) for more information on how to use wallet connect.
 
