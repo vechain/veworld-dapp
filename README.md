@@ -37,39 +37,54 @@ If you wish to serve the production build locally:
 
 ## Connex Initialization
 
-### Pre-requisites
+This DApp uses a `ConnexProvider` to handle the initialization of Connex. The `ConnexProvider` is a React Context Provider that wraps the entire application.
 
-- `@vechain/connex` (`2.0.14` or higher)
+Please refer to [this file](./src/context/ConnexContext.tsx) for our implementation of the `ConnexProvider`.
 
-### Check if VeWorld is installed
+- *Note*: The `ConnexProvider` is wrapped inside a `WalletConnectProvider`. The wallet connect provider handles all the wallet connect logic, and exports a function to create a connex vendor.
 
+To use connex, you can do the following:
 ```typescript
-console.log('VeWorld is installed: ', !!window.vechain);
+import {useConnex} from "src/context/ConnexContext"
+
+const {thor, vendor} = useConnex()
+
 ```
 
-### Initialise Connex for VeWorld (No changes required):
+
+## Wallet Connect
+
+- Please refer to the [wallet connect docs](https://docs.walletconnect.com/2.0/web3modal/about) for more information on how to use wallet connect.
+
+- Please refer to [this file](./src/context/WalletConnectContext.tsx) for an example of how to use the Wallet Connect in your vechain dApp.
+
+- A web3Modal must be constructed to connect:
 
 ```typescript
-const connex = new Connex({
-  node: "https://vethor-node.vechain.com",
-  network: "main"
+const web3Modal = new WalletConnectModal({
+  // You must create a project on wallet connect to get a project ID
+  projectId: DEFAULT_PROJECT_ID,
+  explorerRecommendedWalletIds: "NONE",
+  // This will show the VeWorld wallet on iOS
+  // On android, the wallet will automatically be detected if it is installed
+  mobileWallets: [
+    {
+      name: "VeWorld",
+      id: "veworld-mobile",
+      links: {
+        native: "veworld://org.vechain.veworld.app/",
+        universal: "https://veworld.net",
+      },
+    },
+  ],
+  //This ensures that the Wallet Connect modal appears at the top of the page
+  themeVariables: {
+    "--wcm-z-index": "99999999",
+  },
+  //This image is displayed for the VeWorld mobile wallet on iOS
+  walletImages: {
+    "veworld-mobile": process.env.PUBLIC_URL + "/images/logo/veWorld.png",
+  },
 })
 ```
-
-- If VeWorld is not installed, Sync2 will be used instead.
-
-### Initialise Connex for Sync2:
-
-```typescript
-const connex = new Connex({
-  node: "https://vethor-node.vechain.com",
-  network: "main",
-  noExtension: true,
-})
-```
-
-### Connect wallet button
-
-You can check our implementation of the Connect Wallet Button [here](https://github.com/vechainfoundation/veworld-dapp/blob/main/src/components/ConnectWalletButton/ConnectWalletButton.tsx). Feel free to use or customize it based on your needs.
-
 

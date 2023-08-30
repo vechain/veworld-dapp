@@ -56,6 +56,9 @@ export const ConnexProvider: React.FC<IConnexProvider> = ({ children }) => {
     if (driver.current?.genesis.id === genesis.id)
       return newThor(driver.current)
 
+    //Close the previous driver when switching network
+    driver.current?.close()
+
     const simpleNet = new SimpleNet(networkInfo.url)
 
     driver.current = new Driver(simpleNet, genesis)
@@ -75,12 +78,6 @@ export const ConnexProvider: React.FC<IConnexProvider> = ({ children }) => {
       }
       case WalletSource.WALLET_CONNECT: {
         const driver = newWcDriver(genesis.id)
-
-        if (!driver)
-          throw new Error(
-            "WalletConnect session / client has not been established"
-          )
-
         return newVendor(driver)
       }
     }

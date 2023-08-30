@@ -28,7 +28,7 @@ import { WalletConnectDriver } from "./helpers/WalletConnectVendor"
  * Types
  */
 interface IContext {
-  newWcDriver: (genesisId: string) => WalletConnectDriver | undefined
+  newWcDriver: (genesisId: string) => WalletConnectDriver
 }
 
 /**
@@ -127,9 +127,8 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
   )
 
   const newWcDriver = useCallback(
-    (genesisId: string) => {
-      return new WalletConnectDriver(genesisId, client, session, connect)
-    },
+    (genesisId: string) =>
+      new WalletConnectDriver(genesisId, client, session, connect),
     [connect]
   )
 
@@ -141,6 +140,8 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
         topic: session.current.topic,
         reason: getSdkError("USER_DISCONNECTED"),
       })
+
+      session.current = undefined
     } catch (error) {
       console.error("SignClient.disconnect failed:", error)
     }
