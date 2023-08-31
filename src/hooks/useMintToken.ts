@@ -17,7 +17,7 @@ const useMintToken = () => {
   const [txStatus, setTxStatus] = useState(TxStage.NONE)
   const [error, setError] = useState<string>()
   const toast = useToast()
-  const vip180 = useVip180()
+  const { buildMintClause } = useVip180()
   const { pollForReceipt, explainRevertReason } = useTransaction()
 
   const mintToken = async (
@@ -31,7 +31,7 @@ const useMintToken = () => {
       setTxStatus(TxStage.NONE)
       if (!account.address) throw new Error("You have not selected an account")
 
-      const clauses = await vip180.buildMintClause(
+      const clauses = await buildMintClause(
         data.address,
         data.amount,
         data.clausesNumber,

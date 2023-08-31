@@ -16,7 +16,7 @@ const useMintNonFungibleToken = () => {
   const [txStatus, setTxStatus] = useState(TxStage.NONE)
   const [error, setError] = useState<string>()
   const toast = useToast()
-  const vip181 = useVip181()
+  const { buildMintNftClause } = useVip181()
   const { pollForReceipt, explainRevertReason } = useTransaction()
 
   const mintNonFungibleToken = async (
@@ -31,7 +31,7 @@ const useMintNonFungibleToken = () => {
       setTxStatus(TxStage.NONE)
       if (!account.address) throw new Error("You have not selected an account")
 
-      const clauses = await vip181.buildMintNftClause(
+      const clauses = await buildMintNftClause(
         toAddress,
         nft.address,
         clauseAmount
