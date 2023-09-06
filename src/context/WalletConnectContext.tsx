@@ -23,6 +23,7 @@ import { WalletConnectModal } from "@walletconnect/modal"
 import { EngineTypes } from "@walletconnect/types/dist/types/sign-client/engine"
 import { fromChainId } from "../utils/ChainUtil"
 import { WalletConnectDriver } from "./helpers/WalletConnectDriver"
+import LocalStorage from "./helpers/LocalStorage"
 
 /**
  * Types
@@ -188,6 +189,19 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
         const networkIdentifier = _session.namespaces.vechain.accounts[0].split(
           ":"
         )[1] as Network
+
+        const account = LocalStorage.getAccount()
+
+        if (!account) {
+          await _client.disconnect({
+            topic: _session.topic,
+            reason: {
+              code: 4100,
+              message: "Session expired",
+            },
+          })
+          return
+        }
 
         //Set network and account
         dispatch({
