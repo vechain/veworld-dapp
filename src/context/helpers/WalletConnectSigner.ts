@@ -31,7 +31,7 @@ export class WalletConnectSigner implements Connex.Signer {
 
   public async signTx(
     message: Connex.Vendor.TxMessage,
-    options: Connex.Driver.TxOptions
+    options: Connex.Signer.TxOptions
   ): Promise<Connex.Vendor.TxResponse> {
     const sessionTopic = await this.getSessionTopic()
 
@@ -47,7 +47,7 @@ export class WalletConnectSigner implements Connex.Signer {
 
   public async signCert(
     message: Connex.Vendor.CertMessage,
-    options: Connex.Driver.CertOptions
+    options: Connex.Signer.CertOptions
   ): Promise<Connex.Vendor.CertResponse> {
     const sessionTopic = await this.getSessionTopic()
 
