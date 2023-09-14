@@ -1,7 +1,7 @@
+/// <reference types="@vechain/connex-types" />
 import { SignClient } from "@walletconnect/sign-client/dist/types/client"
 import { DEFAULT_METHODS } from "../../constants"
 import { SessionTypes } from "@walletconnect/types"
-import { DriverVendorOnly } from "@vechain/connex/esm/driver"
 import { chainIdFromGenesis } from "../../utils/ChainUtil"
 import { useRef } from "react"
 
@@ -9,7 +9,7 @@ type ClientRef = ReturnType<typeof useRef<SignClient>>
 type SessionRef = ReturnType<typeof useRef<SessionTypes.Struct>>
 type ConnectFn = (signClient: SignClient) => Promise<SessionTypes.Struct>
 
-export class WalletConnectDriver extends DriverVendorOnly {
+export class WalletConnectSigner implements Connex.Signer {
   private readonly chainId: string
 
   constructor(
@@ -18,7 +18,6 @@ export class WalletConnectDriver extends DriverVendorOnly {
     private readonly session: SessionRef,
     private readonly connect: ConnectFn
   ) {
-    super(genesisId, false)
     this.chainId = chainIdFromGenesis(genesisId)
   }
 
@@ -30,7 +29,7 @@ export class WalletConnectDriver extends DriverVendorOnly {
     return client
   }
 
-  override async signTx(
+  public async signTx(
     message: Connex.Vendor.TxMessage,
     options: Connex.Driver.TxOptions
   ): Promise<Connex.Vendor.TxResponse> {
@@ -46,7 +45,7 @@ export class WalletConnectDriver extends DriverVendorOnly {
     })
   }
 
-  override async signCert(
+  public async signCert(
     message: Connex.Vendor.CertMessage,
     options: Connex.Driver.CertOptions
   ): Promise<Connex.Vendor.CertResponse> {

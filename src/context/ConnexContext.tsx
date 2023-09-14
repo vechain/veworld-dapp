@@ -1,3 +1,4 @@
+/// <reference types="@vechain/connex-types" />
 /**
  * Types
  */
@@ -11,13 +12,20 @@ import React, {
   useRef,
 } from "react"
 import { useWallet } from "./WalletContext"
-import { newThor } from "@vechain/connex-framework/dist/thor"
-import { Driver, SimpleNet } from "@vechain/connex-driver"
+import { Driver } from "@vechain/connex-driver"
 import { genesisBlocks } from "@vechain/connex/esm/config"
 import { Connex } from "@vechain/connex"
-import { DriverVendorOnly } from "@vechain/connex/esm/driver"
 import { newVendor } from "@vechain/connex-framework"
 import { useWalletConnect } from "./WalletConnectContext"
+import { LazyDriver } from "@vechain/connex/esm/driver"
+
+declare global {
+  interface Window {
+    vechain: {
+      newConnexSigner: (genesisId: string) => Connex.Signer
+    }
+  }
+}
 
 interface IContext {
   thor: Connex.Thor
@@ -33,12 +41,16 @@ interface IConnexProvider {
   children: React.ReactNode
 }
 
+const vendorFromSigner = (signer: Connex.Signer) => {
+  return newVendor(new LazyDriver(Promise.resolve(signer)))
+}
+
 export const ConnexProvider: React.FC<IConnexProvider> = ({ children }) => {
   const {
     state: { account, network: selectedNetwork },
   } = useWallet()
 
-  const { newWcDriver } = useWalletConnect()
+  const { newWcSigner } = useWalletConnect()
 
   const driver: MutableRefObject<Driver | undefined> = useRef()
 
@@ -52,36 +64,30 @@ export const ConnexProvider: React.FC<IConnexProvider> = ({ children }) => {
     [selectedNetwork]
   )
 
-  const thor = useMemo(() => {
-    if (driver.current?.genesis.id === genesis.id)
-      return newThor(driver.current)
-
-    //Close the previous driver when switching network
-    driver.current?.close()
-
-    const simpleNet = new SimpleNet(networkInfo.url)
-
-    driver.current = new Driver(simpleNet, genesis)
-
-    return newThor(driver.current)
-  }, [networkInfo, genesis])
+  const thor = useMemo(
+    () =>
+      new Connex.Thor({
+        network: genesis,
+        node: networkInfo.url,
+      }),
+    [networkInfo, genesis]
+  )
 
   const vendor = useCallback(() => {
     switch (account.source) {
       case WalletSource.SYNC2: {
-        return newVendor(new DriverVendorOnly(genesis.id, false))
+        return new Connex.Vendor(genesis.id, "sync2")
       }
       case WalletSource.VEWORLD_EXTENSION: {
         if (!window.vechain) throw new Error("VeWorld extension not found")
 
-        return newVendor(new DriverVendorOnly(genesis.id, true))
+        return vendorFromSigner(window.vechain.newConnexSigner(genesis.id))
       }
       case WalletSource.WALLET_CONNECT: {
-        const driver = newWcDriver(genesis.id)
-        return newVendor(driver)
+        return vendorFromSigner(newWcSigner(genesis.id))
       }
     }
-  }, [account.source, genesis, newWcDriver])
+  }, [account.source, genesis, newWcSigner])
 
   if (thor)
     return (

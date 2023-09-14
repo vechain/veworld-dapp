@@ -22,14 +22,14 @@ import { ActionType, useWallet } from "./WalletContext"
 import { WalletConnectModal } from "@walletconnect/modal"
 import { EngineTypes } from "@walletconnect/types/dist/types/sign-client/engine"
 import { fromChainId } from "../utils/ChainUtil"
-import { WalletConnectDriver } from "./helpers/WalletConnectDriver"
+import { WalletConnectSigner } from "./helpers/WalletConnectSigner"
 import LocalStorage from "./helpers/LocalStorage"
 
 /**
  * Types
  */
 interface IContext {
-  newWcDriver: (genesisId: string) => WalletConnectDriver
+  newWcSigner: (genesisId: string) => WalletConnectSigner
 }
 
 /**
@@ -127,9 +127,9 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
     []
   )
 
-  const newWcDriver = useCallback(
+  const newWcSigner = useCallback(
     (genesisId: string) =>
-      new WalletConnectDriver(genesisId, client, session, connect),
+      new WalletConnectSigner(genesisId, client, session, connect),
     [connect]
   )
 
@@ -249,7 +249,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
   }, [source, disconnect])
 
   const value: IContext = {
-    newWcDriver,
+    newWcSigner,
   }
 
   return (
