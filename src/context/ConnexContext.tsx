@@ -3,16 +3,8 @@
  * Types
  */
 import { NetworkInfo, WalletSource } from "../model/enums"
-import React, {
-  createContext,
-  MutableRefObject,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-} from "react"
+import React, { createContext, useCallback, useContext, useMemo } from "react"
 import { useWallet } from "./WalletContext"
-import { Driver } from "@vechain/connex-driver"
 import { genesisBlocks } from "@vechain/connex/esm/config"
 import { Connex } from "@vechain/connex"
 import { newVendor } from "@vechain/connex-framework"
@@ -51,8 +43,6 @@ export const ConnexProvider: React.FC<IConnexProvider> = ({ children }) => {
   } = useWallet()
 
   const { newWcSigner } = useWalletConnect()
-
-  const driver: MutableRefObject<Driver | undefined> = useRef()
 
   const networkInfo = useMemo(
     () => NetworkInfo[selectedNetwork],
