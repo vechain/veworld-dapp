@@ -9,7 +9,6 @@ import { genesisBlocks } from "@vechain/connex/esm/config"
 import { Connex } from "@vechain/connex"
 import { newVendor } from "@vechain/connex-framework"
 import { useWalletConnect } from "./WalletConnectContext"
-import { LazyDriver } from "@vechain/connex/esm/driver"
 
 declare global {
   interface Window {
@@ -31,10 +30,6 @@ export const ConnexContext = createContext<IContext>({} as IContext)
 
 interface IConnexProvider {
   children: React.ReactNode
-}
-
-const vendorFromSigner = (signer: Connex.Signer) => {
-  return newVendor(new LazyDriver(Promise.resolve(signer)))
 }
 
 export const ConnexProvider: React.FC<IConnexProvider> = ({ children }) => {
@@ -71,10 +66,10 @@ export const ConnexProvider: React.FC<IConnexProvider> = ({ children }) => {
       case WalletSource.VEWORLD_EXTENSION: {
         if (!window.vechain) throw new Error("VeWorld extension not found")
 
-        return vendorFromSigner(window.vechain.newConnexSigner(genesis.id))
+        return newVendor(window.vechain.newConnexSigner(genesis.id))
       }
       case WalletSource.WALLET_CONNECT: {
-        return vendorFromSigner(newWcSigner(genesis.id))
+        return newVendor(newWcSigner(genesis.id))
       }
     }
   }, [account.source, genesis, newWcSigner])

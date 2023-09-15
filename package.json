@@ -10,6 +10,7 @@
     "@heroicons/react": "^2.0.13",
     "@openzeppelin/contracts": "^4.7.3",
     "@vechain/connex": "^2.1.0",
+    "@vechain/connex-framework": "^2.1.0",
     "@vechain/connex-types": "^2.1.0",
     "@vechain/hardhat-ethers": "0.0.1",
     "@vechain/hardhat-vechain": "0.0.1",
