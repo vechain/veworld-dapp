@@ -4,7 +4,7 @@ import { SessionTypes } from "@walletconnect/types"
 import { EngineTypes } from "@walletconnect/types/dist/types/sign-client/engine"
 import { WalletConnectModal } from "@walletconnect/modal"
 import { getSdkError } from "@walletconnect/utils"
-import { accountFromSession, getNetworkIdentifier } from "./wc-utils"
+import { getNetworkIdentifier } from "./wc-utils"
 import { DEFAULT_EVENTS, DEFAULT_METHODS } from "./wc-constants"
 
 export type WcSigner = Connex.Signer & {
@@ -15,7 +15,6 @@ export const newWcSigner = (
   genesisId: string,
   signClient: Promise<SignClient>,
   web3Modal: WalletConnectModal,
-  onRestored: (account: string, network: string) => void,
   onDisconnected: () => void
 ): WcSigner => {
   const networkIdentifier = getNetworkIdentifier(genesisId)
@@ -163,13 +162,17 @@ export const newWcSigner = (
   const restoreSession = (_client: SignClient) => {
     if (typeof session !== "undefined") return
 
-    if (_client.session.length) {
-      const lastKeyIndex = _client.session.keys.length - 1
-      const _session = _client.session.get(_client.session.keys[lastKeyIndex])
-      console.log("RESTORED SESSION:", _session)
-      session = _session
+    const sessionKeys = _client.session.keys
 
-      onRestored(accountFromSession(_session), networkIdentifier)
+    for (const key of sessionKeys) {
+      const _session = _client.session.get(key)
+      const accounts = _session.namespaces.vechain.accounts
+
+      for (const acc of accounts) {
+        if (acc.split(":")[1] === genesisId.slice(-32)) {
+          session = _session
+        }
+      }
     }
   }
 

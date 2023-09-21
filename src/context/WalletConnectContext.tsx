@@ -6,10 +6,8 @@ import React, {
   useMemo,
   useRef,
 } from "react"
-import { WalletSource } from "../model/enums"
 import { WC_APP_METADATA, WC_PROJECT_ID, WC_RELAY_URL } from "../constants"
 import { ActionType, useWallet } from "./WalletContext"
-import { fromChainId } from "../utils/ChainUtil"
 import { newWcClient, newWcSigner, newWeb3Modal } from "../wallet-connect"
 import { WcSigner } from "../wallet-connect/wc-signer"
 import { genesisBlocks } from "@vechain/connex/esm/config"
@@ -43,22 +41,6 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
     state: { account, network },
   } = useWallet()
 
-  const onRestored = useCallback(
-    (accountAddress: string, networkIdentifier: string) => {
-      dispatch({
-        type: ActionType.SET_ALL,
-        payload: {
-          network: fromChainId(networkIdentifier),
-          account: {
-            address: accountAddress,
-            source: WalletSource.WALLET_CONNECT,
-          },
-        },
-      })
-    },
-    [dispatch]
-  )
-
   const onDisconnect = useCallback(async () => {
     dispatch({ type: ActionType.CLEAR })
   }, [dispatch])
@@ -68,14 +50,13 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
       genesisBlocks[network].id,
       client.current,
       web3Modal.current,
-      onRestored,
       onDisconnect
     )
 
     signer.current = _signer
 
     return _signer
-  }, [network, onRestored, onDisconnect])
+  }, [network, onDisconnect])
 
   /**
    * If the user disconnects the wallet, we need to clean up wallet connect
