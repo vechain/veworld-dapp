@@ -4527,6 +4527,19 @@
     thor-devkit "^2.0.5"
     ws "^7.1.0"
 
+"@vechain/connex-driver@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@vechain/connex-driver/-/connex-driver-2.1.0.tgz#bb4587285ad48369a6501394610c416bb9aecd2e"
+  integrity sha512-wFTakrFwsjJPq/9e+USGl5QKnoy6+FeZG4h+/wEITw5IaIAzujtTR8m7wqJFdto/gLZbP8j3puR4ZU9LrdfpkA==
+  dependencies:
+    "@vechain/connex-types" "^2.1.0"
+    axios "^0.21.1"
+    bignumber.js "^7.2.1"
+    isomorphic-ws "^4.0.1"
+    lru-cache "^5.1.1"
+    thor-devkit "^2.0.5"
+    ws "^7.1.0"
+
 "@vechain/connex-framework@^2.0.12":
   version "2.0.12"
   resolved "https://registry.yarnpkg.com/@vechain/connex-framework/-/connex-framework-2.0.12.tgz#3f759b2806dd396f6e5d29a5eb75d72804bb8eff"
@@ -4537,18 +4550,33 @@
     thor-devkit "^2.0.5"
     validator-ts "^0.9.1"
 
+"@vechain/connex-framework@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@vechain/connex-framework/-/connex-framework-2.1.0.tgz#4a838a5a15ed58687cb04ba5749c36b244958b9b"
+  integrity sha512-FaQgkNKPHY9PqAV5YTMb6Mpbun97jprn0rW1b198XKF2rj3U8xGV3UWdOM8+dCOCL9hBGfYIt2RzjBtAMb95xg==
+  dependencies:
+    "@vechain/connex-types" "^2.1.0"
+    bignumber.js "^7.2.1"
+    thor-devkit "^2.0.5"
+    validator-ts "^0.9.1"
+
 "@vechain/connex-types@^2.0.12", "@vechain/connex-types@^2.0.2":
   version "2.0.12"
   resolved "https://registry.yarnpkg.com/@vechain/connex-types/-/connex-types-2.0.12.tgz#d89d50668f59f6c0239c94d9358c1443bc07f83e"
   integrity sha512-FZLvB48U53FyL0cmDIh+eKqn6pNOjoUmp57qtMK8hDXi+hT+x6ZMEJbpmNhtcR7RrQoXqlx5/HFPOC6mVR+1Qg==
 
-"@vechain/connex@^2.0.12":
-  version "2.0.14"
-  resolved "https://registry.yarnpkg.com/@vechain/connex/-/connex-2.0.14.tgz#b66a845becf66b9d673f68a022db1467f396da6b"
-  integrity sha512-h3JyW4rWTArK/Q7AA0TI7AjxDY/koW1s5NzY3yMoaOG26xqUbaSdagy3faId633LMZQPAx0BpVoCMmI7B1pwBw==
+"@vechain/connex-types@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@vechain/connex-types/-/connex-types-2.1.0.tgz#5a4d97554f659532a0ec00a09e5cf25244c55c8a"
+  integrity sha512-8NtOHAO+idy5llrYEmuArWTkwYbwG/FEWqkRScz1f6QuaGvkkj+93IuAnp9E89Pi+kV3t2DKBTaF6mpPjjTmHg==
+
+"@vechain/connex@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@vechain/connex/-/connex-2.1.0.tgz#6bbbd9213a201088306afd218fc4f1dfd14d1e21"
+  integrity sha512-7jPhmvn26pOF7x/f+4dWj0BxsLbEu/tbQ7nweQHtfBMXP4AF9lk21guf1mFC0pezqIovXcFNecxVhg0Z1SrAJw==
   dependencies:
-    "@vechain/connex-driver" "^2.0.12"
-    "@vechain/connex-framework" "^2.0.12"
+    "@vechain/connex-driver" "^2.1.0"
+    "@vechain/connex-framework" "^2.1.0"
     randombytes "^2.1.0"
     thor-devkit "^2.0.5"
 
