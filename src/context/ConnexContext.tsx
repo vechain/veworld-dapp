@@ -37,7 +37,7 @@ export const ConnexProvider: React.FC<IConnexProvider> = ({ children }) => {
     state: { account, network: selectedNetwork },
   } = useWallet()
 
-  const { newWcSigner } = useWalletConnect()
+  const { wcSigner } = useWalletConnect()
 
   const networkInfo = useMemo(
     () => NetworkInfo[selectedNetwork],
@@ -69,10 +69,10 @@ export const ConnexProvider: React.FC<IConnexProvider> = ({ children }) => {
         return newVendor(window.vechain.newConnexSigner(genesis.id))
       }
       case WalletSource.WALLET_CONNECT: {
-        return newVendor(newWcSigner(genesis.id))
+        return newVendor(wcSigner)
       }
     }
-  }, [account.source, genesis, newWcSigner])
+  }, [account.source, genesis, wcSigner])
 
   if (thor)
     return (
