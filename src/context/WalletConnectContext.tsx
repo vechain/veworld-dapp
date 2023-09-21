@@ -32,6 +32,12 @@ interface IWalletConnectProvider {
 
 export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
   const signer = useRef<WcSigner>()
+
+  const web3Modal = useRef(newWeb3Modal(WC_PROJECT_ID))
+  const client = useRef(
+    newWcClient(WC_PROJECT_ID, WC_RELAY_URL, WC_APP_METADATA)
+  )
+
   const {
     dispatch,
     state: { account, network },
@@ -60,8 +66,8 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
   const wcSigner = useMemo(() => {
     const _signer = newWcSigner(
       genesisBlocks[network].id,
-      newWcClient(WC_PROJECT_ID, WC_RELAY_URL, WC_APP_METADATA),
-      newWeb3Modal(WC_PROJECT_ID),
+      client.current,
+      web3Modal.current,
       onRestored,
       onDisconnect
     )

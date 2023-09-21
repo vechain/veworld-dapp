@@ -63,15 +63,13 @@ export const newWcSigner = (
   }
 
   const disconnect = async (): Promise<void> => {
-    const currentSession = session
-
-    if (!currentSession) return
+    if (!session) return
 
     const clientInstance = await signClient
 
     try {
       await clientInstance.disconnect({
-        topic: currentSession.topic,
+        topic: session.topic,
         reason: getSdkError("USER_DISCONNECTED"),
       })
 
