@@ -14,13 +14,14 @@ export type Client = {
 export const newWcClient = (
   projectId: string,
   relayUrl: string,
-  metadata: SignClientTypes.Options["metadata"]
+  metadata: SignClientTypes.Options["metadata"],
+  logger: SignClientTypes.Options["logger"]
 ) => {
   const _signClient = SignClient.init({
     projectId,
     metadata,
     relayUrl,
-    logger: process.env.NODE_ENV === "development" ? "debug" : "",
+    logger,
   })
 
   return {

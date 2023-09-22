@@ -15,6 +15,7 @@ import {
   Signer,
 } from "../wallet-connect"
 import { genesisBlocks } from "@vechain/connex/esm/config"
+import { WalletSource } from "../model/enums"
 
 /**
  * Types
@@ -42,7 +43,12 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
     )
   )
   const client = useRef(
-    newWcClient(WC_PROJECT_ID, WC_RELAY_URL, WC_APP_METADATA)
+    newWcClient(
+      WC_PROJECT_ID,
+      WC_RELAY_URL,
+      WC_APP_METADATA,
+      process.env.NODE_ENV === "development" ? "debug" : ""
+    )
   )
 
   const {
@@ -60,6 +66,25 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
   useEffect(() => {
     if (!account.address) signer.current?.disconnect()
   }, [account])
+
+  const cleanStorage = useCallback(async () => {
+    const _client = await client.current.get()
+
+    const keys = await _client.core.storage.getKeys()
+
+    for (const key of keys) {
+      console.log("Removing WC key", key)
+      await _client.core.storage.removeItem(key)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (account.source !== WalletSource.WALLET_CONNECT || !account.address) {
+      cleanStorage()
+        .then(() => console.log("Cleaned WC storage"))
+        .catch((e) => console.error("Failed to clean WC storage", e))
+    }
+  }, [account, cleanStorage])
 
   const wcSigner = useMemo(() => {
     const _signer = newWcSigner(
