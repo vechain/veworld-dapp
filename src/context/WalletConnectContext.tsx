@@ -8,8 +8,12 @@ import React, {
 } from "react"
 import { WC_APP_METADATA, WC_PROJECT_ID, WC_RELAY_URL } from "../constants"
 import { ActionType, useWallet } from "./WalletContext"
-import { newWcClient, newWcSigner, newWeb3Modal } from "../wallet-connect"
-import { WcSigner } from "../wallet-connect/wc-signer"
+import {
+  newWcClient,
+  newWcSigner,
+  newWeb3Modal,
+  Signer,
+} from "../wallet-connect"
 import { genesisBlocks } from "@vechain/connex/esm/config"
 
 /**
@@ -29,9 +33,14 @@ interface IWalletConnectProvider {
 }
 
 export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
-  const signer = useRef<WcSigner>()
+  const signer = useRef<Signer>()
 
-  const web3Modal = useRef(newWeb3Modal(WC_PROJECT_ID))
+  const web3Modal = useRef(
+    newWeb3Modal(
+      WC_PROJECT_ID,
+      process.env.PUBLIC_URL + "/images/logo/veWorld.png"
+    )
+  )
   const client = useRef(
     newWcClient(WC_PROJECT_ID, WC_RELAY_URL, WC_APP_METADATA)
   )
@@ -45,6 +54,13 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
     dispatch({ type: ActionType.CLEAR })
   }, [dispatch])
 
+  /**
+   * If the user disconnects the wallet, we need to clean up wallet connect
+   */
+  useEffect(() => {
+    if (!account.address) signer.current?.disconnect()
+  }, [account])
+
   const wcSigner = useMemo(() => {
     const _signer = newWcSigner(
       genesisBlocks[network].id,
@@ -57,13 +73,6 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
 
     return _signer
   }, [network, onDisconnect])
-
-  /**
-   * If the user disconnects the wallet, we need to clean up wallet connect
-   */
-  useEffect(() => {
-    if (!account.address) signer.current?.disconnect()
-  }, [account])
 
   const value: IContext = {
     wcSigner,

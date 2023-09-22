@@ -4,23 +4,37 @@ import { SessionTypes } from "@walletconnect/types"
 import { EngineTypes } from "@walletconnect/types/dist/types/sign-client/engine"
 import { WalletConnectModal } from "@walletconnect/modal"
 import { getSdkError } from "@walletconnect/utils"
-import { getNetworkIdentifier } from "./wc-utils"
-import { DEFAULT_EVENTS, DEFAULT_METHODS } from "./wc-constants"
+import { getNetworkIdentifier } from "./utils"
+import { DEFAULT_EVENTS, DEFAULT_METHODS } from "./constants"
+import { Client } from "./client"
 
-export type WcSigner = Connex.Signer & {
+export type Signer = Connex.Signer & {
   disconnect: () => Promise<void>
 }
 
+type SessionAccount = {
+  networkIdentifier: string
+  address: string
+  topic: string
+}
+
+/**
+ * Creates a new WalletConnect Signer - It can be used to construct a new {@link Connex.Vendor} instance
+ * @param genesisId - The genesis ID of the VeChain network you want to connect to
+ * @param wcClient - A function to get the initialized WalletConnect SignClient
+ * @param web3Modal - A WalletConnectModal instance
+ * @param onDisconnected - A callback that will be called when the session is disconnected
+ */
 export const newWcSigner = (
   genesisId: string,
-  signClient: Promise<SignClient>,
+  wcClient: Client,
   web3Modal: WalletConnectModal,
   onDisconnected: () => void
-): WcSigner => {
+): Signer => {
   const networkIdentifier = getNetworkIdentifier(genesisId)
   let session: SessionTypes.Struct | undefined
 
-  signClient.then((clientInstance) => {
+  wcClient.get().then((clientInstance) => {
     listenToEvents(clientInstance)
     restoreSession(clientInstance)
   })
@@ -29,11 +43,11 @@ export const newWcSigner = (
     message: Connex.Vendor.TxMessage,
     options: Connex.Signer.TxOptions
   ): Promise<Connex.Vendor.TxResponse> => {
-    const sessionTopic = await getSessionTopic()
+    const sessionTopic = await getSessionTopic(options.signer)
 
-    const clientInstance = await signClient
+    const signClient = await wcClient.get()
 
-    return clientInstance.request({
+    return signClient.request({
       topic: sessionTopic,
       chainId: networkIdentifier,
       request: {
@@ -47,11 +61,11 @@ export const newWcSigner = (
     message: Connex.Vendor.CertMessage,
     options: Connex.Signer.CertOptions
   ): Promise<Connex.Vendor.CertResponse> => {
-    const sessionTopic = await getSessionTopic()
+    const sessionTopic = await getSessionTopic(options.signer)
 
-    const clientInstance = await signClient
+    const signClient = await wcClient.get()
 
-    return clientInstance.request({
+    return signClient.request({
       topic: sessionTopic,
       chainId: networkIdentifier,
       request: {
@@ -64,10 +78,10 @@ export const newWcSigner = (
   const disconnect = async (): Promise<void> => {
     if (!session) return
 
-    const clientInstance = await signClient
+    const signClient = await wcClient.get()
 
     try {
-      await clientInstance.disconnect({
+      await signClient.disconnect({
         topic: session.topic,
         reason: getSdkError("USER_DISCONNECTED"),
       })
@@ -78,8 +92,43 @@ export const newWcSigner = (
     }
   }
 
-  const getSessionTopic = async (): Promise<string> => {
-    if (session) return session.topic
+  /**
+   * Validates the requested account and network against a request
+   * @param requestedAddress - The optional requested account address
+   */
+  const validateSession = (
+    requestedAddress?: string
+  ): SessionAccount | undefined => {
+    if (!session) return
+
+    const firstAccount = session.namespaces.vechain.accounts[0]
+
+    const address = firstAccount.split(":")[2]
+    const networkIdentifier = firstAccount.split(":")[1]
+
+    // Return undefined if the network identifier doesn't match
+    if (networkIdentifier !== genesisId.slice(-32)) return
+
+    // Return undefined if the address doesn't match
+    if (
+      requestedAddress &&
+      requestedAddress.toLowerCase() !== address.toLowerCase()
+    )
+      return
+
+    return {
+      address,
+      networkIdentifier,
+      topic: session.topic,
+    }
+  }
+
+  const getSessionTopic = async (
+    requestedAccount?: string
+  ): Promise<string> => {
+    const validation = validateSession(requestedAccount)
+
+    if (validation) return validation.topic
 
     const newSession = await connect()
 
@@ -87,7 +136,7 @@ export const newWcSigner = (
   }
 
   const connect = async (): Promise<SessionTypes.Struct> => {
-    const clientInstance = await signClient
+    const signClient = await wcClient.get()
 
     try {
       const requiredNamespaces: EngineTypes.ConnectParams["requiredNamespaces"] =
@@ -99,7 +148,7 @@ export const newWcSigner = (
           },
         }
 
-      const { uri, approval } = await clientInstance.connect({
+      const { uri, approval } = await signClient.connect({
         requiredNamespaces,
       })
 

@@ -1,6 +1,11 @@
 import { WalletConnectModal } from "@walletconnect/modal"
 
-export const newWeb3Modal = (projectId: string) =>
+/**
+ * Creates a new WalletConnectModal instance
+ * @param projectId - Your WalletConnect project ID
+ * @param veWorldImage - The path to the VeWorld Mobile image
+ */
+export const newWeb3Modal = (projectId: string, veWorldImage: string) =>
   new WalletConnectModal({
     projectId,
     explorerRecommendedWalletIds: "NONE",
@@ -10,7 +15,7 @@ export const newWeb3Modal = (projectId: string) =>
         id: "veworld-mobile",
         links: {
           native: "veworld://org.vechain.veworld.app/",
-          universal: "https://veworld.net",
+          universal: "https://veworld.com",
         },
       },
     ],
@@ -18,6 +23,6 @@ export const newWeb3Modal = (projectId: string) =>
       "--wcm-z-index": "99999999",
     },
     walletImages: {
-      "veworld-mobile": process.env.PUBLIC_URL + "/images/logo/veWorld.png",
+      "veworld-mobile": veWorldImage,
     },
   })
