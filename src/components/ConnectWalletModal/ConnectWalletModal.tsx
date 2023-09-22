@@ -14,7 +14,7 @@ import {
 import { LinkIcon, WalletIcon } from "@heroicons/react/24/solid"
 import React, { useCallback, useState } from "react"
 import { ActionType, useWallet } from "../../context/WalletContext"
-import { DEFAULT_NETWORK, Network, WalletSource } from "../../model/enums"
+import { Network, WalletSource } from "../../model/enums"
 import { getErrorMessage } from "../../utils/ExtensionUtils"
 import { humanAddress } from "../../utils/FormattingUtils"
 import AccountSourceRadio from "../Account/AccountSourceRadio/AccountSourceRadio"
@@ -56,18 +56,21 @@ interface IConnectedWalletBody {
 const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
   const {
     dispatch,
-    state: { account },
+    state: { account, network },
   } = useWallet()
   const toast = useToast()
   const { vendor } = useConnex()
 
   const [connectionLoading, setConnectionLoading] = useState(false)
   const [connectionError, setConnectionError] = useState("")
-  const [selectedNetwork, setSelectedNework] =
-    useState<Network>(DEFAULT_NETWORK)
+
   const onNetworkChange = useCallback(
-    (network: Network) => setSelectedNework(network),
-    []
+    (_network: Network) =>
+      dispatch({
+        type: ActionType.SET_NETWORK,
+        payload: _network,
+      }),
+    [dispatch]
   )
 
   const onSourceChange = useCallback(
@@ -124,10 +127,10 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
 
   const onSuccessfullConnection = (cert: Certificate) => {
     dispatch({
-      type: ActionType.SET_ALL,
+      type: ActionType.SET_ACCOUNT,
       payload: {
-        network: selectedNetwork,
-        account: { address: cert.signer, source: account.source },
+        address: cert.signer,
+        source: account.source,
       },
     })
     onClose()
@@ -148,10 +151,7 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
       <Flex direction={"column"} gap={8}>
         <Box>
           <Text mb="8px">Network</Text>
-          <NetworkSelect
-            selected={selectedNetwork}
-            onChange={onNetworkChange}
-          />
+          <NetworkSelect selected={network} onChange={onNetworkChange} />
         </Box>
         <Box>
           <Text mb="8px">Wallet</Text>
