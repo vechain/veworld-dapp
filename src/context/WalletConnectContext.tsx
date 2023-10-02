@@ -73,6 +73,7 @@ export const WalletConnectProvider = ({ children }: IWalletConnectProvider) => {
     const keys = await _client.core.storage.getKeys()
 
     for (const key of keys) {
+      if (!key.startsWith("wc@2")) continue
       console.log("Removing WC key", key)
       await _client.core.storage.removeItem(key)
     }
