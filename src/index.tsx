@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client"
 
 import reportWebVitals from "./reportWebVitals"
 
-import { WalletProvider } from "./context/WalletContext"
+import { AppStateProvider } from "./context/WalletContext"
 import Router from "./router"
 
 import NavBar from "./components/Layout/Navbar"
@@ -13,24 +13,18 @@ import theme from "./styles/Theme"
 import StyledContainer from "./components/Shared/StyledContainer/StyledContainer"
 
 import "./styles/index.css"
-import { WalletConnectProvider } from "./context/WalletConnectContext"
-import { ConnexProvider } from "./context/ConnexContext"
 
 const Index = () => {
   return (
     <>
       <Fonts />
       <ChakraProvider theme={theme}>
-        <WalletProvider>
-          <WalletConnectProvider>
-            <ConnexProvider>
-              <NavBar />
-              <StyledContainer>
-                <Router />
-              </StyledContainer>
-            </ConnexProvider>
-          </WalletConnectProvider>
-        </WalletProvider>
+        <AppStateProvider>
+          <NavBar />
+          <StyledContainer>
+            <Router />
+          </StyledContainer>
+        </AppStateProvider>
       </ChakraProvider>
     </>
   )

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { IToken } from "../model/State"
 import { useVip180 } from "./useVip180"
-import { useConnex } from "../context/ConnexContext"
+import { useConnex } from "@vechain/dapp-kit-react"
 
 const useTokenBalance = () => {
   const [balance, setBalance] = useState<string>()

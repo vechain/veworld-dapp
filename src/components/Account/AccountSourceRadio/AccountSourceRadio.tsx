@@ -1,46 +1,49 @@
 import {
+  Box,
   Flex,
   HStack,
+  Icon,
   Image,
   Text,
   Tooltip,
   VStack,
-  Icon,
-  Box,
 } from "@chakra-ui/react"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
 import React, { useCallback } from "react"
-import { WalletSource, WalletSourceInfo } from "../../../model/enums"
+import { WalletSourceInfo } from "../../../model/enums"
 import RadioCard from "../../Shared/RadioCard/RadioCard"
+import { WalletSource } from "@vechain/dapp-kit"
+import { useWallet } from "@vechain/dapp-kit-react"
 
 interface IAccountSourceRadio {
-  selected: WalletSource
   onChange: (source: WalletSource) => void
 }
 
-const AccountSourceRadio: React.FC<IAccountSourceRadio> = ({
-  selected,
-  onChange,
-}) => {
+const AccountSourceRadio: React.FC<IAccountSourceRadio> = ({ onChange }) => {
   const handleSourceClick = useCallback(
     (isDisabled: boolean, source: WalletSource) => () =>
       !isDisabled && onChange(source),
     [onChange]
   )
+
+  const { source } = useWallet()
+
   return (
     <VStack spacing={4} w="full">
-      {Object.values(WalletSource).map((source) => {
-        const sourceInfo = WalletSourceInfo[source]
+      {Object.entries(WalletSourceInfo).map(([walletSource, sourceInfo]) => {
         const isDisabled = !sourceInfo.isAvailable
-        const isSelected = source === selected
+        const isSelected = source === walletSource
 
         return (
           <AccountSourceButton
-            key={source}
-            source={source}
+            key={walletSource}
+            source={walletSource as WalletSource}
             isSelected={isSelected}
             isDisabled={isDisabled}
-            onClick={handleSourceClick(isDisabled, source)}
+            onClick={handleSourceClick(
+              isDisabled,
+              walletSource as WalletSource
+            )}
           />
         )
       })}
@@ -54,6 +57,7 @@ interface IAccountSourceButton {
   isDisabled: boolean
   onClick: () => void
 }
+
 const AccountSourceButton: React.FC<IAccountSourceButton> = ({
   source,
   isSelected,
@@ -91,6 +95,7 @@ const AccountSourceButton: React.FC<IAccountSourceButton> = ({
 interface ISourceNotDetectedIcon {
   source: WalletSource
 }
+
 const SourceNotDetectedIcon: React.FC<ISourceNotDetectedIcon> = ({
   source,
 }) => {

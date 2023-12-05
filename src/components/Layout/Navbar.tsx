@@ -18,10 +18,11 @@ import React, { useCallback } from "react"
 import { VechainLogo } from "../Logo/Logo"
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher"
 import ConnectWalletButton from "../ConnectWalletButton/ConnectWalletButton"
-import { ActionType, useWallet } from "../../context/WalletContext"
+import { ActionType, useAppState } from "../../context/WalletContext"
 import NetworkBadge from "../Network/NetworkBadge/NetworkBadge"
 import { Bars3Icon } from "@heroicons/react/24/solid"
 import { AccountDetailBody } from "../ConnectedWalletDialog/ConnectedWalletDialog"
+import { useWallet } from "@vechain/dapp-kit-react"
 
 const NavBar: React.FC = () => {
   const bg = useColorModeValue("gray.50", "gray.900")
@@ -48,9 +49,11 @@ const NavBar: React.FC = () => {
 }
 
 const DesktopNavBar = () => {
+  const { account } = useWallet()
+
   const {
-    state: { account, network },
-  } = useWallet()
+    state: { network },
+  } = useAppState()
   return (
     <>
       <Box h="30px">
@@ -91,8 +94,10 @@ const MobileNavBarDrawer: React.FC<IMobileNavBarDrawer> = ({
 }) => {
   const {
     dispatch,
-    state: { account, network },
-  } = useWallet()
+    state: { network },
+  } = useAppState()
+
+  const { account, source } = useWallet()
 
   const disconnectWallet = useCallback(
     () => dispatch({ type: ActionType.CLEAR }),
@@ -107,10 +112,10 @@ const MobileNavBarDrawer: React.FC<IMobileNavBarDrawer> = ({
           <VStack justifyContent={"space-between"} w="full" h="full">
             <VStack spacing={4} w="full" alignItems={"flex-start"}>
               <Text>Connected Wallet</Text>
-              {account.address && network ? (
+              {account && source && network ? (
                 <AccountDetailBody
-                  accountSource={account.source}
-                  accountAddress={account.address}
+                  accountSource={source}
+                  accountAddress={account}
                   network={network}
                   disconnectWallet={disconnectWallet}
                 />

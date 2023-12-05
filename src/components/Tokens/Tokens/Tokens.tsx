@@ -7,8 +7,9 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
+import { useWallet } from "@vechain/dapp-kit-react"
 import React, { useCallback, useEffect, useState } from "react"
-import { useWallet } from "../../../context/WalletContext"
+import { useAppState } from "../../../context/WalletContext"
 import useTokenBalance from "../../../hooks/useTokenBalance"
 import { IToken } from "../../../model/State"
 import { scaleNumberDown } from "../../../utils/FormattingUtils"
@@ -24,7 +25,7 @@ interface ITokens {
 const Tokens: React.FC<ITokens> = ({ selectedToken, openMintView }) => {
   const {
     state: { tokens },
-  } = useWallet()
+  } = useAppState()
 
   console.log(selectedToken)
 
@@ -67,13 +68,11 @@ interface ITokenDetails {
 }
 
 const TokenDetails: React.FC<ITokenDetails> = ({ token, onMintClick }) => {
-  const {
-    state: { account },
-  } = useWallet()
+  const { account } = useWallet()
   const { balance, getBalance } = useTokenBalance()
 
   useEffect(() => {
-    if (account.address && token) getBalance(token, account.address)
+    if (account && token) getBalance(token, account)
   }, [getBalance, account, token])
 
   return (
