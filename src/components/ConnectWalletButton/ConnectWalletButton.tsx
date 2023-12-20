@@ -1,7 +1,8 @@
 import { Button, HTMLChakraProps, Icon, useDisclosure } from "@chakra-ui/react"
 import { WalletIcon } from "@heroicons/react/24/solid"
+import { useWallet } from "@vechain/dapp-kit-react"
 import React from "react"
-import { useWallet } from "../../context/WalletContext"
+import { useAppState } from "../../context/WalletContext"
 import AddressButton from "../Account/Address/AddressButton"
 import AccountDetailModal from "../ConnectedWalletDialog/ConnectedWalletDialog"
 import ConnectWalletModal from "../ConnectWalletModal/ConnectWalletModal"
@@ -16,21 +17,22 @@ const ConnectWalletButton: React.FC<IConnectWalletButton> = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const {
-    state: { account, network },
-  } = useWallet()
+    state: { network },
+  } = useAppState()
 
-  if (account.address && network)
+  const { account } = useWallet()
+
+  if (account && network)
     return (
       <>
         <AccountDetailModal
           isOpen={isOpen}
           onClose={onClose}
-          account={account}
           network={network}
         />
         <AddressButton
           {...buttonProps}
-          address={account.address}
+          address={account}
           showCopyIcon={false}
           onClick={onOpen}
         />

@@ -1,4 +1,4 @@
-import { useConnex } from "../context/ConnexContext"
+import { useConnex } from "@vechain/dapp-kit-react"
 
 export const useTransaction = () => {
   const { thor, vendor } = useConnex()
@@ -9,7 +9,7 @@ export const useTransaction = () => {
     comment?: string,
     delegateUrl?: string
   ) => {
-    const request = vendor()
+    const request = vendor
       .sign("tx", message)
       .signer(signer)
       .link(window.location.href + "#/tx-callback/{txid}")

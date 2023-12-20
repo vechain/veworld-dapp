@@ -1,2 +1,7 @@
 /* variables */
 @import "_variables.css";
+
+
+:root {
+    --vwk-modal-z-index: 1000;
+}

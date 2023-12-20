@@ -1,10 +1,5 @@
 import { genesisBlocks } from "@vechain/connex/esm/config"
-
-export enum WalletSource {
-  VEWORLD_EXTENSION = "veworld",
-  SYNC2 = "sync2",
-  WALLET_CONNECT = "walletConnect",
-}
+import { WalletSource } from "@vechain/dapp-kit"
 
 const logosUrl = process.env.PUBLIC_URL + "/images/logo"
 
@@ -15,28 +10,26 @@ interface IWalletSourceInfo {
   isAvailable: boolean
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 export const WalletSourceInfo: Record<WalletSource, IWalletSourceInfo> = {
-  [WalletSource.VEWORLD_EXTENSION]: {
+  veworld: {
     name: "VeWorld Web",
     logo: `${logosUrl}/veworld_black.png`,
     isAvailable: !!window.vechain,
   },
-  [WalletSource.SYNC2]: {
+  sync2: {
     name: "Sync2",
     logo: `${logosUrl}/sync2.png`,
     url: "https://docs.vechain.org/sync2/get-started.html",
     isAvailable: true,
   },
-  [WalletSource.WALLET_CONNECT]: {
+  "wallet-connect": {
     name: "VeWorld Mobile",
     logo: `${logosUrl}/wallet-connect-logo.png`,
     isAvailable: true,
   },
 }
-
-export const DEFAULT_SOURCE = window.vechain
-  ? WalletSource.VEWORLD_EXTENSION
-  : WalletSource.SYNC2
 
 export enum Network {
   MAIN = "main",

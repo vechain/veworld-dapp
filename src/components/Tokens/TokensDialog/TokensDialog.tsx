@@ -1,16 +1,16 @@
 import { Button, HStack, Text } from "@chakra-ui/react"
 import React, { useCallback, useState } from "react"
-import { useWallet } from "../../../context/WalletContext"
-import { IAccount, IToken } from "../../../model/State"
+import { IToken } from "../../../model/State"
 import MintToken from "../MintToken/MintToken"
 import { Dialog } from "../../Shared"
 import DeployToken from "../DeployToken/DeployToken"
 import Tokens from "../Tokens/Tokens"
+import { useWallet } from "@vechain/dapp-kit-react"
 
 interface IDeployTokenDialog {
   isOpen: boolean
   onClose: () => void
-  account: IAccount
+  account: string
 }
 
 enum TokensDialogView {
@@ -29,11 +29,9 @@ const TokensDialog: React.FC<IDeployTokenDialog> = ({ isOpen, onClose }) => {
     view: TokensDialogView.TOKENS,
   })
 
-  const {
-    state: { account },
-  } = useWallet()
+  const { account } = useWallet()
 
-  if (!account.address) return <></>
+  if (!account) return <></>
 
   return (
     <Dialog
@@ -48,7 +46,7 @@ const TokensDialog: React.FC<IDeployTokenDialog> = ({ isOpen, onClose }) => {
       }
       body={
         <TokensDialogBody
-          accountAddress={account.address}
+          accountAddress={account}
           currentView={currentView}
           setCurrentView={setCurrentView}
         />

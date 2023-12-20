@@ -1,7 +1,7 @@
 import { Button, HStack, Text } from "@chakra-ui/react"
+import { useWallet } from "@vechain/dapp-kit-react"
 import React, { useCallback, useState } from "react"
-import { useWallet } from "../../../context/WalletContext"
-import { IAccount, INonFungibleToken } from "../../../model/State"
+import { INonFungibleToken } from "../../../model/State"
 import { Dialog } from "../../Shared"
 import DeployNFT from "../DeployNFT/DeployNFT"
 import MintNFT from "../MintNFT/MintNFT"
@@ -10,7 +10,7 @@ import NFTs from "../NFTs/NFTs"
 interface IDeployTokenDialog {
   isOpen: boolean
   onClose: () => void
-  account: IAccount
+  account: string
 }
 
 enum NFTsDialogView {
@@ -29,11 +29,9 @@ const NFTsDialog: React.FC<IDeployTokenDialog> = ({ isOpen, onClose }) => {
     view: NFTsDialogView.NFTS,
   })
 
-  const {
-    state: { account },
-  } = useWallet()
+  const { account } = useWallet()
 
-  if (!account.address) return <></>
+  if (!account) return <></>
 
   return (
     <Dialog
@@ -48,7 +46,7 @@ const NFTsDialog: React.FC<IDeployTokenDialog> = ({ isOpen, onClose }) => {
       }
       body={
         <TokensDialogBody
-          accountAddress={account.address}
+          accountAddress={account}
           currentView={currentView}
           setCurrentView={setCurrentView}
         />

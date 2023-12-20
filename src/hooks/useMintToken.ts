@@ -1,17 +1,15 @@
 import { useToast } from "@chakra-ui/react"
 import { useState } from "react"
 import { MintTokenForm } from "../components/Tokens/MintToken/MintToken"
-import { useWallet } from "../context/WalletContext"
 import { IToken } from "../model/State"
 import { TxStage } from "../model/Transaction"
 import { getErrorMessage } from "../utils/ExtensionUtils"
 import { useTransaction } from "./useTransaction"
 import { useVip180 } from "./useVip180"
+import { useWallet } from "@vechain/dapp-kit-react"
 
 const useMintToken = () => {
-  const {
-    state: { account },
-  } = useWallet()
+  const { account } = useWallet()
   const { requestTransaction } = useTransaction()
   const [txId, setTxId] = useState<string>()
   const [txStatus, setTxStatus] = useState(TxStage.NONE)
@@ -29,7 +27,7 @@ const useMintToken = () => {
 
     try {
       setTxStatus(TxStage.NONE)
-      if (!account.address) throw new Error("You have not selected an account")
+      if (!account) throw new Error("You have not selected an account")
 
       const clauses = await buildMintClause(
         data.address,
@@ -45,10 +43,7 @@ const useMintToken = () => {
 
       setTxStatus(TxStage.IN_EXTENSION)
 
-      const { txid } = await requestTransaction(
-        account.address,
-        clausesWithComments
-      )
+      const { txid } = await requestTransaction(account, clausesWithComments)
       setTxId(txid)
       setTxStatus(TxStage.POLLING_TX)
 

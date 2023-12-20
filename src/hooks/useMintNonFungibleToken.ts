@@ -1,6 +1,6 @@
 import { useToast } from "@chakra-ui/react"
+import { useWallet } from "@vechain/dapp-kit-react"
 import { useState } from "react"
-import { useWallet } from "../context/WalletContext"
 import { INonFungibleToken } from "../model/State"
 import { TxStage } from "../model/Transaction"
 import { getErrorMessage } from "../utils/ExtensionUtils"
@@ -8,9 +8,7 @@ import { useTransaction } from "./useTransaction"
 import { useVip181 } from "./useVip181"
 
 const useMintNonFungibleToken = () => {
-  const {
-    state: { account },
-  } = useWallet()
+  const { account } = useWallet()
   const { requestTransaction } = useTransaction()
   const [txId, setTxId] = useState<string>()
   const [txStatus, setTxStatus] = useState(TxStage.NONE)
@@ -29,7 +27,7 @@ const useMintNonFungibleToken = () => {
 
     try {
       setTxStatus(TxStage.NONE)
-      if (!account.address) throw new Error("You have not selected an account")
+      if (!account) throw new Error("You have not selected an account")
 
       const clauses = await buildMintNftClause(
         toAddress,
@@ -43,10 +41,7 @@ const useMintNonFungibleToken = () => {
 
       setTxStatus(TxStage.IN_EXTENSION)
 
-      const { txid } = await requestTransaction(
-        account.address,
-        clausesWithComments
-      )
+      const { txid } = await requestTransaction(account, clausesWithComments)
       setTxId(txid)
       setTxStatus(TxStage.POLLING_TX)
 

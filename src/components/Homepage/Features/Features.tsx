@@ -11,17 +11,17 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import React from "react"
-import { useWallet } from "../../../context/WalletContext"
+import { useAppState } from "../../../context/WalletContext"
 import { CurrencyDollarIcon, WalletIcon } from "@heroicons/react/24/solid"
 import StyledCard from "../../Shared/StyledCard/StyledCard"
-import { IAccount } from "../../../model/State"
 import TokensDialog from "../../Tokens/TokensDialog/TokensDialog"
 import NFTsDialog from "../../NFTs/NFTsDialog/NFTsDialog"
+import { useWallet } from "@vechain/dapp-kit-react"
 
 interface IFeatureDialog {
   isOpen: boolean
   onClose: () => void
-  account: IAccount
+  account: string
 }
 
 interface IFeature {
@@ -72,9 +72,11 @@ interface IFeatureCard {
 }
 
 const FeatureCard: React.FC<IFeatureCard> = ({ feature }) => {
+  const { account } = useWallet()
+
   const {
-    state: { account, network },
-  } = useWallet()
+    state: { network },
+  } = useAppState()
 
   const { isOpen, onClose, onOpen } = useDisclosure()
   const isDisabled = feature.requireWallet && (!account || !network)

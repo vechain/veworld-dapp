@@ -1,40 +1,48 @@
 import { Button, HStack, Image, Text, VStack } from "@chakra-ui/react"
-import React from "react"
-import { ActionType, useWallet } from "../../context/WalletContext"
+import { useWallet } from "@vechain/dapp-kit-react"
+import React, { useEffect } from "react"
+import { ActionType, useAppState } from "../../context/WalletContext"
 import { Network, WalletSourceInfo } from "../../model/enums"
-import { IAccount } from "../../model/State"
 import { getPicassoImgSrc } from "../../utils/PicassoUtils"
 import AddressButton from "../Account/Address/AddressButton"
 import NetworkBadge from "../Network/NetworkBadge/NetworkBadge"
 import { Dialog } from "../Shared"
+import { WalletSource } from "@vechain/dapp-kit"
 
 interface IConnectWalletModal {
   isOpen: boolean
   onClose: () => void
-  account: IAccount
   network: Network
 }
 
 const AccountDetailModal: React.FC<IConnectWalletModal> = ({
   isOpen,
   onClose,
-  account,
   network,
 }) => {
-  const { dispatch } = useWallet()
+  const { dispatch } = useAppState()
+  const { source, disconnect, account } = useWallet()
+
+  useEffect(() => {
+    console.log({
+      source,
+      account,
+    })
+  }, [source, account])
 
   const disconnectWallet = () => {
+    disconnect()
     dispatch({ type: ActionType.CLEAR })
     onClose()
   }
 
-  if (!account.address) return <></>
+  if (!account || !source) return <></>
 
   const header = (
     <HStack
       spacing={2}
       p={4}
-      bgImage={`url(${getPicassoImgSrc(account.address, true)})`}
+      bgImage={`url(${getPicassoImgSrc(account, true)})`}
       bgRepeat={"no-repeat"}
       bgSize="cover"
     >
@@ -51,8 +59,8 @@ const AccountDetailModal: React.FC<IConnectWalletModal> = ({
       closeButtonStyle={{ color: "white" }}
       body={
         <AccountDetailBody
-          accountSource={account.source}
-          accountAddress={account.address}
+          accountSource={source}
+          accountAddress={account}
           network={network}
           disconnectWallet={disconnectWallet}
         />
@@ -63,7 +71,7 @@ const AccountDetailModal: React.FC<IConnectWalletModal> = ({
 
 interface IAccountDetailBody {
   accountAddress: string
-  accountSource: IAccount["source"]
+  accountSource: WalletSource
   network: Network
   disconnectWallet: () => void
 }

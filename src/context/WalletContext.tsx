@@ -1,13 +1,16 @@
 import React, { createContext, useContext, useMemo, useReducer } from "react"
 import LocalStorage from "./helpers/LocalStorage"
-import { IAccount, INonFungibleToken, IToken } from "../model/State"
+import { INonFungibleToken, IToken } from "../model/State"
+import { DAppKitProvider } from "@vechain/dapp-kit-react"
+import { WalletConnectOptions } from "@vechain/dapp-kit"
+import { CustomizedStyle } from "@vechain/dapp-kit-ui"
+import { WC_APP_METADATA, WC_PROJECT_ID } from "../constants"
 
-import { Network, WalletSource } from "../model/enums"
+import { Network, NetworkInfo } from "../model/enums"
 
 export enum ActionType {
   SET_ALL = "SET_ALL",
   SET_NETWORK = "SET_NETWORK",
-  SET_ACCOUNT = "SET_ACCOUNT",
   ADD_TOKEN = "ADD_TOKEN",
   ADD_NFT = "ADD_NFT",
   CLEAR = "CLEAR",
@@ -16,10 +19,9 @@ export enum ActionType {
 type Action =
   | {
       type: ActionType.SET_ALL
-      payload: { network: Network; account: IAccount }
+      payload: { network: Network }
     }
   | { type: ActionType.SET_NETWORK; payload: Network }
-  | { type: ActionType.SET_ACCOUNT; payload: IAccount }
   | { type: ActionType.ADD_TOKEN; payload: IToken }
   | { type: ActionType.ADD_NFT; payload: INonFungibleToken }
   | { type: ActionType.CLEAR }
@@ -27,7 +29,6 @@ type Action =
 type Dispatch = (action: Action) => void
 
 export type State = {
-  account: IAccount
   network: Network
   tokens: IToken[]
   nfts: INonFungibleToken[]
@@ -35,12 +36,7 @@ export type State = {
 
 type ContextStateProps = { state: State; dispatch: Dispatch }
 
-const defaultAccount: IAccount = {
-  source: window.vechain ? WalletSource.VEWORLD_EXTENSION : WalletSource.SYNC2,
-}
-
 const walletReducerDefaultValue = {
-  account: LocalStorage.getAccount() || defaultAccount,
   network: LocalStorage.getNetwork() || Network.TEST,
   tokens: LocalStorage.getTokens(),
   nfts: LocalStorage.getNfts(),
@@ -49,12 +45,8 @@ const walletReducerDefaultValue = {
 const walletReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case ActionType.SET_ALL:
-      LocalStorage.setAccount(action.payload.account)
       LocalStorage.setNetwork(action.payload.network)
       return { ...state, ...action.payload }
-    case ActionType.SET_ACCOUNT:
-      LocalStorage.setAccount(action.payload)
-      return { ...state, account: action.payload }
     case ActionType.ADD_TOKEN: {
       const updatedTokens = [...state.tokens, action.payload]
       LocalStorage.setTokens(updatedTokens)
@@ -72,7 +64,6 @@ const walletReducer = (state: State, action: Action): State => {
       LocalStorage.clear()
       return {
         network: Network.TEST,
-        account: defaultAccount,
         tokens: [],
         nfts: [],
       }
@@ -88,7 +79,11 @@ interface IWalletProvider {
   children: React.ReactNode
 }
 
-const WalletProvider = ({ children }: IWalletProvider) => {
+const walletKitStyles: CustomizedStyle = {
+  "--vwk-modal-z-index": "9999",
+}
+
+const AppStateProvider = ({ children }: IWalletProvider) => {
   const [state, dispatch] = useReducer(walletReducer, walletReducerDefaultValue)
 
   const value = useMemo(
@@ -99,17 +94,31 @@ const WalletProvider = ({ children }: IWalletProvider) => {
     [state, dispatch]
   )
 
+  const walletConnectOptions: WalletConnectOptions = {
+    projectId: WC_PROJECT_ID,
+    metadata: WC_APP_METADATA,
+  }
+
   return (
-    <WalletContext.Provider value={value}>{children}</WalletContext.Provider>
+    <DAppKitProvider
+      nodeUrl={NetworkInfo[state.network].url}
+      genesis={state.network}
+      walletConnectOptions={walletConnectOptions}
+      usePersistence={true}
+      logLevel={"DEBUG"}
+      customStyles={walletKitStyles}
+    >
+      <WalletContext.Provider value={value}>{children}</WalletContext.Provider>
+    </DAppKitProvider>
   )
 }
 
-function useWallet() {
+function useAppState() {
   const context = useContext(WalletContext)
   if (context === undefined) {
-    throw new Error("useWallet must be used within a CountProvider")
+    throw new Error("useAppState must be used within a CountProvider")
   }
   return context
 }
 
-export { WalletProvider, useWallet }
+export { AppStateProvider, useAppState }

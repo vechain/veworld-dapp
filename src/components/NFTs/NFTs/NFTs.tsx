@@ -7,8 +7,9 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
+import { useWallet } from "@vechain/dapp-kit-react"
 import React, { useCallback, useEffect, useState } from "react"
-import { useWallet } from "../../../context/WalletContext"
+import { useAppState } from "../../../context/WalletContext"
 import useNFTBalance from "../../../hooks/useNFTBalance"
 import { INonFungibleToken } from "../../../model/State"
 import AddressButton from "../../Account/Address/AddressButton"
@@ -23,7 +24,7 @@ interface ITokens {
 const NFTs: React.FC<ITokens> = ({ selectedNft, openMintView }) => {
   const {
     state: { nfts },
-  } = useWallet()
+  } = useAppState()
 
   const [selected, setSelected] = useState<INonFungibleToken>(
     selectedNft || nfts[0]
@@ -65,13 +66,11 @@ interface INftsDetails {
 }
 
 const NFTDetails: React.FC<INftsDetails> = ({ nft, onMintClick }) => {
-  const {
-    state: { account },
-  } = useWallet()
+  const { account } = useWallet()
   const { balance, getNFTBalance } = useNFTBalance()
 
   useEffect(() => {
-    if (account.address) getNFTBalance(nft, account.address)
+    if (account) getNFTBalance(nft, account)
   }, [getNFTBalance, account, nft])
 
   return (

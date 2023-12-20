@@ -13,7 +13,7 @@ import {
 import { ArrowPathIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
 import React, { useCallback } from "react"
 import { RegisterOptions, useForm } from "react-hook-form"
-import { ActionType, useWallet } from "../../../context/WalletContext"
+import { ActionType, useAppState } from "../../../context/WalletContext"
 import useDeployToken from "../../../hooks/useDeployToken"
 import { IToken } from "../../../model/State"
 import { TxStage } from "../../../model/Transaction"
@@ -46,7 +46,7 @@ const DeployToken: React.FC<IDeployToken> = ({
 
   const isFirstDeploy = !txId
 
-  const { dispatch } = useWallet()
+  const { dispatch } = useAppState()
 
   const onBackClick = useCallback(() => navigateBack(), [navigateBack])
 

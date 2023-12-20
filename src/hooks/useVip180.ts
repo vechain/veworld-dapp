@@ -3,8 +3,8 @@ import { ClauseType } from "../model/Transaction"
 import VIP180Abi from "../vechain/VIP180.abi"
 import { scaleNumberUp } from "../utils/FormattingUtils"
 import { IToken } from "../model/State"
-import { useConnex } from "../context/ConnexContext"
 import Web3 from "web3"
+import { useConnex } from "@vechain/dapp-kit-react"
 
 const web3 = new Web3()
 

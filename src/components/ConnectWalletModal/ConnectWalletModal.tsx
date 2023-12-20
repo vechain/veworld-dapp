@@ -13,15 +13,16 @@ import {
 } from "@chakra-ui/react"
 import { LinkIcon, WalletIcon } from "@heroicons/react/24/solid"
 import React, { useCallback, useState } from "react"
-import { ActionType, useWallet } from "../../context/WalletContext"
-import { Network, WalletSource } from "../../model/enums"
+import { ActionType, useAppState } from "../../context/WalletContext"
+import { Network } from "../../model/enums"
 import { getErrorMessage } from "../../utils/ExtensionUtils"
 import { humanAddress } from "../../utils/FormattingUtils"
 import AccountSourceRadio from "../Account/AccountSourceRadio/AccountSourceRadio"
 import NetworkSelect from "../Network/NetworkSelect/NetworkSelect"
 import { Dialog } from "../Shared"
 import { Certificate } from "thor-devkit"
-import { useConnex } from "../../context/ConnexContext"
+import { useConnex, useWallet } from "@vechain/dapp-kit-react"
+import { WalletSource } from "@vechain/dapp-kit"
 
 interface IConnectedWalletDialog {
   isOpen: boolean
@@ -56,8 +57,9 @@ interface IConnectedWalletBody {
 const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
   const {
     dispatch,
-    state: { account, network },
-  } = useWallet()
+    state: { network },
+  } = useAppState()
+  const { setSource } = useWallet()
   const toast = useToast()
   const { vendor } = useConnex()
 
@@ -74,9 +76,8 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
   )
 
   const onSourceChange = useCallback(
-    (source: WalletSource) =>
-      dispatch({ type: ActionType.SET_ACCOUNT, payload: { source } }),
-    [dispatch]
+    (source: WalletSource) => setSource(source),
+    [setSource]
   )
 
   const connectToWalletHandler = async (): Promise<Certificate> => {
@@ -88,7 +89,7 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
       },
     }
 
-    const certResponse = await vendor().sign("cert", message).request()
+    const certResponse = await vendor.sign("cert", message).request()
 
     const cert: Certificate = {
       purpose: message.purpose,
@@ -126,13 +127,6 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
   }
 
   const onSuccessfullConnection = (cert: Certificate) => {
-    dispatch({
-      type: ActionType.SET_ACCOUNT,
-      payload: {
-        address: cert.signer,
-        source: account.source,
-      },
-    })
     onClose()
     toast({
       title: "Wallet connected.",
@@ -155,10 +149,7 @@ const ConnectedWalletBody: React.FC<IConnectedWalletBody> = ({ onClose }) => {
         </Box>
         <Box>
           <Text mb="8px">Wallet</Text>
-          <AccountSourceRadio
-            selected={account.source}
-            onChange={onSourceChange}
-          />
+          <AccountSourceRadio onChange={onSourceChange} />
         </Box>
       </Flex>
       <VStack w="full" spacing={4} mt={8}>

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { INonFungibleToken } from "../model/State"
 import { useVip181 } from "./useVip181"
-import { useConnex } from "../context/ConnexContext"
+import { useConnex } from "@vechain/dapp-kit-react"
 
 const useNFTBalance = () => {
   const [balance, setBalance] = useState()

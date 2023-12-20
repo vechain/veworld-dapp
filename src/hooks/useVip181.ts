@@ -2,8 +2,8 @@ import CompiledVIP181 from "../artifacts/contracts/MyVIP181.sol/MyVIP181.json"
 import { ClauseType } from "../model/Transaction"
 import VIP181Abi from "../vechain/VIP181.abi"
 import { INonFungibleToken } from "../model/State"
-import { useConnex } from "../context/ConnexContext"
 import Web3 from "web3"
+import { useConnex } from "@vechain/dapp-kit-react"
 
 const web3 = new Web3()
 
