@@ -20,7 +20,7 @@ const Welcome = () => {
           <ConnectWalletButton />
           <Link
             ml={0}
-            href="https://github.com/vechainfoundation/veworld-dapp"
+            href="https://github.com/vechain/veworld-dapp"
             isExternal
           >
             <Button variant="link" colorScheme="blue">

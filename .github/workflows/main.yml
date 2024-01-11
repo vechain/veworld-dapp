@@ -36,12 +36,7 @@ jobs:
       - name: Use Node v16 & GitHub registry
         uses: actions/setup-node@v3
         with:
-          node-version: 16
-          registry-url: 'https://npm.pkg.github.com'
-          always-auth: true
-          scope: '@vechainfoundation'
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          node-version: 18
 
       - name: Build React App
         run: yarn build
