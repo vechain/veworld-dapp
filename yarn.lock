@@ -4491,11 +4491,6 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.5.7.tgz#4b8ecac87fbefbc92f431d09c30e176fc0a7c377"
   integrity sha512-dP7f3LdZIysZnmvP3ANJYTSwg+wLLl8p7RqniVlV7j+oXSXAbt9h0WIBFmJy5inWZoX9wZN6eXx+YXd9Rh3RBA==
 
-"@types/node@18.15.13":
-  version "18.15.13"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.15.13.tgz#f64277c341150c979e42b00e4ac289290c9df469"
-  integrity sha512-N+0kuo9KgrUQ1Sn/ifDXsvg0TTleP7rIy4zOBGECxAljqvqfqpTfzx0Q1NUedOixRMBfe2Whhb056a42cWs26Q==
-
 "@types/node@^10.0.3", "@types/node@^10.3.2":
   version "10.17.60"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.60.tgz#35f3d6213daed95da7f0f73e75bcc6980e90597b"
@@ -4935,26 +4930,29 @@
     uuid "2.0.1"
     xmlhttprequest "1.8.0"
 
-"@vechain/hardhat-ethers@0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@vechain/hardhat-ethers/-/hardhat-ethers-0.1.6.tgz#f0421346e64ba092f5e815112fb6e2ea8b739d76"
-  integrity sha512-PY3er4jUB840Om/TIZuU7BZydgnM7xwS/jR5dOSQcgvGnCo44V/Lz6kPAEPmGLiJSRgBNjEKscX/RPT+BgUcjw==
-  dependencies:
-    ethers "^6.7.1"
+"@vechain/hardhat-ethers@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@vechain/hardhat-ethers/-/hardhat-ethers-0.0.4.tgz#53d0dcb177fe193e301f68a04d8ca31d992b9eae"
+  integrity sha512-AfjY4gTKGPo84x8qRHLvh9Xyjkfz/OVHv0T7xy0DyMxc9U0hSXnfS4GXqy1tm494Y5HZgR/DNouAUpLrPX5w/w==
 
-"@vechain/hardhat-vechain@0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@vechain/hardhat-vechain/-/hardhat-vechain-0.1.6.tgz#1ed3a143849d6bfdacdef7e343fdc272d6fc5ab9"
-  integrity sha512-Tv6QypfFpA9PsB3T4LT9dmqqJFNzJYtLPUsYOq0/PflgNCxgDULJ007gwKwamYeBNABbWztw1c2BE+22uuLjHA==
+"@vechain/hardhat-vechain@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@vechain/hardhat-vechain/-/hardhat-vechain-0.0.4.tgz#81dc089b57a2cd3540fe8e48c5a10f6139e6aa24"
+  integrity sha512-v4aOM1+1t5P8DZ5fIIJDT3Q48JzX4HvyuYQpFJjo8V+GQbc/6PIgFtr747CEcS1MHlbjygLIs2gXEjA3kIbBow==
   dependencies:
     "@vechain/connex-driver" "^2.0.12"
     "@vechain/connex-framework" "^2.0.12"
-    "@vechain/web3-providers-connex" "^1.1.2"
+    "@vechain/web3-providers-connex" "^1.0.0"
     debug "^4.3.4"
-    ethers "^6.7.1"
+    ethers "^5.7.2"
     pino "8.14.1"
     pino-pretty "9.4.0"
     thor-devkit "^2.0.6"
+
+"@vechain/hardhat-web3@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@vechain/hardhat-web3/-/hardhat-web3-0.0.4.tgz#9159be69b648d7f7c0f61d05c89b35da9e1a0927"
+  integrity sha512-I11LHB3wPchTdkqE0tI2TE2gE+TLJlAV2rPmCTnTSY33678knnKLw4e0BU6KA15tsKr+tNBtZP6kIptwBJUgSw==
 
 "@vechain/picasso@2.1.1", "@vechain/picasso@^2.1.1":
   version "2.1.1"
@@ -4963,7 +4961,7 @@
   dependencies:
     mersenne-twister "^1.1.0"
 
-"@vechain/web3-providers-connex@^1.1.2":
+"@vechain/web3-providers-connex@^1.0.0":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@vechain/web3-providers-connex/-/web3-providers-connex-1.1.2.tgz#4c8541fc3b9da3ff958f9a28be2eaf7a3c0b3445"
   integrity sha512-YvteUeJaxpYDfEKswAPn9F9YeJgS+gMEBAGIiQQiEe22UayFQGqQjrr2F9huMIyWxOXr9jBzV9lYVKVzI61WSQ==
@@ -5812,11 +5810,6 @@ aes-js@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/aes-js/-/aes-js-3.0.0.tgz#e21df10ad6c2053295bcbb8dab40b09dbea87e4d"
   integrity sha512-H7wUZRn8WpTq9jocdxQ2c8x2sKo9ZVmzfRE13GiNJXfp7NcKYEdvl3vspKjXox6RIG2VtaRe4JFvxG4rqp2Zuw==
-
-aes-js@4.0.0-beta.5:
-  version "4.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/aes-js/-/aes-js-4.0.0-beta.5.tgz#8d2452c52adedebc3a3e28465d858c11ca315873"
-  integrity sha512-G965FqalsNyrPqgEGON7nIx1e/OVENSgiEIzyC63haUMuvNnwIgIjMs52hlTCKhkBny7A2ORNlfY9Zu+jmGk1Q==
 
 aes-js@^3.1.2:
   version "3.1.2"
@@ -9151,19 +9144,6 @@ ethers@^5.7.1, ethers@^5.7.2:
     "@ethersproject/wallet" "5.7.0"
     "@ethersproject/web" "5.7.1"
     "@ethersproject/wordlists" "5.7.0"
-
-ethers@^6.7.1:
-  version "6.9.2"
-  resolved "https://registry.yarnpkg.com/ethers/-/ethers-6.9.2.tgz#6f4632f62e2350fa8354ff28624027a175ef85a4"
-  integrity sha512-YpkrtILnMQz5jSEsJQRTpduaGT/CXuLnUIuOYzHA0v/7c8IX91m2J48wSKjzGL5L9J/Us3tLoUdb+OwE3U+FFQ==
-  dependencies:
-    "@adraffy/ens-normalize" "1.10.0"
-    "@noble/curves" "1.2.0"
-    "@noble/hashes" "1.3.2"
-    "@types/node" "18.15.13"
-    aes-js "4.0.0-beta.5"
-    tslib "2.4.0"
-    ws "8.5.0"
 
 ethjs-unit@0.1.6:
   version "0.1.6"
@@ -17823,11 +17803,6 @@ ws@8.13.0, ws@^8.13.0:
   version "8.13.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.13.0.tgz#9a9fb92f93cf41512a0735c8f4dd09b8a1211cd0"
   integrity sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==
-
-ws@8.5.0:
-  version "8.5.0"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.5.0.tgz#bfb4be96600757fe5382de12c670dab984a1ed4f"
-  integrity sha512-BWX0SWVgLPzYwF8lTzEy1egjhS4S4OEAHfsO8o65WOVsrnSRGaSiUaa9e0ggGlkMTtBlmOpEXiie9RUcBO86qg==
 
 ws@^3.0.0:
   version "3.3.3"
